@@ -26,7 +26,7 @@ namespace snake
         , m_nextState(nextState)
         , m_elapsedTimeSec(0.0f)
         , m_minDurationSec(minDurationSec) // any negative means this value is ignored
-    { }
+    {}
 
     StateBase::StateBase(
         const Context & context,
@@ -228,12 +228,12 @@ namespace snake
 
     OptionsState::OptionsState(Context & context)
         : StateBase(
-            context,
-            State::Option,
-            State::NextLevelMsg,
-            "Ready?\nHit a key to start!\n\n\n\n\n\n\n\n\n",
-            m_defaultMinDurationSec)
-    { }
+              context,
+              State::Option,
+              State::NextLevelMsg,
+              "Ready?\nHit a key to start!\n\n\n\n\n\n\n\n\n",
+              m_defaultMinDurationSec)
+    {}
 
     void OptionsState::onEnter(Context &)
     {
@@ -278,7 +278,7 @@ namespace snake
 
     TestLevelSetupState::TestLevelSetupState(const Context & context)
         : StateBase(context, State::Test, State::Quit)
-    { }
+    {}
 
     void TestLevelSetupState::onEnter(Context & context)
     {
@@ -321,7 +321,7 @@ namespace snake
         const float minDurationSec)
         : StateBase(context, state, nextState, message, minDurationSec)
     {
-        const sf::FloatRect textBounds { util::scaleRectInPlaceCopy(
+        const sf::FloatRect textBounds{ util::scaleRectInPlaceCopy(
             context.layout.board_bounds_f, 0.9f) };
 
         util::centerInside(m_text, textBounds);
@@ -367,14 +367,14 @@ namespace snake
 
     LevelCompleteMessageState::LevelCompleteMessageState(const Context & context)
         : TimedMessageState(
-            context,
-            State::LevelCompleteMsg,
-            State::NextLevelMsg,
-            "Level Survived!",
-            (m_defaultMinDurationSec * 2.0f))
-    { }
+              context,
+              State::LevelCompleteMsg,
+              State::NextLevelMsg,
+              "Level Survived!",
+              (m_defaultMinDurationSec * 2.0f))
+    {}
 
-    void LevelCompleteMessageState::onEnter(Context & context)
+    void LevelCompleteMessageState::onEnter(Context &)
     {
         // std::cout << context.game.statusString("Level Complete") << std::endl;
     }
@@ -388,12 +388,12 @@ namespace snake
 
     NextLevelMessageState::NextLevelMessageState(const Context & context)
         : TimedMessageState(
-            context,
-            State::NextLevelMsg,
-            State::Play,
-            makeMessage(context),
-            m_defaultMinDurationSec)
-    { }
+              context,
+              State::NextLevelMsg,
+              State::Play,
+              makeMessage(context),
+              m_defaultMinDurationSec)
+    {}
 
     void NextLevelMessageState::onEnter(Context & context) { context.audio.play("level-intro"); }
 
@@ -406,8 +406,8 @@ namespace snake
 
     GameOverState::GameOverState(const Context & context)
         : TimedMessageState(
-            context, State::Over, State::NextLevelMsg, "You Died!\nTry Again!\n\n", 4.5f)
-    { }
+              context, State::Over, State::NextLevelMsg, "You Died!\nTry Again!\n\n", 4.5f)
+    {}
 
     void GameOverState::onEnter(Context & context)
     {
@@ -435,7 +435,7 @@ namespace snake
 
     PauseState::PauseState(const Context & context)
         : TimedMessageState(context, State::Pause, State::Play, "PAUSE", -1.0f)
-    { }
+    {}
 
     void PauseState::onEnter(Context & context) { context.audio.play("mario-pause"); }
 
@@ -455,9 +455,9 @@ namespace snake
 
     PlayState::PlayState(const Context & context)
         : StateBase(context, State::Play, State::Play)
-    { }
+    {}
 
-    void PlayState::onEnter(Context & context)
+    void PlayState::onEnter(Context &)
     {
         // std::cout << context.game.statusString("Play Starting") << std::endl;
     }
