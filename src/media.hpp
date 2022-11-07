@@ -13,7 +13,7 @@ namespace snake
 {
     class Media
     {
-    public:
+      public:
         Media() = default;
 
         void reset(const std::filesystem::path & path)
@@ -22,16 +22,16 @@ namespace snake
             m_candleTexture = sf::Texture();
             m_starTexture = sf::Texture();
 
-            const std::filesystem::path fontPath {
+            const std::filesystem::path fontPath{
                 path / "font/bpdots-unicase-square/bpdots-unicase-square.otf"
             };
 
             M_CHECK_SS(m_font.loadFromFile(fontPath.string()), fontPath);
 
-            const std::filesystem::path candleImagePath { path / "image/puff.png" };
+            const std::filesystem::path candleImagePath{ path / "image/puff.png" };
             M_CHECK_SS(m_candleTexture.loadFromFile(candleImagePath.string()), candleImagePath);
 
-            const std::filesystem::path starImagePath { path / "image/star-8x-full.png" };
+            const std::filesystem::path starImagePath{ path / "image/star-8x-full.png" };
             M_CHECK_SS(m_starTexture.loadFromFile(starImagePath.string()), starImagePath);
         }
 
@@ -40,7 +40,7 @@ namespace snake
 
         const sf::Font & font() const { return m_font; }
 
-    private:
+      private:
         sf::Font m_font;
         sf::Texture m_candleTexture;
         sf::Texture m_starTexture;

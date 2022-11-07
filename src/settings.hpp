@@ -23,8 +23,8 @@ namespace snake
 {
     struct TeleportWallPos
     {
-        BoardPos_t pos { 0, 0 };
-        int count { 0 };
+        BoardPos_t pos{ 0, 0 };
+        int count{ 0 };
     };
 
     using TeleportWallPosVec_t = std::vector<TeleportWallPos>;
@@ -34,7 +34,7 @@ namespace snake
     // Parameters that define how the board is divided into cells (square tiles).
     class Layout
     {
-    public:
+      public:
         Layout() = default;
 
         void reset(const GameConfig & config);
@@ -52,7 +52,7 @@ namespace snake
             static_assert(std::is_arithmetic_v<T>);
             static_assert(!std::is_same_v<std::remove_cv_t<T>, bool>);
 
-            const sf::Vector2i pos { posOrig };
+            const sf::Vector2i pos{ posOrig };
 
             return (
                 (pos.x >= 0) && (pos.y >= 0) && (pos.x < cell_counts.x) && (pos.y < cell_counts.y));
@@ -60,32 +60,32 @@ namespace snake
 
         //
 
-        sf::Vector2i window_size { 0, 0 };
-        sf::Vector2f window_size_f { 0.0f, 0.0f };
-        sf::IntRect window_bounds { 0, 0, 0, 0 };
-        sf::FloatRect window_bounds_f { 0.0f, 0.0f, 0.0f, 0.0f };
+        sf::Vector2i window_size{ 0, 0 };
+        sf::Vector2f window_size_f{ 0.0f, 0.0f };
+        sf::IntRect window_bounds{ 0, 0, 0, 0 };
+        sf::FloatRect window_bounds_f{ 0.0f, 0.0f, 0.0f, 0.0f };
         //
-        sf::Vector2i cell_size { 0, 0 };
-        sf::Vector2i board_size { 0, 0 };
-        sf::Vector2i cell_counts { 0, 0 };
-        int cell_count_total { 0 };
-        std::size_t cell_count_total_st { 0 };
-        sf::Vector2i top_left_pos { 0, 0 };
-        sf::IntRect board_bounds { 0, 0, 0, 0 };
-        sf::FloatRect board_bounds_f { 0, 0, 0, 0 };
+        sf::Vector2i cell_size{ 0, 0 };
+        sf::Vector2i board_size{ 0, 0 };
+        sf::Vector2i cell_counts{ 0, 0 };
+        int cell_count_total{ 0 };
+        std::size_t cell_count_total_st{ 0 };
+        sf::Vector2i top_left_pos{ 0, 0 };
+        sf::IntRect board_bounds{ 0, 0, 0, 0 };
+        sf::FloatRect board_bounds_f{ 0, 0, 0, 0 };
 
-        sf::IntRect status_bounds { 0, 0, 0, 0 };
-        sf::FloatRect status_bounds_f { 0.0f, 0.0f, 0.0f, 0.0f };
+        sf::IntRect status_bounds{ 0, 0, 0, 0 };
+        sf::FloatRect status_bounds_f{ 0.0f, 0.0f, 0.0f, 0.0f };
 
-        sf::IntRect cells_rect { 0, 0, 0, 0 };
+        sf::IntRect cells_rect{ 0, 0, 0, 0 };
 
         BoardPosVec_t default_wall_positions;
 
-    private:
+      private:
         void regionCalculations(const GameConfig & config);
         void cellCalculations(const GameConfig & config);
 
-    private:
+      private:
         std::set<BoardPos_t> all_valid_positions;
         std::vector<sf::Vertex> cell_quad_verts;
         std::vector<std::vector<sf::IntRect>> cell_bounds_lut;
@@ -96,7 +96,7 @@ namespace snake
     // Parameters that CANNOT change during play, but could be customized before a new game starts.
     class GameConfig
     {
-    public:
+      public:
         GameConfig() = default;
 
         // no reset() function because these are the values that are never supposed to change
@@ -107,42 +107,42 @@ namespace snake
         bool isTest() const
         {
             return (
-                is_god_mode || is_speed_test || is_level_test || is_level_test_manual
-                || is_all_video_mode_test);
+                is_god_mode || is_speed_test || is_level_test || is_level_test_manual ||
+                is_all_video_mode_test);
         }
 
-        bool is_god_mode { false };
-        bool is_speed_test { false };
-        bool is_level_test { false };
-        bool is_level_test_manual { false };
-        bool is_all_video_mode_test { false };
+        bool is_god_mode{ false };
+        bool is_speed_test{ false };
+        bool is_level_test{ false };
+        bool is_level_test_manual{ false };
+        bool is_all_video_mode_test{ false };
 
-        std::filesystem::path media_path { std::filesystem::current_path() / "media" };
+        std::filesystem::path media_path{ std::filesystem::current_path() / "media" };
 
-        unsigned int sf_window_style { static_cast<unsigned>(sf::Style::Fullscreen) };
+        unsigned int sf_window_style{ static_cast<unsigned>(sf::Style::Fullscreen) };
 
-        sf::Vector2u resolution { sf::VideoMode::getDesktopMode().width,
-                                  sf::VideoMode::getDesktopMode().height };
+        sf::Vector2u resolution{ sf::VideoMode::getDesktopMode().width,
+                                 sf::VideoMode::getDesktopMode().height };
 
-        unsigned int frame_rate_limit { 60u }; // zero means there is no limit
+        unsigned int frame_rate_limit{ 60u }; // zero means there is no limit
 
-        sf::Color window_background_color { sf::Color::Black };
-        sf::Color board_background_color { 25, 0, 5 };
-        sf::Color alt_board_background_color { 37, 0, 23 };
-        sf::Color board_outline_color { 230, 190, 180, 100 };
+        sf::Color window_background_color{ sf::Color::Black };
+        sf::Color board_background_color{ 25, 0, 5 };
+        sf::Color alt_board_background_color{ 37, 0, 23 };
+        sf::Color board_outline_color{ 230, 190, 180, 100 };
 
-        float cell_size_window_ratio { 0.0175f };
+        float cell_size_window_ratio{ 0.0175f };
         // float board_size_reduction_ratio{ 1.0f }; // { 0.9f };
-        float status_bounds_height_ratio { 0.02f };
+        float status_bounds_height_ratio{ 0.02f };
 
-        float cell_anim_grow_ratio { 1.04f };
-        float cell_anim_alpha_shrink_ratio { 0.95f };
+        float cell_anim_grow_ratio{ 1.04f };
+        float cell_anim_alpha_shrink_ratio{ 0.95f };
 
-        bool will_put_black_border_around_cells { true };
+        bool will_put_black_border_around_cells{ true };
 
-        float initial_volume { 50.0f };
-        float eat_sfx_pitch_start { 0.4f };
-        float eat_sfx_pitch_adj { 0.033f };
+        float initial_volume{ 50.0f };
+        float eat_sfx_pitch_start{ 0.4f };
+        float eat_sfx_pitch_adj{ 0.033f };
     };
 
     //
@@ -152,20 +152,20 @@ namespace snake
         float completedRatio() const;
         std::size_t remainingToEat() const { return (eat_count_required - eat_count_current); }
         //
-        std::size_t number { 0 };
-        BoardPos_t start_pos { 0, 0 };
+        std::size_t number{ 0 };
+        BoardPos_t start_pos{ 0, 0 };
 
-        std::size_t eat_count_current { 0 };
-        std::size_t eat_count_required { 0 };
+        std::size_t eat_count_current{ 0 };
+        std::size_t eat_count_required{ 0 };
 
-        std::size_t tail_start_length { 0 };
-        std::size_t tail_grow_after_eat { 0 };
-        std::size_t pickups_visible_at_start_count { 0 };
+        std::size_t tail_start_length{ 0 };
+        std::size_t tail_grow_after_eat{ 0 };
+        std::size_t pickups_visible_at_start_count{ 0 };
 
-        float sec_per_turn_fastest { 0.0f };
-        float sec_per_turn_slowest { 0.0f };
-        float sec_per_turn_current { 0.0f };
-        float sec_per_turn_shrink_per_eat { 0.0f };
+        float sec_per_turn_fastest{ 0.0f };
+        float sec_per_turn_slowest{ 0.0f };
+        float sec_per_turn_current{ 0.0f };
+        float sec_per_turn_shrink_per_eat{ 0.0f };
 
         // tile::Job tiles;
         BoardPosVec_t wall_positions;
@@ -175,7 +175,7 @@ namespace snake
     // Parameters that change per level and define how hard it is to play the game.
     class Level
     {
-    public:
+      public:
         Level() = default;
 
         // set all default values, but IS NOT READY TO PLAY
@@ -190,17 +190,17 @@ namespace snake
 
         // static void testLevelSetupsSkippingRepeats(Context & context);
 
-    private:
+      private:
         BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
         TeleportWallPosVec_t makeTeleportPositionsForLevelNumber(Context & context) const;
         BoardPos_t findNextFoodPos(const Context & context) const;
 
-    private:
+      private:
         LevelDetails m_details;
 
         // static inline const std::size_t levels_per_inc_eat_required{ 5 };
-        static inline const float sec_per_turn_shrink_per_eat_min { 0.2f };
-        static inline const float sec_per_turn_shrink_per_level { 0.99f };
+        static inline const float sec_per_turn_shrink_per_eat_min{ 0.2f };
+        static inline const float sec_per_turn_shrink_per_level{ 0.99f };
     };
 
     //
@@ -214,7 +214,7 @@ namespace snake
     // Parameters that are specific to a game currently being played.
     class GameInPlay
     {
-    public:
+      public:
         GameInPlay() = default;
 
         std::string toString() const;
@@ -237,20 +237,20 @@ namespace snake
 
         std::string statusString(const std::string & prefix) const;
 
-    private:
+      private:
         void handlePickupFood(Context & context, const BoardPos_t & pos, const Piece piece);
         void handlePickupLethal(Context & context, const BoardPos_t & pos, const Piece piece);
         int calcLevelCompleteScoreBonus() const;
         int scoreAdj(const Context & context, const int adj);
 
-    private:
+      private:
         Level m_level;
-        int m_score { 0 };
-        bool m_isGameOver { true };
-        WhoIsPlaying m_whoIsPlaying { WhoIsPlaying::Human };
-        float m_eatSfxPitch { 1.0f };
+        int m_score{ 0 };
+        bool m_isGameOver{ true };
+        WhoIsPlaying m_whoIsPlaying{ WhoIsPlaying::Human };
+        float m_eatSfxPitch{ 1.0f };
 
-        static inline const float m_aiPlayVolume { 5.0f };
+        static inline const float m_aiPlayVolume{ 5.0f };
     };
 } // namespace snake
 

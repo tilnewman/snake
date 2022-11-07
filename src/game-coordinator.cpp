@@ -47,7 +47,7 @@ namespace snake
               m_statusRegion,
               m_teleportEffect)
         , m_runClock()
-    { }
+    {}
 
     void GameCoordinator::setup(const GameConfig & configParam)
     {
@@ -76,15 +76,15 @@ namespace snake
         m_soundPlayer.reset((m_config.media_path / "sfx").string());
 
         m_soundPlayer.load({
-            "rpg-game-over.ogg", // death
-            "explode-puff.ogg", // text message appear
-            "tap-1-a.ogg", // keystroke/turn
-            "miss.ogg", // miss food by one space
-            "shine.ogg", // eat food
-            "step-smash-yuck.ogg", // eat self
-            "mario-pause.ogg", // pause
+            "rpg-game-over.ogg",     // death
+            "explode-puff.ogg",      // text message appear
+            "tap-1-a.ogg",           // keystroke/turn
+            "miss.ogg",              // miss food by one space
+            "shine.ogg",             // eat food
+            "step-smash-yuck.ogg",   // eat self
+            "mario-pause.ogg",       // pause
             "mario-break-block.ogg", // wall hit
-            "level-intro.ogg" // start level
+            "level-intro.ogg"        // start level
         });
 
         m_soundPlayer.volume(m_config.initial_volume);
@@ -123,8 +123,8 @@ namespace snake
 
         // verify the window size is what was specified/expected,
         // otherwise all the size/positions calculations will be wrong
-        const sf::Vector2u windowExpectedSize { m_config.resolution };
-        const sf::Vector2u windowActualSize { m_window.getSize() };
+        const sf::Vector2u windowExpectedSize{ m_config.resolution };
+        const sf::Vector2u windowActualSize{ m_window.getSize() };
 
         if (windowActualSize != windowExpectedSize)
         {
@@ -134,7 +134,7 @@ namespace snake
 
         if (m_config.sf_window_style != sf::Style::None)
         {
-            const auto desktopVideoMode { sf::VideoMode::getDesktopMode() };
+            const auto desktopVideoMode{ sf::VideoMode::getDesktopMode() };
             const sf::Vector2u desktopScreenSize(desktopVideoMode.width, desktopVideoMode.height);
             if (windowActualSize != desktopScreenSize)
             {
@@ -174,9 +174,9 @@ namespace snake
 
     void GameCoordinator::repeatPlayForAllVideoModes(const GameConfig & configOrig)
     {
-        const unsigned int desktopBitsPerPixel { sf::VideoMode::getDesktopMode().bitsPerPixel };
+        const unsigned int desktopBitsPerPixel{ sf::VideoMode::getDesktopMode().bitsPerPixel };
 
-        std::vector<sf::VideoMode> videoModes { sf::VideoMode::getFullscreenModes() };
+        std::vector<sf::VideoMode> videoModes{ sf::VideoMode::getFullscreenModes() };
         std::reverse(std::begin(videoModes), std::end(videoModes));
 
         for (const sf::VideoMode & vm : videoModes)
@@ -191,7 +191,7 @@ namespace snake
 
             std::cout << '\n';
 
-            GameConfig configForThisTest { configOrig };
+            GameConfig configForThisTest{ configOrig };
             configForThisTest.resolution.x = vm.width;
             configForThisTest.resolution.y = vm.height;
 
@@ -200,7 +200,9 @@ namespace snake
 
             // remove old events
             sf::Event event;
-            while (m_window.pollEvent(event)) { }
+            while (m_window.pollEvent(event))
+            {
+            }
         }
     }
 
@@ -208,7 +210,7 @@ namespace snake
     {
         sf::Clock frameClock;
         sf::Clock periodClock;
-        std::size_t frameCounter { 0 };
+        std::size_t frameCounter{ 0 };
 
         m_runClock.restart();
 
@@ -231,13 +233,13 @@ namespace snake
     {
         ++frameCounter;
 
-        const float elapsedSec { periodClock.getElapsedTime().asSeconds() };
+        const float elapsedSec{ periodClock.getElapsedTime().asSeconds() };
         if (elapsedSec < 1.0f)
         {
             return;
         }
 
-        const float fps { static_cast<float>(frameCounter) / elapsedSec };
+        const float fps{ static_cast<float>(frameCounter) / elapsedSec };
 
         frameCounter = 0;
         periodClock.restart();
@@ -250,8 +252,8 @@ namespace snake
         // There are just too many ways for food to either be destroyed or unreachable.
         // So this check prevents players from being trapped in a level requiring them to eat food
         // that cannot be reached.
-        if ((m_stateMachine.stateEnum() == State::Play) && !m_game.isGameOver()
-            && !m_game.isLevelComplete())
+        if ((m_stateMachine.stateEnum() == State::Play) && !m_game.isGameOver() &&
+            !m_game.isLevelComplete())
         {
             if ((m_game.level().remainingToEat() > 0) && (m_board.countPieces(Piece::Food) == 0))
             {
@@ -284,8 +286,8 @@ namespace snake
 
     void GameCoordinator::printDebugStatus()
     {
-        const float runTimeSec { std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f)
-                                 / 100.0f };
+        const float runTimeSec{ std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f) /
+                                100.0f };
 
         std::cout << std::endl;
 

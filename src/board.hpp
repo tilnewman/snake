@@ -35,7 +35,7 @@ namespace snake
         PosEntry(const Piece piece, const std::size_t quadIndex) noexcept
             : piece_enum(piece)
             , quad_index(quadIndex)
-        { }
+        {}
 
         Piece piece_enum;
         std::size_t quad_index;
@@ -47,9 +47,9 @@ namespace snake
 
     struct AdjacentInfo
     {
-        Piece piece { Piece::Wall };
-        BoardPos_t pos { BoardPosInvalid };
-        sf::Keyboard::Key dir { keys::not_a_key };
+        Piece piece{ Piece::Wall };
+        BoardPos_t pos{ BoardPosInvalid };
+        sf::Keyboard::Key dir{ keys::not_a_key };
     };
 
     using AdjacentInfoOpt_t = std::optional<AdjacentInfo>;
@@ -226,7 +226,7 @@ namespace snake
 
         std::size_t pieceCount(const Piece pieceToFind) const
         {
-            std::size_t count { 0 };
+            std::size_t count{ 0 };
             for (const AdjacentInfo & ap : adjacents)
             {
                 if (pieceToFind == ap.piece)
@@ -240,7 +240,7 @@ namespace snake
 
         std::size_t piecesCount(const std::initializer_list<Piece> & list) const
         {
-            std::size_t count { 0 };
+            std::size_t count{ 0 };
             for (const Piece piece : list)
             {
                 count += pieceCount(piece);
@@ -251,14 +251,14 @@ namespace snake
 
         //
 
-        BoardPos_t center_pos { BoardPosInvalid };
+        BoardPos_t center_pos{ BoardPosInvalid };
         std::vector<AdjacentInfo> adjacents;
     };
 
     //
     class Board
     {
-    public:
+      public:
         Board() = default;
 
         void reset();
@@ -324,7 +324,7 @@ namespace snake
 
         const Surroundings surroundings(const BoardPos_t & centerPos) const;
 
-    private:
+      private:
         PieceBase & makePiece(Context &, const Piece piece, const BoardPos_t & pos);
         std::size_t findOrMakeFreeQuadIndex();
 
@@ -350,9 +350,9 @@ namespace snake
         // sf::Vector2f appendTeleportLineVerts(
         //    const Context &, const sf::FloatRect & bounds, const BoardPos_t & firstPos);
 
-    private:
-        static inline const sf::Color m_freeVertColor { sf::Color::Transparent };
-        static inline const sf::Vertex m_freeQuadVertex { { 0.0f, 0.0f }, m_freeVertColor };
+      private:
+        static inline const sf::Color m_freeVertColor{ sf::Color::Transparent };
+        static inline const sf::Vertex m_freeQuadVertex{ { 0.0f, 0.0f }, m_freeVertColor };
 
         std::map<BoardPos_t, PosEntry> m_posEntryMap;
         std::vector<sf::Vertex> m_pieceVerts;
@@ -364,7 +364,7 @@ namespace snake
         std::vector<PoisonPiece> m_poisonPieces;
 
         sf::Sprite m_candleSprite;
-        sf::VertexArray m_candleBlackSideQuads { sf::Quads };
+        sf::VertexArray m_candleBlackSideQuads{ sf::Quads };
 
         std::vector<sf::Vertex> m_teleportQuads;
 

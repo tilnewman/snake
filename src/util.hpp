@@ -122,7 +122,7 @@ namespace util
         }
         else
         {
-            const T diffAbs { abs(right - left) };
+            const T diffAbs{ abs(right - left) };
 
             if (diffAbs < T(1))
             {
@@ -130,7 +130,7 @@ namespace util
             }
             else
             {
-                const T maxForEpsilon { max(abs(left), abs(right), T(1)) };
+                const T maxForEpsilon{ max(abs(left), abs(right), T(1)) };
                 return (diffAbs < (maxForEpsilon * float_compare_epsilon<T>));
             }
         }
@@ -173,9 +173,8 @@ namespace util
         static_assert(std::is_floating_point_v<Ratio_t>);
 
         return (
-            outMin
-            + static_cast<Number_t>(
-                ratio * (static_cast<Ratio_t>(outMax) - static_cast<Ratio_t>(outMin))));
+            outMin + static_cast<Number_t>(
+                         ratio * (static_cast<Ratio_t>(outMax) - static_cast<Ratio_t>(outMin))));
     }
 
     template <typename Number_t, typename Ratio_t = float>
@@ -197,7 +196,7 @@ namespace util
         return map(std::clamp(ratio, 0.0f, 1.0f), 0.0f, 1.0f, sf::Uint8(0), sf::Uint8(255));
     }
 
-    constexpr std::size_t verts_per_quad { 4 };
+    constexpr std::size_t verts_per_quad{ 4 };
 
     template <typename Container_t>
     [[nodiscard]] inline std::string containerToString(
@@ -207,7 +206,7 @@ namespace util
     {
         std::ostringstream ss;
 
-        const auto iterBegin { std::begin(container) };
+        const auto iterBegin{ std::begin(container) };
         for (auto iter(iterBegin); std::end(container) != iter; ++iter)
         {
             if (iterBegin != iter)
@@ -218,7 +217,7 @@ namespace util
             ss << *iter;
         }
 
-        const std::string content { ss.str() };
+        const std::string content{ ss.str() };
 
         if (content.empty())
         {
@@ -226,11 +225,11 @@ namespace util
         }
         else
         {
-            const std::string wrapFront { (wrap.size() >= 1) ? std::string(1, wrap[0])
-                                                             : std::string() };
-
-            const std::string wrapBack { (wrap.size() >= 2) ? std::string(1, wrap[1])
+            const std::string wrapFront{ (wrap.size() >= 1) ? std::string(1, wrap[0])
                                                             : std::string() };
+
+            const std::string wrapBack{ (wrap.size() >= 2) ? std::string(1, wrap[1])
+                                                           : std::string() };
 
             return (wrapFront + content + wrapBack);
         }
@@ -341,8 +340,8 @@ namespace sf
     [[nodiscard]] bool operator<(const sf::Rect<T> & r1, const sf::Rect<T> & r2)
     {
         return (
-            std::tie(r1.top, r1.left, r1.width, r1.height)
-            < std::tie(r2.top, r2.left, r2.width, r2.height));
+            std::tie(r1.top, r1.left, r1.width, r1.height) <
+            std::tie(r2.top, r2.left, r2.width, r2.height));
     }
 
     //
@@ -406,14 +405,14 @@ namespace util
     [[nodiscard]] inline std::string makeSupportedVideoModesString(
         const bool willSkipDiffBitsPerPixel = false, const std::string & separator = "\n")
     {
-        const unsigned int desktopBitsPerPixel { sf::VideoMode::getDesktopMode().bitsPerPixel };
+        const unsigned int desktopBitsPerPixel{ sf::VideoMode::getDesktopMode().bitsPerPixel };
 
-        std::vector<sf::VideoMode> videoModes { sf::VideoMode::getFullscreenModes() };
+        std::vector<sf::VideoMode> videoModes{ sf::VideoMode::getFullscreenModes() };
         std::reverse(std::begin(videoModes), std::end(videoModes));
 
-        const std::size_t modeCountOrig { videoModes.size() };
+        const std::size_t modeCountOrig{ videoModes.size() };
 
-        std::size_t count { 0 };
+        std::size_t count{ 0 };
         std::ostringstream ss;
         for (const sf::VideoMode & vm : videoModes)
         {
@@ -431,7 +430,7 @@ namespace util
             ++count;
         }
 
-        const std::size_t modeCountReturned { count };
+        const std::size_t modeCountReturned{ count };
 
         ss << separator << "(total_supported=" << modeCountOrig << ")";
         ss << separator << "(total_listed=" << modeCountReturned << ")";
@@ -445,8 +444,8 @@ namespace util
     static constexpr bool isBitSet(const T bits, const U toCheck) noexcept
     {
         static_assert(
-            (std::is_unsigned_v<T>)
-            || (std::is_enum_v<T> && std::is_unsigned_v<typename std::underlying_type_t<T>>));
+            (std::is_unsigned_v<T>) ||
+            (std::is_enum_v<T> && std::is_unsigned_v<typename std::underlying_type_t<T>>));
 
         static_assert(!std::is_same_v<std::remove_cv<T>, bool>);
 
@@ -465,8 +464,8 @@ namespace util
     static constexpr void setBit(T & bits, const U toSet) noexcept
     {
         static_assert(
-            (std::is_unsigned_v<T>)
-            || (std::is_enum_v<T> && std::is_unsigned_v<std::underlying_type_t<T>>));
+            (std::is_unsigned_v<T>) ||
+            (std::is_enum_v<T> && std::is_unsigned_v<std::underlying_type_t<T>>));
 
         static_assert(!std::is_same_v<std::remove_cv<T>, bool>);
 
@@ -484,7 +483,7 @@ namespace util
     template <typename T, typename U>
     static constexpr T setBitCopy(const T & bits, const U toSet) noexcept
     {
-        T copy { bits };
+        T copy{ bits };
         setBit(copy, toSet);
         return copy;
     }
@@ -498,7 +497,7 @@ namespace util
         static_assert(std::is_unsigned_v<T>);
         static_assert(!std::is_same_v<std::remove_cv<T>, bool>);
 
-        std::size_t count { 0 };
+        std::size_t count{ 0 };
         for (; number; count++)
         {
             number &= (number - 1);
@@ -528,7 +527,7 @@ namespace util
 
     // math
 
-    constexpr float pi { 3.1415926535897932f };
+    constexpr float pi{ 3.1415926535897932f };
 
     [[nodiscard]] constexpr float degreesToRadians(const float degrees) noexcept
     {
@@ -540,7 +539,7 @@ namespace util
         return (radians * (180.0f / pi));
     }
 
-    constexpr float tiny { 0.0001f };
+    constexpr float tiny{ 0.0001f };
 
     [[nodiscard]] inline bool isAbsTiny(const float value) noexcept
     {
@@ -679,7 +678,7 @@ namespace util
     T makeEvenCopy(const T number, const bool willAdd)
     {
         static_assert(std::is_integral_v<T>);
-        T copy { number };
+        T copy{ number };
         makeEven(copy, willAdd);
         return copy;
     }
@@ -749,7 +748,7 @@ namespace util
     [[nodiscard]] inline sf::Vector2f normalize(
         const sf::Vector2f & vec, const sf::Vector2f & returnOnError = { 0.0f, 0.0f }) noexcept
     {
-        const float mag { magnitude(vec) };
+        const float mag{ magnitude(vec) };
 
         if (mag < tiny)
         {
@@ -770,9 +769,9 @@ namespace util
     // degrees, assumes 0/360 degrees aims right, and positive degress turns clockwise
     [[nodiscard]] inline float angleFromVector(const sf::Vector2f & velocity)
     {
-        const sf::Vector2f posDiffNormal { normalize(velocity) };
-        const float angleRadians { std::acosf(posDiffNormal.x) };
-        const float angleDegrees { radiansToDegrees(angleRadians) };
+        const sf::Vector2f posDiffNormal{ normalize(velocity) };
+        const float angleRadians{ std::acosf(posDiffNormal.x) };
+        const float angleDegrees{ radiansToDegrees(angleRadians) };
 
         // vertical or Y values that are positive move down, so have to flip
         if (velocity.y < 0.0f)
@@ -794,7 +793,7 @@ namespace util
     template <typename T, typename U = T>
     [[nodiscard]] float angleFromTo(const T & from, const U & to)
     {
-        sf::Vector2f fromPos { 0.0f, 0.0f };
+        sf::Vector2f fromPos{ 0.0f, 0.0f };
         if constexpr (std::is_same_v<std::remove_cv_t<T>, sf::Vector2f>)
         {
             fromPos = from;
@@ -804,7 +803,7 @@ namespace util
             fromPos = center(from);
         }
 
-        sf::Vector2f toPos { 0.0f, 0.0f };
+        sf::Vector2f toPos{ 0.0f, 0.0f };
         if constexpr (std::is_same_v<std::remove_cv_t<U>, sf::Vector2f>)
         {
             toPos = to;
@@ -887,18 +886,18 @@ namespace util
     void fit(T & thing, const sf::Vector2f & size)
     {
         // skip if source size is zero (or close) to avoid dividing by zero below
-        const sf::FloatRect localBounds { thing.getLocalBounds() };
+        const sf::FloatRect localBounds{ thing.getLocalBounds() };
         if ((localBounds.width < 1.0f) || (localBounds.height < 1.0f))
         {
             return;
         }
 
-        const float scaleHoriz { size.x / localBounds.width };
+        const float scaleHoriz{ size.x / localBounds.width };
         thing.setScale(scaleHoriz, scaleHoriz);
 
         if (thing.getGlobalBounds().height > size.y)
         {
-            const float scaleVert { size.y / localBounds.height };
+            const float scaleVert{ size.y / localBounds.height };
             thing.setScale(scaleVert, scaleVert);
         }
 
@@ -976,7 +975,7 @@ namespace util
         Container_t & verts,
         const sf::Color & color = sf::Color::Transparent)
     {
-        std::size_t origSize { 0 };
+        std::size_t origSize{ 0 };
         if constexpr (std::is_same_v<std::remove_cv_t<Container_t>, sf::VertexArray>)
         {
             origSize = verts.getVertexCount();
@@ -1156,12 +1155,12 @@ namespace util
         }
 
         auto calcColorValue = [ratio](const sf::Uint8 fromVal, const sf::Uint8 toVal) {
-            const float diff { static_cast<float>(toVal) - static_cast<float>(fromVal) };
-            const float finalValue { static_cast<float>(fromVal) + (diff * ratio) };
+            const float diff{ static_cast<float>(toVal) - static_cast<float>(fromVal) };
+            const float finalValue{ static_cast<float>(fromVal) + (diff * ratio) };
             return static_cast<sf::Uint8>(finalValue);
         };
 
-        sf::Color color { toColor };
+        sf::Color color{ toColor };
         color.r = calcColorValue(fromColor.r, toColor.r);
         color.g = calcColorValue(fromColor.g, toColor.g);
         color.b = calcColorValue(fromColor.b, toColor.b);
@@ -1196,12 +1195,12 @@ namespace util
                 return fromVal;
             }
 
-            const int stepInt { static_cast<int>(stepSize) };
-            const int fromInt { static_cast<int>(fromVal) };
-            const int toInt { static_cast<int>(toVal) };
-            const int diff { std::min(std::abs(toInt - fromInt), stepInt) };
+            const int stepInt{ static_cast<int>(stepSize) };
+            const int fromInt{ static_cast<int>(fromVal) };
+            const int toInt{ static_cast<int>(toVal) };
+            const int diff{ std::min(std::abs(toInt - fromInt), stepInt) };
 
-            int finalValue { fromInt };
+            int finalValue{ fromInt };
             if (toVal > fromVal)
             {
                 finalValue += diff;
@@ -1214,7 +1213,7 @@ namespace util
             return static_cast<sf::Uint8>(std::clamp(finalValue, 0, 255));
         };
 
-        sf::Color color { toColor };
+        sf::Color color{ toColor };
         color.r = calcColorValue(fromColor.r, toColor.r);
         color.g = calcColorValue(fromColor.g, toColor.g);
         color.b = calcColorValue(fromColor.b, toColor.b);
@@ -1246,12 +1245,12 @@ namespace util
             return ss.str();
         }
 
-        std::size_t count { 0 };
-        T min { T(0) };
-        T max { T(0) };
-        T sum { T(0) };
-        double avg { 0.0 };
-        double sdv { 0.0 };
+        std::size_t count{ 0 };
+        T min{ T(0) };
+        T max{ T(0) };
+        T sum{ T(0) };
+        double avg{ 0.0 };
+        double sdv{ 0.0 };
     };
 
     template <typename T>
@@ -1294,10 +1293,10 @@ namespace util
             return stats;
         }
 
-        double deviationSum { 0.0 };
+        double deviationSum{ 0.0 };
         for (const T number : container)
         {
-            const double diff { static_cast<double>(number) - stats.avg };
+            const double diff{ static_cast<double>(number) - stats.avg };
             deviationSum += (diff * diff);
         }
 
@@ -1313,7 +1312,7 @@ namespace util
         explicit MediaPath(const std::filesystem::path & pathParam)
             : path(pathParam)
             , error_message(setErrorMessage(pathParam))
-        { }
+        {}
 
         bool isValid() const { return error_message.empty(); }
 
@@ -1348,17 +1347,17 @@ namespace util
         static_assert(std::is_arithmetic_v<U>);
         static_assert(!std::is_same_v<std::remove_cv_t<U>, bool>);
 
-        if (!(den > U { 0 }))
+        if (!(den > U{ 0 }))
         {
             return 0.0f;
         }
 
-        long double result { (static_cast<long double>(num) / static_cast<long double>(den)) };
+        long double result{ (static_cast<long double>(num) / static_cast<long double>(den)) };
         result *= 100.0L;
 
         if (afterDotCount > 0)
         {
-            const long double afterDotMult { 10.0L * static_cast<long double>(afterDotCount) };
+            const long double afterDotMult{ 10.0L * static_cast<long double>(afterDotCount) };
             if (afterDotMult > 0.0L)
             {
                 result *= afterDotMult;

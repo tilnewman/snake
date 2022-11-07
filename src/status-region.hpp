@@ -35,7 +35,7 @@ namespace snake
 
     class StatusText : public sf::Drawable
     {
-    public:
+      public:
         StatusText() = default;
 
         StatusText(
@@ -62,7 +62,7 @@ namespace snake
                 updateNumber(T(0));
             }
 
-            std::string numberStr { std::to_string(number) };
+            std::string numberStr{ std::to_string(number) };
             if (numberStr.length() < m_digitCount)
             {
                 numberStr.insert(0, (m_digitCount - numberStr.length()), '0');
@@ -70,7 +70,7 @@ namespace snake
 
             if ((m_digitCount > 3) && ((m_digitCount % 3) == 0))
             {
-                std::string temp { numberStr };
+                std::string temp{ numberStr };
                 std::reverse(std::begin(temp), std::end(temp));
 
                 std::size_t i(3);
@@ -105,13 +105,13 @@ namespace snake
         void draw(sf::RenderTarget &, sf::RenderStates) const override;
         sf::Vector2f scale() const { return m_text.getScale(); }
 
-    private:
+      private:
         sf::Text m_text;
         std::string m_prefix;
-        float m_height { 0.0f };
-        std::size_t m_digitCount { 0 };
+        float m_height{ 0.0f };
+        std::size_t m_digitCount{ 0 };
 
-        static inline const float m_condensedRatio { 0.7f };
+        static inline const float m_condensedRatio{ 0.7f };
     };
 
     //
@@ -120,7 +120,7 @@ namespace snake
     // is required, is because we needed a State that could be constructed without Context.
     class StatusRegion : public IRegion
     {
-    public:
+      public:
         StatusRegion() = default;
         virtual ~StatusRegion() override = default;
 
@@ -128,13 +128,13 @@ namespace snake
 
         sf::FloatRect bounds() const override { return m_statusBounds; }
         sf::FloatRect textBounds() const { return m_textBounds; }
-        void update(Context &, const float) override { }
-        void handleEvent(Context &, const sf::Event &) override { }
+        void update(Context &, const float) override {}
+        void handleEvent(Context &, const sf::Event &) override {}
         void draw(sf::RenderTarget &, sf::RenderStates) const override;
 
         void updateText(const Context & context) override;
 
-    private:
+      private:
         sf::FloatRect m_statusBounds;
         sf::FloatRect m_textBounds;
 

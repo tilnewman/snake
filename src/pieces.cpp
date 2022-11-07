@@ -23,7 +23,7 @@ namespace snake
         , m_position(pos)
         , m_turnDurationSec(timeBetweenTurnsSec)
         , m_turnElapsedSec(0.0f)
-    { }
+    {}
 
     std::string PieceBase::toString() const
     {
@@ -277,12 +277,12 @@ namespace snake
             // and assume we will never reach the current target and pick a new on.
             // A lot of different values would easily work here, but basing it on
             // the number of cells/board-size makes the most sense.
-            const std::size_t movesMax {
-                20_st
-                + (static_cast<std::size_t>(std::sqrt(context.layout.cell_count_total)) * 2_st)
+            const std::size_t movesMax{
+                20_st +
+                (static_cast<std::size_t>(std::sqrt(context.layout.cell_count_total)) * 2_st)
             };
 
-            const std::size_t movesMin { movesMax / 2 };
+            const std::size_t movesMin{ movesMax / 2 };
 
             // std::cout << "\n\t m_stMovesTowardMaxBEFORE      = "
             //           << m_stMovesTowardCurrentTargetCountMax;
@@ -353,13 +353,13 @@ namespace snake
         targets.reserve(1000);
         targets.clear();
 
-        const sf::Vector2i posSelf { position() };
+        const sf::Vector2i posSelf{ position() };
 
         for (const BoardPos_t & foodPos : context.board.findPieces(Piece::Food))
         {
-            const sf::Vector2i posFood { foodPos };
-            const sf::Vector2i posDiff { posFood - posSelf };
-            const int distance { std::abs(posDiff.x) + std::abs(posDiff.y) };
+            const sf::Vector2i posFood{ foodPos };
+            const sf::Vector2i posDiff{ posFood - posSelf };
+            const int distance{ std::abs(posDiff.x) + std::abs(posDiff.y) };
             targets.push_back({ distance, foodPos });
         }
 
@@ -464,7 +464,7 @@ namespace snake
         , piece_opt(context.board.pieceEnumOptAt(pos))
         , dist_to_target(0)
     {
-        const sf::Vector2i posDiff { targetPos - pos };
+        const sf::Vector2i posDiff{ targetPos - pos };
         dist_to_target = (std::abs(posDiff.x) + std::abs(posDiff.y));
     }
 

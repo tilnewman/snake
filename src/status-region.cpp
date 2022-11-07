@@ -58,7 +58,7 @@ namespace snake
         }
 
         m_height = newHeight;
-        const float scale { m_height / m_text.getLocalBounds().height };
+        const float scale{ m_height / m_text.getLocalBounds().height };
         m_text.setScale((scale * m_condensedRatio), scale);
         util::setOriginToPosition(m_text);
     }
@@ -78,7 +78,7 @@ namespace snake
         m_statusBounds = context.layout.status_bounds_f;
         m_textBounds = util::scaleRectInPlaceCopy(m_statusBounds, { 0.95f, 0.65f });
 
-        float textHeight { m_textBounds.height };
+        float textHeight{ m_textBounds.height };
 
         // all kinds of text colors
         const sf::Color yellow(230, 190, 50);
@@ -92,13 +92,13 @@ namespace snake
         // m_texts.emplace_back(context, "LEFT", 3, creamSkin, textHeight);
         m_texts.emplace_back(context, "FPS", 3, creamCool, textHeight);
 
-        const float betweenPadCount { static_cast<float>(m_texts.size() - 1) };
-        const float betweenPadMin { m_statusBounds.height };
-        const float betweenPadMinSum { betweenPadMin * betweenPadCount };
-        const float heightDecrement { 0.005f };
+        const float betweenPadCount{ static_cast<float>(m_texts.size() - 1) };
+        const float betweenPadMin{ m_statusBounds.height };
+        const float betweenPadMinSum{ betweenPadMin * betweenPadCount };
+        const float heightDecrement{ 0.005f };
 
-        float highestTopPos { util::bottom(m_statusBounds) }; // anything taller than this is fine
-        float totalLength { 0.0f };
+        float highestTopPos{ util::bottom(m_statusBounds) }; // anything taller than this is fine
+        float totalLength{ 0.0f };
         do
         {
             totalLength = betweenPadMinSum;
@@ -116,9 +116,9 @@ namespace snake
                     statusText.height(textHeight);
                 }
 
-                const float posTop { (context.layout.board_bounds_f.top
-                                      - statusText.bounds().height)
-                                     + (m_statusBounds.height / 23.0f) };
+                const float posTop{ (context.layout.board_bounds_f.top -
+                                     statusText.bounds().height) +
+                                    (m_statusBounds.height / 23.0f) };
 
                 statusText.position(0.0f, posTop);
 
@@ -131,10 +131,10 @@ namespace snake
             }
         } while (totalLength > m_textBounds.width);
 
-        const float emptyHorizSpace { m_textBounds.width - totalLength };
-        const float betweenPadActual { betweenPadMin + (emptyHorizSpace / betweenPadCount) };
+        const float emptyHorizSpace{ m_textBounds.width - totalLength };
+        const float betweenPadActual{ betweenPadMin + (emptyHorizSpace / betweenPadCount) };
 
-        float posLeft { m_textBounds.left };
+        float posLeft{ m_textBounds.left };
         for (StatusText & statusText : m_texts)
         {
             statusText.position(posLeft, highestTopPos);

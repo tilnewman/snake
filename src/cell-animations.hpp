@@ -21,7 +21,7 @@ namespace snake
 
     class Animations : public sf::Drawable
     {
-    public:
+      public:
         Animations()
         {
             m_growFadeSprites.reserve(100);
@@ -42,7 +42,7 @@ namespace snake
         {
             for (sf::Sprite & sprite : m_growFadeSprites)
             {
-                const sf::FloatRect newRect { util::scaleRectInPlaceCopy(
+                const sf::FloatRect newRect{ util::scaleRectInPlaceCopy(
                     sprite.getGlobalBounds(), 1.05f) };
 
                 util::fitAndCenterInside(sprite, newRect);
@@ -103,7 +103,7 @@ namespace snake
                 std::end(m_growFadeTexts));
         }
 
-    private:
+      private:
         void setupCellTexture()
         {
             sf::Image image;
@@ -111,7 +111,7 @@ namespace snake
             m_cellSizeTexture.loadFromImage(image);
         }
 
-    private:
+      private:
         sf::Texture m_cellSizeTexture;
         std::vector<sf::Sprite> m_growFadeSprites;
         std::vector<sf::Text> m_growFadeTexts;

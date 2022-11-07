@@ -52,7 +52,7 @@ namespace snake
             , state(sta)
             , status(stat)
             , teleporter(tele)
-        { }
+        {}
 
         Context(const Context &) = delete;
         Context(Context &&) = delete;
@@ -73,7 +73,7 @@ namespace snake
         IRegion & status;
         TeleportEffect & teleporter;
 
-        std::size_t fps { 0 };
+        std::size_t fps{ 0 };
     };
 } // namespace snake
 

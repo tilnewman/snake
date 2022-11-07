@@ -14,15 +14,15 @@ namespace util
 {
     class Random
     {
-    public:
+      public:
         Random()
-            : Random(std::random_device {}())
-        { }
+            : Random(std::random_device{}())
+        {}
 
         explicit Random(const std::random_device::result_type seed)
             : m_engine()
         {
-            std::seed_seq seedSequence { seed };
+            std::seed_seq seedSequence{ seed };
             m_engine.seed(seedSequence);
 
             // Warm-up-skipping is good standard practice when working with PRNGs, but the Mersenne
@@ -115,7 +115,7 @@ namespace util
                 throw std::runtime_error(message);
             }
 
-            const auto offset { zeroTo(std::distance(first, last) - 1) };
+            const auto offset{ zeroTo(std::distance(first, last) - 1) };
             std::advance(first, static_cast<std::ptrdiff_t>(offset));
             return *first;
         }
@@ -168,7 +168,7 @@ namespace util
             // mid-point (0.5) than four standard-eviations from that mid-point in each direction.
             std::normal_distribution<T> distribution(T(0.5), (T(0.125) * stdDevRatio));
 
-            T randNormal { distribution(m_engine) };
+            T randNormal{ distribution(m_engine) };
 
             while ((randNormal < 0.0f) || (randNormal > 1.0f))
             {
@@ -210,13 +210,13 @@ namespace util
                 return normalFromTo(from, to, std::numeric_limits<float>::epsilon(), style);
             }
 
-            const float range { static_cast<float>(to - from) };
-            const float ratio { normalRatio<float>(stdDevRatio, style) };
-            const T offset { static_cast<T>(range * ratio) };
+            const float range{ static_cast<float>(to - from) };
+            const float ratio{ normalRatio<float>(stdDevRatio, style) };
+            const T offset{ static_cast<T>(range * ratio) };
             return std::clamp((from + offset), from, to);
         }
 
-    private:
+      private:
         mutable std::mt19937 m_engine;
     };
 } // namespace util

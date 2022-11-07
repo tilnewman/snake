@@ -24,7 +24,7 @@ namespace snake
 {
     class GameCoordinator
     {
-    public:
+      public:
         GameCoordinator(const GameConfig & configOrig);
 
         // prevent all copy and assignment
@@ -38,7 +38,7 @@ namespace snake
         void play(const GameConfig & config);
         void printDebugStatus();
 
-    private:
+      private:
         bool willContinue() const
         {
             return (m_window.isOpen() && (m_stateMachine.stateEnum() != State::Quit));
@@ -53,7 +53,7 @@ namespace snake
         void update(const float elapsedSec);
         void draw();
 
-    private:
+      private:
         GameConfig m_configOriginalCopy;
         GameConfig m_config;
         Layout m_layout;

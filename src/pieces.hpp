@@ -33,9 +33,9 @@ namespace snake
     //
     struct MoveRecord
     {
-        bool ate_pickup { false };
-        bool missed_pickup { false };
-        bool wrapped_around_board { false };
+        bool ate_pickup{ false };
+        bool missed_pickup{ false };
+        bool wrapped_around_board{ false };
     };
 
     //
@@ -60,7 +60,7 @@ namespace snake
     //
     class PieceBase
     {
-    protected:
+      protected:
         PieceBase() = delete;
 
         PieceBase(
@@ -69,7 +69,7 @@ namespace snake
             const BoardPos_t & pos,
             const float timeBetweenTurnsSec = -1.0f); // see comment below
 
-    public:
+      public:
         virtual ~PieceBase() = default;
 
         std::string toString() const;
@@ -86,10 +86,10 @@ namespace snake
         void turnDurationSec(const float seconds) { m_turnDurationSec = seconds; }
 
         virtual void update(Context &, const float elapsedSec);
-        virtual void handleEvent(Context &, const sf::Event &) { }
-        virtual void takeTurn(Context &) { }
+        virtual void handleEvent(Context &, const sf::Event &) {}
+        virtual void takeTurn(Context &) {}
 
-    private:
+      private:
         Piece m_piece;
         sf::Color m_color;
         BoardPos_t m_position;
@@ -104,11 +104,11 @@ namespace snake
     {
         WallPiece(Context & context, const BoardPos_t & pos)
             : PieceBase(context, Piece::Wall, pos)
-        { }
+        {}
 
         virtual ~WallPiece() override = default;
 
-        void update(Context &, const float) override { }
+        void update(Context &, const float) override {}
     };
 
     //
@@ -118,7 +118,7 @@ namespace snake
         FoodPiece(Context & context, const BoardPos_t & pos);
         virtual ~FoodPiece() override = default;
 
-        void update(Context &, const float) override { }
+        void update(Context &, const float) override {}
     };
 
     //
@@ -127,11 +127,11 @@ namespace snake
     {
         PoisonPiece(Context & context, const BoardPos_t & pos)
             : PieceBase(context, Piece::Poison, pos)
-        { }
+        {}
 
         virtual ~PoisonPiece() override = default;
 
-        void update(Context &, const float) override { }
+        void update(Context &, const float) override {}
     };
 
     //
@@ -140,17 +140,17 @@ namespace snake
     {
         TailPiece(Context & context, const BoardPos_t & pos)
             : PieceBase(context, Piece::Tail, pos)
-        { }
+        {}
 
         virtual ~TailPiece() override = default;
 
-        void update(Context &, const float) override { }
+        void update(Context &, const float) override {}
 
-        static inline sf::Color m_colorLight { 64, 255, 0 };
+        static inline sf::Color m_colorLight{ 64, 255, 0 };
 
-        static inline sf::Color m_colorDark { static_cast<sf::Uint8>(m_colorLight.r / 4),
-                                              static_cast<sf::Uint8>(m_colorLight.g / 4),
-                                              static_cast<sf::Uint8>(m_colorLight.b / 4) };
+        static inline sf::Color m_colorDark{ static_cast<sf::Uint8>(m_colorLight.r / 4),
+                                             static_cast<sf::Uint8>(m_colorLight.g / 4),
+                                             static_cast<sf::Uint8>(m_colorLight.b / 4) };
     };
 
     //
@@ -164,7 +164,7 @@ namespace snake
         void handleEvent(Context & context, const sf::Event & event) override;
         void takeTurn(Context & context) override;
 
-    private:
+      private:
         void finalizeDirectionToMove_Player(const Context & context);
         void finalizeDirectionToMove_SelfTest(Context & context);
         auto move(Context & context);
@@ -172,7 +172,7 @@ namespace snake
 
         void handlePickup(Context &, const BoardPos_t & newPos, const Piece piece);
 
-    protected:
+      protected:
         sf::Keyboard::Key m_directionPrev;
         sf::Keyboard::Key m_directionNext;
         sf::Keyboard::Key m_directionNextNext;
@@ -180,13 +180,13 @@ namespace snake
         std::size_t m_tailGrowRemainingCount;
 
         // self-test stuff
-    private:
+      private:
         BoardPos_t sfPickTarget(const Context & context) const;
         sf::Keyboard::Key stPickDirection(const Context & context) const;
 
-        std::size_t m_stMovesTowardCurrentTargetCount { 0 };
-        std::size_t m_stMovesTowardCurrentTargetCountMax { 0 };
-        BoardPos_t m_stTargetPos { BoardPosInvalid };
+        std::size_t m_stMovesTowardCurrentTargetCount{ 0 };
+        std::size_t m_stMovesTowardCurrentTargetCountMax{ 0 };
+        BoardPos_t m_stTargetPos{ BoardPosInvalid };
     };
 
     //
@@ -197,18 +197,12 @@ namespace snake
         {
             switch (piece)
             {
-                case Piece::Head:
-                    return "Head";
-                case Piece::Tail:
-                    return "Tail";
-                case Piece::Food:
-                    return "Food";
-                case Piece::Wall:
-                    return "Wall";
-                case Piece::Poison:
-                    return "Poison";
-                default:
-                    return "";
+                case Piece::Head: return "Head";
+                case Piece::Tail: return "Tail";
+                case Piece::Food: return "Food";
+                case Piece::Wall: return "Wall";
+                case Piece::Poison: return "Poison";
+                default: return "";
             }
         }
 
@@ -216,18 +210,12 @@ namespace snake
         {
             switch (piece)
             {
-                case Piece::Head:
-                    return sf::Color::Green;
-                case Piece::Tail:
-                    return TailPiece::m_colorLight;
-                case Piece::Food:
-                    return sf::Color::Yellow;
-                case Piece::Wall:
-                    return sf::Color(75, 40, 5);
-                case Piece::Poison:
-                    return sf::Color::Red;
-                default:
-                    return sf::Color::Transparent;
+                case Piece::Head: return sf::Color::Green;
+                case Piece::Tail: return TailPiece::m_colorLight;
+                case Piece::Food: return sf::Color::Yellow;
+                case Piece::Wall: return sf::Color(75, 40, 5);
+                case Piece::Poison: return sf::Color::Red;
+                default: return sf::Color::Transparent;
             }
         }
     } // namespace piece

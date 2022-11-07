@@ -72,13 +72,13 @@ namespace snake
             sprite.move(velocity * elapsedSec);
 
             //
-            const float blueColorValueF { static_cast<float>(sprite.getColor().b)
-                                          - (ageRatio() * 64.0f) };
+            const float blueColorValueF{ static_cast<float>(sprite.getColor().b) -
+                                         (ageRatio() * 64.0f) };
 
-            const sf::Uint8 blueColorValue { static_cast<sf::Uint8>(
+            const sf::Uint8 blueColorValue{ static_cast<sf::Uint8>(
                 std::clamp(blueColorValueF, 0.0f, 255.0f)) };
 
-            sf::Color slowlyMoreYellowColor { sprite.getColor() };
+            sf::Color slowlyMoreYellowColor{ sprite.getColor() };
             slowlyMoreYellowColor.b = blueColorValue;
 
             sprite.setColor(slowlyMoreYellowColor);
@@ -86,19 +86,19 @@ namespace snake
             //
             if (isGrowing())
             {
-                const float sizeRatio { 2.0f * ageRatio() };
+                const float sizeRatio{ 2.0f * ageRatio() };
 
-                const sf::Vector2f currentSize { sizeRatio
-                                                 * sf::Vector2f(dimm_max_size, dimm_max_size) };
+                const sf::Vector2f currentSize{ sizeRatio *
+                                                sf::Vector2f(dimm_max_size, dimm_max_size) };
 
                 util::fit(sprite, currentSize);
             }
             else
             {
-                const float sizeRatio { 1.0f - ageRatio() };
+                const float sizeRatio{ 1.0f - ageRatio() };
 
-                const sf::Vector2f currentSize { sizeRatio
-                                                 * sf::Vector2f(dimm_max_size, dimm_max_size) };
+                const sf::Vector2f currentSize{ sizeRatio *
+                                                sf::Vector2f(dimm_max_size, dimm_max_size) };
 
                 util::fit(sprite, currentSize);
             }
@@ -140,7 +140,7 @@ namespace snake
             , bounds(bou)
             , color(col)
             , velocity(vel)
-        { }
+        {}
 
         BoardPos_t position;
         sf::FloatRect bounds;
@@ -152,7 +152,7 @@ namespace snake
 
     class TeleportEffect : public sf::Drawable
     {
-    public:
+      public:
         TeleportEffect() = default;
 
         TeleportEffect(const Context & context) { reset(context); }
@@ -179,15 +179,15 @@ namespace snake
 
                 for (const SparkleArea & area : m_areas)
                 {
-                    const float spawnPosLeft { area.bounds.left
-                                               + context.random.zeroTo(area.bounds.width) };
+                    const float spawnPosLeft{ area.bounds.left +
+                                              context.random.zeroTo(area.bounds.width) };
 
-                    const float spawnPosTop { area.bounds.top
-                                              + context.random.zeroTo(area.bounds.height) };
+                    const float spawnPosTop{ area.bounds.top +
+                                             context.random.zeroTo(area.bounds.height) };
 
-                    const sf::Vector2f spawnPos { spawnPosLeft, spawnPosTop };
+                    const sf::Vector2f spawnPos{ spawnPosLeft, spawnPosTop };
 
-                    bool alreadyCreated { false };
+                    bool alreadyCreated{ false };
                     for (Star & star : m_stars)
                     {
                         if (!star.isAlive())
@@ -226,7 +226,7 @@ namespace snake
                 const sf::Vector2f & velocity = { 0.0f, 0.0f })
         {
             // make the bounds bigger so that some of the sparkles are just past the edges
-            const sf::FloatRect bounds { util::scaleRectInPlaceCopy(
+            const sf::FloatRect bounds{ util::scaleRectInPlaceCopy(
                 context.layout.cellBounds(boardPos), 2.0f) };
 
             add(bounds, color, velocity);
@@ -250,11 +250,11 @@ namespace snake
                 std::end(m_areas));
         }
 
-    private:
+      private:
         std::vector<SparkleArea> m_areas;
         std::vector<Star> m_stars;
-        float sec_until_spawn { 0.0f };
-        float elapsed_sec { 0.0f };
+        float sec_until_spawn{ 0.0f };
+        float elapsed_sec{ 0.0f };
     };
 } // namespace snake
 

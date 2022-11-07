@@ -20,7 +20,7 @@ namespace snake
         const sf::Color & color,
         const sf::FloatRect & cellBounds)
     {
-        const float heightLimit { context.layout.window_size_f.y / 20.0f };
+        const float heightLimit{ context.layout.window_size_f.y / 20.0f };
 
         const sf::FloatRect region(
             0.0f, (cellBounds.top - heightLimit), context.layout.window_size_f.x, heightLimit);

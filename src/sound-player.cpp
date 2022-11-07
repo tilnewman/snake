@@ -16,9 +16,9 @@ namespace util
         , m_pathStr(pathStr)
         , m_isMuted(false)
         , m_volume(0.0f)
-        , m_volumeMin(0.0f) // this is what sfml uses
-        , m_volumeMax(100.0f) // this is what sfml uses
-        , m_volumeInc(m_volumeMax / 10.0f) // only ten different vol levels possible
+        , m_volumeMin(0.0f)                 // this is what sfml uses
+        , m_volumeMax(100.0f)               // this is what sfml uses
+        , m_volumeInc(m_volumeMax / 10.0f)  // only ten different vol levels possible
         , m_fileExtensions(".ogg.flac.wav") // dots are required here
         , m_soundEffects()
     {
@@ -111,7 +111,7 @@ namespace util
 
     bool SoundPlayer::load(const std::initializer_list<std::string> & names)
     {
-        bool success { true };
+        bool success{ true };
 
         for (const std::string & name : names)
         {
@@ -147,7 +147,7 @@ namespace util
 
         for (std::size_t i(0); i < m_soundEffects.size(); ++i)
         {
-            const bool startsWith { m_soundEffects.at(i)->filename.find(name, 0) == 0 };
+            const bool startsWith{ m_soundEffects.at(i)->filename.find(name, 0) == 0 };
             if (startsWith)
             {
                 indexes.push_back(i);
@@ -211,7 +211,7 @@ namespace util
 
         std::filesystem::recursive_directory_iterator dirIter(path);
 
-        bool success { false };
+        bool success{ false };
         for (const std::filesystem::directory_entry & entry : dirIter)
         {
             if (!willLoad(entry))
@@ -240,9 +240,9 @@ namespace util
     bool SoundPlayer::loadFile(
         const std::filesystem::directory_entry & entry, const std::string & nameMustMatch)
     {
-        const std::string filename { entry.path().filename().string() }; //-V807
+        const std::string filename{ entry.path().filename().string() }; //-V807
 
-        const bool filenameStartsWith { filename.find(nameMustMatch, 0) == 0 };
+        const bool filenameStartsWith{ filename.find(nameMustMatch, 0) == 0 };
 
         if (!nameMustMatch.empty() && !filenameStartsWith)
         {
@@ -263,7 +263,7 @@ namespace util
 
         sfx->filename = filename;
 
-        const bool sfxStartsWith { sfx->filename.find(nameMustMatch, 0) == 0 };
+        const bool sfxStartsWith{ sfx->filename.find(nameMustMatch, 0) == 0 };
 
         if (!nameMustMatch.empty() && !sfxStartsWith)
         {

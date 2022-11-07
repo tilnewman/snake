@@ -19,16 +19,16 @@ namespace util
         , m_imageCaches()
         , m_fileExtensions(".bmp/.jpg/.jpeg/.png/.tga")
         , m_maxPlayingAtOnceCount(100)
-    { }
+    {}
 
     void AnimationPlayer::stop(const std::string & name)
     {
-        const std::vector<std::size_t> indexes { findCacheIndexesByName(name) };
+        const std::vector<std::size_t> indexes{ findCacheIndexesByName(name) };
 
         for (Animation & anim : m_animations)
         {
-            if (std::find(std::begin(indexes), std::end(indexes), anim.cache_index)
-                != std::end(indexes))
+            if (std::find(std::begin(indexes), std::end(indexes), anim.cache_index) !=
+                std::end(indexes))
             {
                 anim.is_playing = false;
             }
@@ -57,7 +57,7 @@ namespace util
     bool AnimationPlayer::load(
         const std::initializer_list<std::string> & names, const AnimConfig & config)
     {
-        bool success { true };
+        bool success{ true };
 
         for (const std::string & name : names)
         {
@@ -160,7 +160,7 @@ namespace util
         {
             if (anim.is_playing)
             {
-                const auto blendModeOrig { states.blendMode };
+                const auto blendModeOrig{ states.blendMode };
                 states.blendMode = anim.config.blend_mode;
                 target.draw(anim.sprite, states);
                 states.blendMode = blendModeOrig;
@@ -206,8 +206,8 @@ namespace util
     {
         parse = parseDirectoryName(dirEntry.path().filename().string());
 
-        const bool isDirNameValid { !parse.name.empty() && (parse.frame_size.x > 0)
-                                    && (parse.frame_size.y > 0) };
+        const bool isDirNameValid{ !parse.name.empty() && (parse.frame_size.x > 0) &&
+                                   (parse.frame_size.y > 0) };
 
         if (!isDirNameValid)
         {
@@ -216,7 +216,7 @@ namespace util
 
         if (!nameToLoad.empty())
         {
-            const bool dirNameStartsWith { parse.name.find(nameToLoad, 0) == 0 };
+            const bool dirNameStartsWith{ parse.name.find(nameToLoad, 0) == 0 };
             if (dirNameStartsWith)
             {
                 return true;
@@ -233,7 +233,7 @@ namespace util
         const ParsedDirectoryName & parse,
         const AnimConfig & config)
     {
-        auto imageCache { std::make_unique<ImageCache>(
+        auto imageCache{ std::make_unique<ImageCache>(
             m_imageCaches.size(), parse.name, config, sf::Vector2f(parse.frame_size)) };
 
         if (loadAnimationImages(dirEntry, *imageCache))
@@ -371,9 +371,9 @@ namespace util
         const sf::FloatRect & bounds,
         const AnimConfig & configParam)
     {
-        const std::size_t randomCacheIndex { m_random.from(possibleCacheIndexes) };
-        const ImageCache & cache { *m_imageCaches.at(randomCacheIndex) };
-        Animation & anim { getAvailableAnimation() };
+        const std::size_t randomCacheIndex{ m_random.from(possibleCacheIndexes) };
+        const ImageCache & cache{ *m_imageCaches.at(randomCacheIndex) };
+        Animation & anim{ getAvailableAnimation() };
 
         if (configParam.is_default)
         {
@@ -452,8 +452,7 @@ namespace util
 
         for (std::size_t i(0); i < m_imageCaches.size(); ++i)
         {
-            const bool animNameStartsWith { m_imageCaches.at(i)->animation_name.find(name, 0)
-                                            == 0 };
+            const bool animNameStartsWith{ m_imageCaches.at(i)->animation_name.find(name, 0) == 0 };
             if (animNameStartsWith)
             {
                 indexes.push_back(i);
@@ -472,9 +471,9 @@ namespace util
 
         anim.sec_elapsed += elapsedTimeSec;
 
-        const ImageCache & cache { *m_imageCaches.at(anim.cache_index) };
-        const float frameCount { static_cast<float>(cache.frame_count) };
-        const float durationRatio { (anim.sec_elapsed / anim.config.duration_sec) };
+        const ImageCache & cache{ *m_imageCaches.at(anim.cache_index) };
+        const float frameCount{ static_cast<float>(cache.frame_count) };
+        const float durationRatio{ (anim.sec_elapsed / anim.config.duration_sec) };
         const std::size_t newFrameIndex(static_cast<std::size_t>(frameCount * durationRatio));
 
         if (newFrameIndex > cache.frame_count)
@@ -496,9 +495,9 @@ namespace util
     void AnimationPlayer::setAnimationFrame(Animation & anim, const std::size_t newFrameIndex) const
     {
         anim.frame_index = newFrameIndex;
-        const ImageCache & cache { *m_imageCaches.at(anim.cache_index) };
+        const ImageCache & cache{ *m_imageCaches.at(anim.cache_index) };
 
-        std::size_t frameCounter { 0 };
+        std::size_t frameCounter{ 0 };
         for (const Image & image : cache.images)
         {
             for (const sf::IntRect & rect : image.rects)

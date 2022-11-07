@@ -42,8 +42,8 @@ namespace snake
 
         ss << "\n  piece_verts_vec   = " << m_pieceVerts.capacity();
 
-        std::size_t usedCount { 0 };
-        std::size_t availCount { 0 };
+        std::size_t usedCount{ 0 };
+        std::size_t availCount{ 0 };
         for (std::size_t i(0); i < m_pieceVerts.size(); i += util::verts_per_quad)
         {
             if (m_pieceVerts.at(i).color == m_freeVertColor)
@@ -60,11 +60,11 @@ namespace snake
         ss << "\n  quads_free      = " << (availCount / util::verts_per_quad);
         ss << "\n  m_pieceVerts.size()  = " << m_pieceVerts.size();
 
-        const std::size_t headCount { m_headPieces.size() };
-        const std::size_t tailCount { m_tailPieces.size() };
-        const std::size_t foodCount { m_foodPieces.size() };
-        const std::size_t wallCount { m_wallPieces.size() };
-        const std::size_t pieceCount { (headCount + tailCount + foodCount + wallCount) };
+        const std::size_t headCount{ m_headPieces.size() };
+        const std::size_t tailCount{ m_tailPieces.size() };
+        const std::size_t foodCount{ m_foodPieces.size() };
+        const std::size_t wallCount{ m_wallPieces.size() };
+        const std::size_t pieceCount{ (headCount + tailCount + foodCount + wallCount) };
 
         ss << "\n  heads_count      = " << headCount;
         ss << "\n  tails_count      = " << tailCount;
@@ -117,9 +117,8 @@ namespace snake
         m_candleSprite.setScale(1.0f, 1.0f);
         util::setOriginToCenter(m_candleSprite);
 
-        const float candleScaleVert {
-            0.7f * (context.layout.board_bounds_f.height / m_candleSprite.getLocalBounds().height)
-        };
+        const float candleScaleVert{ 0.7f * (context.layout.board_bounds_f.height /
+                                             m_candleSprite.getLocalBounds().height) };
 
         m_candleSprite.setScale(candleScaleVert, candleScaleVert);
         m_candleSprite.setColor(sf::Color::Transparent);
@@ -130,7 +129,7 @@ namespace snake
         m_wallPieces.reserve(context.layout.cell_count_total_st);
         m_foodPieces.reserve(context.layout.cell_count_total_st);
 
-        const LevelDetails & level { context.game.level() };
+        const LevelDetails & level{ context.game.level() };
 
         replaceWithNewPiece(context, Piece::Head, level.start_pos);
 
@@ -144,7 +143,7 @@ namespace snake
         BoardPosVec_t boardPositions;
         boardPositions.reserve(10);
 
-        int currentDistance { static_cast<int>(level.number) };
+        int currentDistance{ static_cast<int>(level.number) };
 
         while (boardPositions.empty() && (currentDistance > 0))
         {
@@ -207,13 +206,13 @@ namespace snake
 
     bool Board::isPiece(const BoardPos_t & pos, const Piece piece) const
     {
-        const PosEntryOpt_t entryOpt { entryAt(pos) };
+        const PosEntryOpt_t entryOpt{ entryAt(pos) };
         return (entryOpt.has_value() && (entryOpt->piece_enum == piece));
     }
 
     PieceEnumOpt_t Board::pieceEnumOptAt(const BoardPos_t & pos) const
     {
-        const PosEntryOpt_t entryOpt { entryAt(pos) };
+        const PosEntryOpt_t entryOpt{ entryAt(pos) };
         if (entryOpt)
         {
             return entryOpt->piece_enum;
@@ -226,7 +225,7 @@ namespace snake
 
     void Board::addNewPieceAtRandomFreePos(Context & context, const Piece piece)
     {
-        const BoardPosOpt_t posOpt { findFreeBoardPosRandom(context) };
+        const BoardPosOpt_t posOpt{ findFreeBoardPosRandom(context) };
 
         if (!posOpt)
         {
@@ -245,7 +244,7 @@ namespace snake
     {
         M_CHECK_SS(context.layout.isPositionValid(pos), pos);
 
-        std::size_t quadIndex { removePiece(context, pos) };
+        std::size_t quadIndex{ removePiece(context, pos) };
         if (!isQuadIndexValid(quadIndex) || m_pieceVerts.empty())
         {
             quadIndex = findOrMakeFreeQuadIndex();
@@ -272,7 +271,7 @@ namespace snake
         // context.teleporter.remove(posToRemove);
 
         auto erasePieceAtPosition = [&](auto & cont, const BoardPos_t & posTemp) {
-            const std::size_t countBefore { cont.size() };
+            const std::size_t countBefore{ cont.size() };
 
             cont.erase(
                 std::remove_if(
@@ -281,7 +280,7 @@ namespace snake
                     [&](const auto & piece) { return (piece.position() == posTemp); }),
                 std::end(cont));
 
-            const std::size_t countAfter { cont.size() };
+            const std::size_t countAfter{ cont.size() };
 
             return (countBefore - countAfter);
         };
@@ -315,10 +314,10 @@ namespace snake
             return m_pieceVerts.size();
         }
 
-        const PosEntry entryToRemoveCopy { entryToRemoveIter->second };
+        const PosEntry entryToRemoveCopy{ entryToRemoveIter->second };
         freeQuad(entryToRemoveCopy.quad_index);
 
-        const std::size_t piecesErasedCount { erasePieceInContainer(entryToRemoveCopy.piece_enum) };
+        const std::size_t piecesErasedCount{ erasePieceInContainer(entryToRemoveCopy.piece_enum) };
 
         M_CHECK_LOG_SS(
             (piecesErasedCount == 1),
@@ -332,7 +331,7 @@ namespace snake
         Board::move(Context & context, const BoardPos_t & fromPos, const BoardPos_t & toPos)
     {
         // check if walked off the board
-        const BoardPosOpt_t wrapPosOpt { context.layout.findWraparoundPos(toPos) };
+        const BoardPosOpt_t wrapPosOpt{ context.layout.findWraparoundPos(toPos) };
         if (wrapPosOpt)
         {
             return move(context, fromPos, wrapPosOpt.value());
@@ -345,7 +344,7 @@ namespace snake
                           "is at...");
 
         const PosEntry fromEntryCopyBefore = [&]() {
-            const auto fromOrigIter { m_posEntryMap.find(fromPos) };
+            const auto fromOrigIter{ m_posEntryMap.find(fromPos) };
 
             M_CHECK_SS(
                 (m_posEntryMap.find(fromPos) != std::end(m_posEntryMap)),
@@ -367,8 +366,8 @@ namespace snake
         M_CHECK_SS(!entryAt(fromPos).has_value(), entryToString(entryAt(fromPos).value()));
 
         M_CHECK_SS(
-            (entryAt(toPos).has_value()
-             && (entryAt(toPos)->piece_enum == fromEntryCopyBefore.piece_enum)),
+            (entryAt(toPos).has_value() &&
+             (entryAt(toPos)->piece_enum == fromEntryCopyBefore.piece_enum)),
             entryToString(entryAt(fromPos).value()));
 
         return toPos;
@@ -399,7 +398,7 @@ namespace snake
         }
 
         {
-            static bool willLighten { false };
+            static bool willLighten{ false };
             const sf::Color colorAdj(0, 0, 0, 1);
 
             for (sf::Vertex & vert : m_teleportQuads)
@@ -432,7 +431,7 @@ namespace snake
 
         if (!m_headPieces.empty() && (m_candleSprite.getColor().a > 0))
         {
-            const sf::FloatRect headBounds { context.layout.cellBounds(
+            const sf::FloatRect headBounds{ context.layout.cellBounds(
                 m_headPieces.front().position()) };
 
             m_candleSprite.setPosition(util::center(headBounds));
@@ -443,15 +442,15 @@ namespace snake
 
             m_candleBlackSideQuads.clear();
 
-            const float pad { 2.0f };
-            const float doublePad { pad * 2.0f };
-            const sf::FloatRect bounds { context.layout.board_bounds_f };
+            const float pad{ 2.0f };
+            const float doublePad{ pad * 2.0f };
+            const sf::FloatRect bounds{ context.layout.board_bounds_f };
 
-            const sf::FloatRect extendedbounds {
+            const sf::FloatRect extendedbounds{
                 (0.0f - pad), (0.0f - pad), (bounds.width + doublePad), (bounds.height + doublePad)
             };
 
-            const float leftEdge { m_candleSprite.getGlobalBounds().left + pad };
+            const float leftEdge{ m_candleSprite.getGlobalBounds().left + pad };
 
             const sf::FloatRect leftRect(
                 extendedbounds.left,
@@ -459,7 +458,7 @@ namespace snake
                 (leftEdge - extendedbounds.left),
                 extendedbounds.height);
 
-            const float topEdge { m_candleSprite.getGlobalBounds().top + pad };
+            const float topEdge{ m_candleSprite.getGlobalBounds().top + pad };
 
             const sf::FloatRect topRect(
                 extendedbounds.left,
@@ -467,15 +466,15 @@ namespace snake
                 extendedbounds.width,
                 (topEdge - extendedbounds.top));
 
-            const float rightEdge { util::right(m_candleSprite.getGlobalBounds()) - pad };
+            const float rightEdge{ util::right(m_candleSprite.getGlobalBounds()) - pad };
 
-            const sf::FloatRect rightRect {
+            const sf::FloatRect rightRect{
                 rightEdge, extendedbounds.top, extendedbounds.width, extendedbounds.height
             };
 
-            const float bottomEdge { util::bottom(m_candleSprite.getGlobalBounds()) - pad };
+            const float bottomEdge{ util::bottom(m_candleSprite.getGlobalBounds()) - pad };
 
-            const sf::FloatRect bottomRect {
+            const sf::FloatRect bottomRect{
                 extendedbounds.left, bottomEdge, extendedbounds.width, extendedbounds.height
             };
 
@@ -500,7 +499,7 @@ namespace snake
             target, context.layout.board_bounds_f, context.config.board_background_color);
 
         // draw every other cell with a slightly brighter color for a nice looking checker pattern
-        const auto & cellVerts { context.layout.cellVerts() };
+        const auto & cellVerts{ context.layout.cellVerts() };
         if (!cellVerts.empty())
         {
             target.draw(&cellVerts[0], cellVerts.size(), sf::Quads, states);
@@ -535,7 +534,7 @@ namespace snake
     BoardPosVec_t Board::findAllFreePositions(const Context & context) const
     {
         // start with a copy of all valid/on-board positions
-        std::set<BoardPos_t> positions { context.layout.allValidPositions() };
+        std::set<BoardPos_t> positions{ context.layout.allValidPositions() };
 
         // remove any that are alraedy occupied
         for (const auto & [pos, entry] : m_posEntryMap)
@@ -556,7 +555,7 @@ namespace snake
     BoardPosOpt_t Board::findFreeBoardPosRandom(const Context & context) const
     {
         // start with a copy of all valid/on-board positions
-        std::set<BoardPos_t> positions { context.layout.allValidPositions() };
+        std::set<BoardPos_t> positions{ context.layout.allValidPositions() };
 
         // remove any that are alraedy occupied
         for (const auto & [pos, entry] : m_posEntryMap)
@@ -581,19 +580,19 @@ namespace snake
         BoardPosVec_t finalPositions;
 
         // start with a copy of all valid/on-board positions
-        const BoardPosVec_t allFreePositions { findAllFreePositions(context) };
+        const BoardPosVec_t allFreePositions{ findAllFreePositions(context) };
         if (allFreePositions.empty() || (targetDistance <= 0))
         {
             return finalPositions;
         }
 
-        const BoardPos_t headPos { m_headPieces.front().position() };
+        const BoardPos_t headPos{ m_headPieces.front().position() };
 
         std::multimap<int, BoardPos_t> targetDistPosistions;
         for (const BoardPos_t & pos : allFreePositions)
         {
-            const int distanceFromTarget { std::abs(pos.x - headPos.x)
-                                           + std::abs(pos.y - headPos.y) };
+            const int distanceFromTarget{ std::abs(pos.x - headPos.x) +
+                                          std::abs(pos.y - headPos.y) };
 
             if (distanceRule == DistanceRule::Exact)
             {
@@ -656,8 +655,7 @@ namespace snake
     {
         assert(distanceMin > 0);
 
-        const std::size_t reserveCount { static_cast<std::size_t>(
-            context.layout.cell_count_total) };
+        const std::size_t reserveCount{ static_cast<std::size_t>(context.layout.cell_count_total) };
 
         BoardPosVec_t innerPositions;
         innerPositions.reserve(reserveCount);
@@ -672,8 +670,8 @@ namespace snake
             }
 
             return (
-                std::find(std::begin(innerPositions), std::end(innerPositions), pos)
-                == std::end(innerPositions));
+                std::find(std::begin(innerPositions), std::end(innerPositions), pos) ==
+                std::end(innerPositions));
         };
 
         // start with inner positions as all the body positions
@@ -734,7 +732,7 @@ namespace snake
 
     void Board::colorQuad(const BoardPos_t & pos, const sf::Color & color)
     {
-        const PosEntryOpt_t entryOpt { entryAt(pos) };
+        const PosEntryOpt_t entryOpt{ entryAt(pos) };
         if (!entryOpt)
         {
             return;
@@ -745,7 +743,7 @@ namespace snake
 
     const PosEntryOpt_t Board::entryAt(const BoardPos_t & pos) const
     {
-        const auto foundIter { m_posEntryMap.find(pos) };
+        const auto foundIter{ m_posEntryMap.find(pos) };
         if (foundIter == std::end(m_posEntryMap))
         {
             return std::nullopt;
@@ -758,8 +756,8 @@ namespace snake
 
     void Board::reColorTailPieces(Context & context)
     {
-        float index { 0.0f };
-        const float count { static_cast<float>(m_tailPieces.size()) };
+        float index{ 0.0f };
+        const float count{ static_cast<float>(m_tailPieces.size()) };
         for (auto iter(std::begin(m_tailPieces)); iter != std::end(m_tailPieces); ++iter)
         {
             iter->color(
@@ -794,11 +792,11 @@ namespace snake
     const AdjacentInfoOpt_t
         Board::adjacentInfoOpt(const BoardPos_t & centerPos, const sf::Keyboard::Key dir) const
     {
-        const BoardPos_t adjPos { keys::move(centerPos, dir) };
-        const auto enumOpt { pieceEnumOptAt(adjPos) };
+        const BoardPos_t adjPos{ keys::move(centerPos, dir) };
+        const auto enumOpt{ pieceEnumOptAt(adjPos) };
         if (enumOpt)
         {
-            return AdjacentInfo { enumOpt.value(), adjPos, dir };
+            return AdjacentInfo{ enumOpt.value(), adjPos, dir };
         }
         else
         {
@@ -824,19 +822,13 @@ namespace snake
     {
         switch (piece)
         {
-            case Piece::Head:
-                return m_headPieces.emplace_back(HeadPiece(context, pos));
-            case Piece::Tail:
-                return m_tailPieces.emplace_front(TailPiece(context, pos)); //-V525
-            case Piece::Food:
-                return m_foodPieces.emplace_back(FoodPiece(context, pos));
-            case Piece::Wall:
-                return m_wallPieces.emplace_back(WallPiece(context, pos));
-            case Piece::Poison:
-                return m_poisonPieces.emplace_back(PoisonPiece(context, pos));
+            case Piece::Head: return m_headPieces.emplace_back(HeadPiece(context, pos));
+            case Piece::Tail: return m_tailPieces.emplace_front(TailPiece(context, pos)); //-V525
+            case Piece::Food: return m_foodPieces.emplace_back(FoodPiece(context, pos));
+            case Piece::Wall: return m_wallPieces.emplace_back(WallPiece(context, pos));
+            case Piece::Poison: return m_poisonPieces.emplace_back(PoisonPiece(context, pos));
 
-            default:
-                break;
+            default: break;
         }
 
         std::ostringstream ss;
@@ -861,7 +853,7 @@ namespace snake
             }
         }
 
-        const std::size_t freeQuadIndex { m_pieceVerts.size() };
+        const std::size_t freeQuadIndex{ m_pieceVerts.size() };
         m_pieceVerts.resize((m_pieceVerts.size() + util::verts_per_quad), m_freeQuadVertex);
         return freeQuadIndex;
     }
@@ -898,20 +890,20 @@ namespace snake
     {
         std::ostringstream ss;
 
-        const std::string pieceEnumName { piece::toString(entry.piece_enum) };
+        const std::string pieceEnumName{ piece::toString(entry.piece_enum) };
         if (pieceEnumName.empty())
         {
             ss << "(ERROR:PIECE_" << int(entry.piece_enum) << "_HAS_EMPTY_NAME)";
         }
 
-        const bool isMultipleOfFour { (entry.quad_index % util::verts_per_quad) == 0 };
+        const bool isMultipleOfFour{ (entry.quad_index % util::verts_per_quad) == 0 };
         if (!isMultipleOfFour)
         {
             ss << "(ERROR:INDEX_" << entry.quad_index << "_NOT_MULT_OF_4)";
         }
 
-        const bool isIndexInRange { (entry.quad_index + util::verts_per_quad)
-                                    <= m_pieceVerts.size() };
+        const bool isIndexInRange{ (entry.quad_index + util::verts_per_quad) <=
+                                   m_pieceVerts.size() };
         if (!isIndexInRange)
         {
             ss << "(ERROR:INDEX_" << entry.quad_index
@@ -941,8 +933,8 @@ namespace snake
     {
         M_CHECK_SS(isQuadIndexValid(quadIndex), quadIndex);
 
-        const sf::FloatRect rect { context.layout.cellBounds(pos) };
-        const sf::Vector2f rectPos { rect.left, rect.top };
+        const sf::FloatRect rect{ context.layout.cellBounds(pos) };
+        const sf::Vector2f rectPos{ rect.left, rect.top };
 
         if (color != m_freeVertColor)
         {
@@ -971,8 +963,8 @@ namespace snake
 
     bool Board::isQuadIndexValid(const std::size_t quadIndex) const
     {
-        const bool isMultipleOfFour { (quadIndex % util::verts_per_quad) == 0 };
-        const bool isIndexInRange { (quadIndex + util::verts_per_quad) <= m_pieceVerts.size() };
+        const bool isMultipleOfFour{ (quadIndex % util::verts_per_quad) == 0 };
+        const bool isIndexInRange{ (quadIndex + util::verts_per_quad) <= m_pieceVerts.size() };
         return (isMultipleOfFour && isIndexInRange);
     }
 

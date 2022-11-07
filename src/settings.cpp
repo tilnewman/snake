@@ -52,33 +52,33 @@ namespace snake
 
     void Layout::regionCalculations(const GameConfig & config)
     {
-        window_size = sf::Vector2i { config.resolution };
-        window_size_f = sf::Vector2f { window_size };
+        window_size = sf::Vector2i{ config.resolution };
+        window_size_f = sf::Vector2f{ window_size };
 
         window_bounds = sf::IntRect({ 0, 0 }, window_size);
         window_bounds_f = sf::FloatRect(window_bounds);
 
-        const float windowSizeAvg { (window_size_f.x + window_size_f.y) / 2.0f };
-        const float cellSideLengthEst { windowSizeAvg * config.cell_size_window_ratio };
-        const int cellSideLength { util::makeEvenCopy(static_cast<int>(cellSideLengthEst), true) };
+        const float windowSizeAvg{ (window_size_f.x + window_size_f.y) / 2.0f };
+        const float cellSideLengthEst{ windowSizeAvg * config.cell_size_window_ratio };
+        const int cellSideLength{ util::makeEvenCopy(static_cast<int>(cellSideLengthEst), true) };
 
         M_CHECK_SS((cellSideLength > 0), cellSideLength);
 
         cell_size.x = cellSideLength;
         cell_size.y = cellSideLength;
 
-        const int statusRegionHeightEstimate { util::makeEvenCopy(
+        const int statusRegionHeightEstimate{ util::makeEvenCopy(
             static_cast<int>(window_size_f.y * config.status_bounds_height_ratio), false) };
 
-        const sf::IntRect boardFence { 0,
-                                       0,
-                                       window_size.x,
-                                       util::makeEvenCopy(
-                                           (window_size.y - statusRegionHeightEstimate), true) };
+        const sf::IntRect boardFence{ 0,
+                                      0,
+                                      window_size.x,
+                                      util::makeEvenCopy(
+                                          (window_size.y - statusRegionHeightEstimate), true) };
 
         M_CHECK_SS(
-            ((boardFence.left >= 0) && (boardFence.top >= 0) && (boardFence.width > 0)
-             && (boardFence.height > 0)),
+            ((boardFence.left >= 0) && (boardFence.top >= 0) && (boardFence.width > 0) &&
+             (boardFence.height > 0)),
             boardFence);
 
         cell_counts = (util::size(boardFence) / cell_size);
@@ -107,11 +107,11 @@ namespace snake
         top_left_pos.y = top_left_pos.x;
 
         board_bounds = sf::IntRect(top_left_pos, board_size);
-        board_bounds_f = sf::FloatRect { board_bounds };
+        board_bounds_f = sf::FloatRect{ board_bounds };
 
         M_CHECK_SS(
-            ((board_bounds.left >= 0) && (board_bounds.top >= 0) && (board_bounds.width > 0)
-             && (board_bounds.height > 0)),
+            ((board_bounds.left >= 0) && (board_bounds.top >= 0) && (board_bounds.width > 0) &&
+             (board_bounds.height > 0)),
             board_bounds);
 
         status_bounds.left = 0;
@@ -125,10 +125,10 @@ namespace snake
         status_bounds.top = 0;
         status_bounds_f = sf::FloatRect(status_bounds);
 
-        const int newBoardTop { (window_size.y - board_size.y) - board_bounds.left };
+        const int newBoardTop{ (window_size.y - board_size.y) - board_bounds.left };
         top_left_pos.y = newBoardTop;
         board_bounds.top = newBoardTop;
-        board_bounds_f = sf::FloatRect { board_bounds };
+        board_bounds_f = sf::FloatRect{ board_bounds };
         status_bounds.height = (board_bounds.top - 1);
         status_bounds_f = sf::FloatRect(status_bounds);
 
@@ -153,18 +153,18 @@ namespace snake
 
         cell_bounds_lut.resize(
             static_cast<std::size_t>(cell_counts.y),
-            IntRectVec_t(static_cast<std::size_t>(cell_counts.x), sf::IntRect {}));
+            IntRectVec_t(static_cast<std::size_t>(cell_counts.x), sf::IntRect{}));
 
         for (int vert(0); vert < cell_counts.y; ++vert)
         {
             for (int horiz(0); horiz < cell_counts.x; ++horiz)
             {
-                const BoardPos_t pos { horiz, vert };
+                const BoardPos_t pos{ horiz, vert };
 
-                sf::IntRect bounds { (top_left_pos + (pos * cell_size)), cell_size };
+                sf::IntRect bounds{ (top_left_pos + (pos * cell_size)), cell_size };
 
                 //
-                bool willShadeThisCell { (horiz % 2) == 0 };
+                bool willShadeThisCell{ (horiz % 2) == 0 };
                 if ((vert % 2) == 0)
                 {
                     willShadeThisCell = !willShadeThisCell;
@@ -186,8 +186,8 @@ namespace snake
                 }
 
                 M_CHECK_SS(
-                    ((bounds.left >= 0) && (bounds.top >= 0) && (bounds.width > 1)
-                     && (bounds.height > 1)),
+                    ((bounds.left >= 0) && (bounds.top >= 0) && (bounds.width > 1) &&
+                     (bounds.height > 1)),
                     "board_pos=" << pos << ", cell_bounds=" << bounds);
 
                 //
@@ -198,8 +198,8 @@ namespace snake
                 cell_bounds_lut[posST.y][posST.x] = bounds;
 
                 //
-                if ((pos.x == 0) || (pos.y == 0) || (pos.x == (cell_counts.x - 1))
-                    || (pos.y == (cell_counts.y - 1)))
+                if ((pos.x == 0) || (pos.y == 0) || (pos.x == (cell_counts.x - 1)) ||
+                    (pos.y == (cell_counts.y - 1)))
                 {
                     default_wall_positions.push_back(pos);
                 }
@@ -237,8 +237,8 @@ namespace snake
             return { 0.0f, 0.0f, 0.0f, 0.0f };
         }
 
-        const sf::Vector2s posST { pos };
-        return sf::FloatRect { cell_bounds_lut[posST.y][posST.x] };
+        const sf::Vector2s posST{ pos };
+        return sf::FloatRect{ cell_bounds_lut[posST.y][posST.x] };
     }
 
     BoardPosOpt_t Layout::findWraparoundPos(const BoardPos_t & pos) const
@@ -367,12 +367,12 @@ namespace snake
 
     float LevelDetails::completedRatio() const
     {
-        float ratio { 0.0f };
+        float ratio{ 0.0f };
 
         if (eat_count_required > 0)
         {
-            ratio
-                = (static_cast<float>(eat_count_current) / static_cast<float>(eat_count_required));
+            ratio =
+                (static_cast<float>(eat_count_current) / static_cast<float>(eat_count_required));
         }
 
         return std::clamp(ratio, 0.0f, 1.0f);
@@ -386,14 +386,14 @@ namespace snake
 
     bool Level::isComplete() const
     {
-        const LevelDetails & lvl { m_details };
+        const LevelDetails & lvl{ m_details };
 
         return ((lvl.eat_count_required > 0) && (lvl.eat_count_current >= lvl.eat_count_required));
     }
 
     void Level::handlePickupFood(const Context &)
     {
-        LevelDetails & lvl { m_details };
+        LevelDetails & lvl{ m_details };
 
         if (lvl.eat_count_current >= lvl.eat_count_required)
         {
@@ -413,8 +413,8 @@ namespace snake
         // const std::size_t eatCountSqrtST { static_cast<std::size_t>(sqrt(lvl.eat_count_current))
         // };
 
-        lvl.tail_grow_after_eat
-            = (1_st + (lvl.eat_count_current * lvl.number) + lvl.number + lvl.eat_count_current);
+        lvl.tail_grow_after_eat =
+            (1_st + (lvl.eat_count_current * lvl.number) + lvl.number + lvl.eat_count_current);
 
         // std::cout << "Pickup Food #" << lvl.eat_count_current << " on level #" << lvl.number <<
         // ":"; std::cout << "\n\t level_sqrt             = " << levelSqrtST; std::cout << "\n\t
@@ -425,28 +425,28 @@ namespace snake
 
     void Level::setupForLevelNumber(Context & context, const std::size_t levelNumberST)
     {
-        LevelDetails & lvl { m_details };
+        LevelDetails & lvl{ m_details };
 
         lvl.number = levelNumberST;
 
-        const float levelNumberF { static_cast<float>(levelNumberST) };
+        const float levelNumberF{ static_cast<float>(levelNumberST) };
 
-        const float levelSqrtF { std::clamp(
+        const float levelSqrtF{ std::clamp(
             std::sqrtf(levelNumberF), 1.0f, (1.0f + (levelNumberF / 2.0f))) };
 
-        const std::size_t levelSqrtST { static_cast<std::size_t>(levelSqrtF) };
+        const std::size_t levelSqrtST{ static_cast<std::size_t>(levelSqrtF) };
 
         lvl.start_pos = { context.layout.cell_counts / 2 };
 
         lvl.eat_count_current = 0;
         lvl.eat_count_required = (8 + lvl.number);
 
-        const std::size_t eatCountSqrtST { static_cast<std::size_t>(sqrt(lvl.eat_count_current)) };
+        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(sqrt(lvl.eat_count_current)) };
 
         lvl.tail_start_length = 3;
 
-        lvl.tail_grow_after_eat
-            = (1_st + (lvl.eat_count_current * lvl.number) + levelSqrtST + eatCountSqrtST);
+        lvl.tail_grow_after_eat =
+            (1_st + (lvl.eat_count_current * lvl.number) + levelSqrtST + eatCountSqrtST);
 
         if (lvl.number <= lvl.eat_count_required)
         {
@@ -567,7 +567,7 @@ namespace snake
         m_eatSfxPitch = context.config.eat_sfx_pitch_start;
         context.cell_anims.reset();
 
-        const std::size_t nextLevelNumber { ((survived) ? (level().number + 1) : level().number) };
+        const std::size_t nextLevelNumber{ ((survived) ? (level().number + 1) : level().number) };
 
         m_level.setupForLevelNumber(context, nextLevelNumber);
         context.board.loadMap(context);
@@ -588,13 +588,13 @@ namespace snake
 
     int GameInPlay::calcScoreForEating(Context &)
     {
-        const std::size_t score { level().number + level().eat_count_current + 1 };
+        const std::size_t score{ level().number + level().eat_count_current + 1 };
         return static_cast<int>(score * 10);
     }
 
     int GameInPlay::calcLevelCompleteScoreBonus() const
     {
-        const std::size_t score { level().number + level().eat_count_current + 1 };
+        const std::size_t score{ level().number + level().eat_count_current + 1 };
         return static_cast<int>(score * 100);
     }
 
@@ -621,7 +621,7 @@ namespace snake
 
         m_level.handlePickupFood(context);
 
-        const int scoreEarned { calcScoreForEating(context) };
+        const int scoreEarned{ calcScoreForEating(context) };
         scoreAdj(context, scoreEarned);
 
         if (m_level.isComplete())
@@ -698,7 +698,7 @@ namespace snake
             ss << " is playing ";
         }
 
-        auto & details { m_level.details() };
+        auto & details{ m_level.details() };
         ss << "level=" << details.number;
         ss << ", with " << details.remainingToEat();
         ss << " of " << details.eat_count_required;

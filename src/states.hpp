@@ -34,11 +34,11 @@ namespace snake
     enum class State
     {
         Start = 0, // an empty "do-nothing" placeholder while the app starts up
-        Option, // first thing player sees, allows customizing game before it starts
+        Option,    // first thing player sees, allows customizing game before it starts
         Play,
         Pause,
         LevelCompleteMsg, // TimedMessage showing "Level Survived!"
-        NextLevelMsg, // TimedMessage showing what level # is next
+        NextLevelMsg,     // TimedMessage showing what level # is next
         Over,
         Quit, // performs all normal shutdown and exits the program
         Test
@@ -54,26 +54,16 @@ namespace snake
         {
             switch (state)
             {
-                case State::Start:
-                    return "Start";
-                case State::Option:
-                    return "Option";
-                case State::Play:
-                    return "Play";
-                case State::Pause:
-                    return "Pause";
-                case State::LevelCompleteMsg:
-                    return "LevelCompleteMsg";
-                case State::NextLevelMsg:
-                    return "NextLevelMsg";
-                case State::Over:
-                    return "Over";
-                case State::Quit:
-                    return "Quit";
-                case State::Test:
-                    return "Test";
-                default:
-                    return "";
+                case State::Start: return "Start";
+                case State::Option: return "Option";
+                case State::Play: return "Play";
+                case State::Pause: return "Pause";
+                case State::LevelCompleteMsg: return "LevelCompleteMsg";
+                case State::NextLevelMsg: return "NextLevelMsg";
+                case State::Over: return "Over";
+                case State::Quit: return "Quit";
+                case State::Test: return "Test";
+                default: return "";
             }
         }
     } // namespace state
@@ -98,7 +88,7 @@ namespace snake
         virtual void onEnter(Context &) = 0;
         virtual void onExit(Context &) = 0;
 
-    protected:
+      protected:
         virtual bool changeToNextState(const Context &) = 0;
         virtual bool willIgnoreEvent(const Context &, const sf::Event & event) const = 0;
 
@@ -111,7 +101,7 @@ namespace snake
     //
     class StateBase : public IState
     {
-    protected:
+      protected:
         StateBase(const State state, const State nextState, const float minDurationSec = -1.0f);
 
         StateBase(
@@ -121,7 +111,7 @@ namespace snake
             const std::string & message = {},
             const float minDurationSec = -1.0f);
 
-    public:
+      public:
         virtual ~StateBase() override = default;
 
         // prevent all copy and assignment
@@ -136,10 +126,10 @@ namespace snake
         void update(Context &, const float elapsedSec) override;
         bool handleEvent(Context & context, const sf::Event & event) override;
         void draw(const Context &, sf::RenderTarget &, const sf::RenderStates &) const override;
-        void onEnter(Context &) override { }
-        void onExit(Context &) override { }
+        void onEnter(Context &) override {}
+        void onExit(Context &) override {}
 
-    protected:
+      protected:
         bool hasMinTimeElapsed() const
         {
             return (!(m_minDurationSec > 0.0f) || (m_elapsedTimeSec > m_minDurationSec));
@@ -151,16 +141,16 @@ namespace snake
         void setupText(const Context & context, const std::string & message);
         // void updateBgFade(const float elapsedSec);
 
-    protected:
+      protected:
         State m_state;
         State m_nextState;
         float m_elapsedTimeSec;
         float m_minDurationSec; // any negative means this value is ignored
         sf::Text m_text;
 
-        static inline const sf::Color m_textColorDefault { sf::Color(200, 200, 200) };
+        static inline const sf::Color m_textColorDefault{ sf::Color(200, 200, 200) };
 
-        static inline const float m_defaultMinDurationSec { 1.5f };
+        static inline const float m_defaultMinDurationSec{ 1.5f };
     };
 
     // the initial state that only  to State::Options
@@ -168,13 +158,13 @@ namespace snake
     {
         StartState()
             : StateBase(State::Start, State::Option)
-        { }
+        {}
 
         virtual ~StartState() override = default;
 
-        void update(Context &, const float) final { }
+        void update(Context &, const float) final {}
         bool handleEvent(Context &, const sf::Event &) final { return false; }
-        void draw(const Context &, sf::RenderTarget &, const sf::RenderStates &) const final { }
+        void draw(const Context &, sf::RenderTarget &, const sf::RenderStates &) const final {}
     };
 
     // the state that simply exits the application
@@ -182,13 +172,13 @@ namespace snake
     {
         QuitState()
             : StateBase(State::Quit, State::Quit)
-        { }
+        {}
 
         virtual ~QuitState() override = default;
 
-        void update(Context &, const float) final { }
+        void update(Context &, const float) final {}
         bool handleEvent(Context &, const sf::Event &) final { return false; }
-        void draw(const Context &, sf::RenderTarget &, const sf::RenderStates &) const final { }
+        void draw(const Context &, sf::RenderTarget &, const sf::RenderStates &) const final {}
     };
 
     //
@@ -205,7 +195,7 @@ namespace snake
     //
     class TestLevelSetupState : public StateBase
     {
-    public:
+      public:
         explicit TestLevelSetupState(const Context & context);
         virtual ~TestLevelSetupState() override = default;
 
@@ -230,8 +220,8 @@ namespace snake
         void update(Context & context, const float elapsedSec) override;
         bool handleEvent(Context & context, const sf::Event & event) override;
 
-    protected:
-        bool m_hasMouseClickedOrKeyPressed { false };
+      protected:
+        bool m_hasMouseClickedOrKeyPressed{ false };
     };
 
     //
@@ -278,7 +268,7 @@ namespace snake
     //
     class PlayState : public StateBase
     {
-    public:
+      public:
         explicit PlayState(const Context & context);
 
         virtual ~PlayState() override = default;
@@ -301,7 +291,7 @@ namespace snake
     //
     class StateMachine : public IStatesPending
     {
-    public:
+      public:
         StateMachine();
         virtual ~StateMachine() override = default;
 
@@ -324,10 +314,10 @@ namespace snake
         void setChangePending(const State state) override;
         void changeIfPending(Context & context);
 
-    private:
+      private:
         IStateUPtr_t makeState(Context & context, const State state);
 
-    private:
+      private:
         IStateUPtr_t m_stateUPtr;
         StateOpt_t m_changePendingOpt;
     };
