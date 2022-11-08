@@ -298,16 +298,10 @@ namespace snake
             const int distanceFromBody,
             const std::size_t count) const;
 
-        // 0 is easiest, 1 hardest
-        // BoardPosVec_t findFreeBoardPosAtDifficulty(
-        //     const Context & context, const float difficultyRatio, const std::size_t count) const;
-
         void colorQuad(const BoardPos_t & pos, const sf::Color & color);
         const PosEntryOpt_t entryAt(const BoardPos_t & pos) const;
 
         std::string entryToString(const PosEntry & entry) const;
-
-        // void selfTest(Context & context);
 
         BoardPos_t findLastTailPiecePos() const { return m_tailPieces.back().position(); }
 

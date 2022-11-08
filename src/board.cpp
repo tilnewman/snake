@@ -122,62 +122,18 @@ namespace snake
         //}
 
         // place food
-        BoardPosVec_t boardPositions;
-        boardPositions.reserve(10);
+        // TODO
 
-        int currentDistance{ static_cast<int>(level.number) };
-
-        while (boardPositions.empty() && (currentDistance > 0))
-        {
-            boardPositions = findFreeBoardPosAtDistance(
-                context,
-                currentDistance,
-                DistanceRule::Outside,
-                level.pickups_visible_at_start_count);
-
-            currentDistance--;
-        }
-        //
         // for (const BoardPos_t & pos :
         //     BoardPosVec_t { { 5, 5 }, { 6, 5 }, { 7, 5 }, { 8, 5 }, { 9, 5 } })
         //{
         //    replaceWithNewPiece(context, Piece::Food, pos);
         //}
 
-        //
-        //    // auto pickRandomDimmPos = [&](const int dimmCellLength) {
-        //    //    const float stdDevRatio{ 1.25f };
-        //    //    int distance{ context.random.normalFromTo(
-        //    //        1, (dimmCellLength - 2), stdDevRatio, util::Random::Option::None) };
-        //    //
-        //    //    const std::size_t levelWhenEdgeHelpStops{ 4 };
-        //    //    if (lvl.number() < levelWhenEdgeHelpStops)
-        //    //    {
-        //    //        const int edgeTooClose{ 4 };
-        //    //        if (distance <= edgeTooClose)
-        //    //        {
-        //    //            distance += 1;
-        //    //            distance += (levelWhenEdgeHelpStops - lvl.number());
-        //    //        }
-        //    //        else if ((dimmCellLength - distance) <= edgeTooClose)
-        //    //        {
-        //    //            distance -= 1;
-        //    //            distance -= (levelWhenEdgeHelpStops - lvl.number());
-        //    //        }
-        //    //    }
-        //    //
-        //    //    return distance;
-        //    //};
-        //    //
-        //    // const int left{ pickRandomDimmPos(context.layout.cell_counts.x) };
-        //    // const int top{ pickRandomDimmPos(context.layout.cell_counts.y) };
-        //    //
-        //    // replaceWithNewPiece(context, Piece::Food, BoardPos_t(left, top));
-
         // place random abstacles
         // for (int i(0); i < 20; ++i)
         //{
-        //    placePieceAtRandomPos(context, Piece::Wall);
+        //    addNewPieceAtRandomFreePos(context, Piece::Wall);
         //}
     }
 
@@ -595,9 +551,6 @@ namespace snake
 
         return outerPositions;
     }
-
-    // BoardPosVec_t findFreeBoardPosAtDifficulty(
-    //    const Context & context, const float difficultyRatio, const std::size_t count) const;
 
     void Board::colorQuad(const BoardPos_t & pos, const sf::Color & color)
     {
