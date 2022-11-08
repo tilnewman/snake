@@ -122,7 +122,6 @@ namespace snake
         sf::Color board_outline_color{ 230, 190, 180, 100 };
 
         float cell_size_window_ratio{ 0.0175f };
-        // float board_size_reduction_ratio{ 1.0f }; // { 0.9f };
         float status_bounds_height_ratio{ 0.02f };
 
         float cell_anim_grow_ratio{ 1.04f };
