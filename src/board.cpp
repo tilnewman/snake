@@ -24,8 +24,6 @@ namespace snake
         m_tailPieces.clear();
         m_wallPieces.clear();
         m_foodPieces.clear();
-        m_candleSprite = sf::Sprite();
-        m_candleBlackSideQuads.clear();
         m_teleportQuads.clear();
     }
 
@@ -111,17 +109,6 @@ namespace snake
 
         m_teleportQuads.clear();
         m_teleportQuads.reserve(1000);
-
-        // setup candle light sprite
-        m_candleSprite.setTexture(context.media.candleTexture());
-        m_candleSprite.setScale(1.0f, 1.0f);
-        util::setOriginToCenter(m_candleSprite);
-
-        const float candleScaleVert{ 0.7f * (context.layout.board_bounds_f.height /
-                                             m_candleSprite.getLocalBounds().height) };
-
-        m_candleSprite.setScale(candleScaleVert, candleScaleVert);
-        m_candleSprite.setColor(sf::Color::Transparent);
 
         //
         m_pieceVerts.reserve(context.layout.cell_count_total_st);
@@ -428,67 +415,6 @@ namespace snake
                 }
             }
         }
-
-        if (!m_headPieces.empty() && (m_candleSprite.getColor().a > 0))
-        {
-            const sf::FloatRect headBounds{ context.layout.cellBounds(
-                m_headPieces.front().position()) };
-
-            m_candleSprite.setPosition(util::center(headBounds));
-
-            // setup the black sides of the candle light when it doesn't cover the whole
-            // board extend it past the edges of the window just in case border pad is ever
-            // added
-
-            m_candleBlackSideQuads.clear();
-
-            const float pad{ 2.0f };
-            const float doublePad{ pad * 2.0f };
-            const sf::FloatRect bounds{ context.layout.board_bounds_f };
-
-            const sf::FloatRect extendedbounds{
-                (0.0f - pad), (0.0f - pad), (bounds.width + doublePad), (bounds.height + doublePad)
-            };
-
-            const float leftEdge{ m_candleSprite.getGlobalBounds().left + pad };
-
-            const sf::FloatRect leftRect(
-                extendedbounds.left,
-                extendedbounds.top,
-                (leftEdge - extendedbounds.left),
-                extendedbounds.height);
-
-            const float topEdge{ m_candleSprite.getGlobalBounds().top + pad };
-
-            const sf::FloatRect topRect(
-                extendedbounds.left,
-                extendedbounds.top,
-                extendedbounds.width,
-                (topEdge - extendedbounds.top));
-
-            const float rightEdge{ util::right(m_candleSprite.getGlobalBounds()) - pad };
-
-            const sf::FloatRect rightRect{
-                rightEdge, extendedbounds.top, extendedbounds.width, extendedbounds.height
-            };
-
-            const float bottomEdge{ util::bottom(m_candleSprite.getGlobalBounds()) - pad };
-
-            const sf::FloatRect bottomRect{
-                extendedbounds.left, bottomEdge, extendedbounds.width, extendedbounds.height
-            };
-
-            util::appendQuadVerts(leftRect, m_candleBlackSideQuads, sf::Color::Black);
-            util::appendQuadVerts(topRect, m_candleBlackSideQuads, sf::Color::Black);
-            util::appendQuadVerts(rightRect, m_candleBlackSideQuads, sf::Color::Black);
-            util::appendQuadVerts(bottomRect, m_candleBlackSideQuads, sf::Color::Black);
-        }
-
-        //// TODO REMOVE AFTER TESTING SURROUNDING ALGS
-        // for (const BoardPos_t & pos : findFreeBoardPosAroundBody(context, 4, 1, 0))
-        //{
-        //    replaceWithNewPiece(context, Piece::Poison, pos);
-        //}
     }
 
     void Board::draw(
@@ -508,12 +434,6 @@ namespace snake
         if (!m_pieceVerts.empty())
         {
             target.draw(&m_pieceVerts[0], m_pieceVerts.size(), sf::Quads, states);
-        }
-
-        if (m_candleSprite.getColor().a > 0)
-        {
-            target.draw(m_candleSprite, sf::BlendMultiply);
-            target.draw(m_candleBlackSideQuads);
         }
 
         if (!m_teleportQuads.empty())

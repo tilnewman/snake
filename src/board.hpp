@@ -363,9 +363,6 @@ namespace snake
         std::vector<FoodPiece> m_foodPieces;
         std::vector<PoisonPiece> m_poisonPieces;
 
-        sf::Sprite m_candleSprite;
-        sf::VertexArray m_candleBlackSideQuads{ sf::Quads };
-
         std::vector<sf::Vertex> m_teleportQuads;
 
         // clang-format off
