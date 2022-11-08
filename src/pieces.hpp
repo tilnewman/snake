@@ -213,7 +213,7 @@ namespace snake
                 case Piece::Head: return sf::Color::Green;
                 case Piece::Tail: return TailPiece::m_colorLight;
                 case Piece::Food: return sf::Color::Yellow;
-                case Piece::Wall: return sf::Color(75, 40, 5);
+                case Piece::Wall: return sf::Color(105, 70, 35);
                 case Piece::Poison: return sf::Color::Red;
                 default: return sf::Color::Transparent;
             }
