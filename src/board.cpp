@@ -116,19 +116,34 @@ namespace snake
         replaceWithNewPiece(context, Piece::Head, level.start_pos);
 
         // place walls
-        // for (const BoardPos_t & pos : level.wall_positions)
-        //{
-        //    replaceWithNewPiece(context, Piece::Wall, pos);
-        //}
+        if (context.random.boolean())
+        {
+            for (const BoardPos_t & pos : level.wall_positions)
+            {
+                replaceWithNewPiece(context, Piece::Wall, pos);
+            }
+        }
 
         // place random obstacles
-        // for (int i(0); i < 20; ++i)
-        //{
-        //    addNewPieceAtRandomFreePos(context, Piece::Wall);
-        //}
+        if (context.random.boolean())
+        {
+            for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
+            {
+                addNewPieceAtRandomFreePos(context, Piece::Wall);
+            }
+        }
 
         // place food
-        // TODO
+        if (context.random.boolean())
+        {
+            const std::size_t foodCount = context.random.fromTo(
+                static_cast<std::size_t>(1), context.game.level().remainingToEat());
+
+            for (std::size_t i(0); i < foodCount; ++i)
+            {
+                addNewPieceAtRandomFreePos(context, Piece::Food);
+            }
+        }
     }
 
     bool Board::isPiece(const BoardPos_t & pos, const Piece piece) const
