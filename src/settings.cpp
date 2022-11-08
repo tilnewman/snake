@@ -390,10 +390,9 @@ namespace snake
 
         const std::size_t eatCountSqrtST{ static_cast<std::size_t>(sqrt(lvl.eat_count_current)) };
 
-        lvl.tail_start_length = 3;
+        lvl.tail_start_length = 10;
 
-        lvl.tail_grow_after_eat =
-            (1_st + (lvl.eat_count_current * lvl.number) + levelSqrtST + eatCountSqrtST);
+        lvl.tail_grow_after_eat = (3_st + lvl.eat_count_current + levelSqrtST + eatCountSqrtST);
 
         if (lvl.number <= lvl.eat_count_required)
         {
