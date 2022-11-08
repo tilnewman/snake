@@ -136,8 +136,8 @@ namespace snake
         // place food
         if (context.random.boolean())
         {
-            const std::size_t foodCount = context.random.fromTo(
-                static_cast<std::size_t>(1), context.game.level().remainingToEat());
+            const std::size_t foodCount =
+                context.random.fromTo(1_st, context.game.level().remainingToEat());
 
             for (std::size_t i(0); i < foodCount; ++i)
             {
