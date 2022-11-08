@@ -265,43 +265,6 @@ namespace snake
 
     //
 
-    // void GameConfig::reset()
-    //{
-    //    is_god_mode = false;
-    //    is_speed_test = false;
-    //    is_level_test = false;
-    //    is_level_test_manual = false;
-    //    is_all_video_mode_test = false;
-    //
-    //    media_path = { std::filesystem::current_path() / "media" };
-    //
-    //    sf_window_style = static_cast<unsigned>(sf::Style::Fullscreen);
-    //
-    //    resolution = sf::Vector2u(
-    //        sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height);
-    //
-    //    frame_rate_limit = 60u; // zero means there is no limit
-    //
-    //    window_background_color = sf::Color::Black;
-    //    board_background_color = sf::Color(25, 0, 5);
-    //    alt_board_background_color = sf::Color(37, 0, 23);
-    //    board_outline_color = sf::Color(230, 190, 180, 100);
-    //
-    //    cell_size_window_ratio = 0.0175f;
-    //    status_bounds_height_ratio = 0.035f;
-    //
-    //    cell_anim_grow_ratio = 1.04f;
-    //    cell_anim_alpha_shrink_ratio = 0.95f;
-    //
-    //    will_put_black_border_around_cells = true;
-    //
-    //    initial_volume = 50.0f;
-    //    eat_sfx_pitch_start = 0.4f;
-    //    eat_sfx_pitch_adj = 0.033f;
-    //
-    //    verifyAllMembers();
-    //}
-
     void GameConfig::verifyAllMembers()
     {
         M_CHECK_SS(std::filesystem::exists(media_path), media_path);
@@ -403,24 +366,8 @@ namespace snake
         ++lvl.eat_count_current;
         lvl.sec_per_turn_current *= lvl.sec_per_turn_shrink_per_eat;
 
-        // const float levelNumberF { static_cast<float>(lvl.number) };
-
-        // const float levelSqrtF { std::clamp(
-        //    std::sqrtf(levelNumberF), 1.0f, (1.0f + (levelNumberF / 2.0f))) };
-
-        // const std::size_t levelSqrtST { static_cast<std::size_t>(levelSqrtF) };
-
-        // const std::size_t eatCountSqrtST { static_cast<std::size_t>(sqrt(lvl.eat_count_current))
-        // };
-
         lvl.tail_grow_after_eat =
             (1_st + (lvl.eat_count_current * lvl.number) + lvl.number + lvl.eat_count_current);
-
-        // std::cout << "Pickup Food #" << lvl.eat_count_current << " on level #" << lvl.number <<
-        // ":"; std::cout << "\n\t level_sqrt             = " << levelSqrtST; std::cout << "\n\t
-        // eat_count_current_sqrt = " << eatCountSqrtST; std::cout << "\n\t tail_grow_after_eat    =
-        // " << lvl.tail_grow_after_eat; std::cout << "\n\t sec_per_turn_current   = " <<
-        // lvl.sec_per_turn_current; std::cout << std::endl << std::endl;
     }
 
     void Level::setupForLevelNumber(Context & context, const std::size_t levelNumberST)
@@ -457,13 +404,13 @@ namespace snake
             lvl.pickups_visible_at_start_count = 0;
         }
 
-        // start speed where it takes 5 seconds to travel the height of the board
+        // start speed where it takes 6 seconds to travel the height of the board
         lvl.sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
 
         // ...and end so fast that it only takes 2 seconds
-        lvl.sec_per_turn_fastest = (1.0f / static_cast<float>(context.layout.cell_counts.y));
+        lvl.sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
 
-        lvl.sec_per_turn_shrink_per_eat = 0.975f;
+        lvl.sec_per_turn_shrink_per_eat = 0.925f;
         //    = (1.0f
         //       - ((lvl.sec_per_turn_slowest - lvl.sec_per_turn_fastest)
         //          / static_cast<float>(lvl.eat_count_required)));
@@ -471,18 +418,6 @@ namespace snake
         lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
 
         lvl.wall_positions = makeWallPositionsForLevelNumber(context);
-
-        // if ((num % levels_per_inc_eat_required) == 0)
-        //{
-        //    ++eat_count_required;
-        //}
-
-        // adjust how far the tail grows after eating
-        // const std::size_t cellCountSqrt{ static_cast<std::size_t>(
-        //    std::sqrt(context.layout.cell_count_total)) };
-        //
-        // const std::size_t tailGrowByLevel{ (num * (cellCountSqrt / 5_st)) };
-        // tail_grow_after_eat += tailGrowByLevel;
 
         // std::cout << "Setting up for level #" << levelNumberST << ":";
         // std::cout << "\n\t level_sqrt             = " << levelSqrtST;
@@ -505,9 +440,6 @@ namespace snake
     BoardPos_t Level::findNextFoodPos(const Context & context) const
     {
         return context.board.findFreeBoardPosRandom(context).value_or(BoardPosInvalid);
-
-        // const auto freePositions{ context.board.findAllFreePositions(context) };
-        // return context.random.from(freePositions);
     }
 
     //

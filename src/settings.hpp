@@ -157,7 +157,6 @@ namespace snake
         float sec_per_turn_current{ 0.0f };
         float sec_per_turn_shrink_per_eat{ 0.0f };
 
-        // tile::Job tiles;
         BoardPosVec_t wall_positions;
     };
 
@@ -176,8 +175,6 @@ namespace snake
         const LevelDetails & details() const { return m_details; }
         void handlePickupFood(const Context & context);
         void setupForLevelNumber(Context & context, const std::size_t levelNumber);
-
-        // static void testLevelSetupsSkippingRepeats(Context & context);
 
       private:
         BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);

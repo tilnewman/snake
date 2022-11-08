@@ -121,20 +121,14 @@ namespace snake
         //    replaceWithNewPiece(context, Piece::Wall, pos);
         //}
 
-        // place food
-        // TODO
-
-        // for (const BoardPos_t & pos :
-        //     BoardPosVec_t { { 5, 5 }, { 6, 5 }, { 7, 5 }, { 8, 5 }, { 9, 5 } })
-        //{
-        //    replaceWithNewPiece(context, Piece::Food, pos);
-        //}
-
-        // place random abstacles
+        // place random obstacles
         // for (int i(0); i < 20; ++i)
         //{
         //    addNewPieceAtRandomFreePos(context, Piece::Wall);
         //}
+
+        // place food
+        // TODO
     }
 
     bool Board::isPiece(const BoardPos_t & pos, const Piece piece) const
@@ -304,8 +298,6 @@ namespace snake
 
     void Board::update(Context & context, const float elapsedSec)
     {
-        // m_poisonPieces.clear();
-
         for (HeadPiece & piece : m_headPieces)
         {
             piece.update(context, elapsedSec);
@@ -611,6 +603,7 @@ namespace snake
 
         return positions;
     }
+
     const AdjacentInfoOpt_t
         Board::adjacentInfoOpt(const BoardPos_t & centerPos, const sf::Keyboard::Key dir) const
     {
