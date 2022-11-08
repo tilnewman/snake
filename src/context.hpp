@@ -21,7 +21,6 @@ namespace snake
     struct IStatesPending;
     class Layout;
     struct IRegion;
-    class TeleportEffect;
 
     //
 
@@ -38,8 +37,7 @@ namespace snake
             util::AnimationPlayer & ani,
             Animations & cellAnims,
             IStatesPending & sta,
-            IRegion & stat,
-            TeleportEffect & tele)
+            IRegion & stat)
             : config(con)
             , layout(lay)
             , game(gam)
@@ -51,7 +49,6 @@ namespace snake
             , cell_anims(cellAnims)
             , state(sta)
             , status(stat)
-            , teleporter(tele)
         {}
 
         Context(const Context &) = delete;
@@ -71,7 +68,6 @@ namespace snake
         Animations & cell_anims;
         IStatesPending & state;
         IRegion & status;
-        TeleportEffect & teleporter;
 
         std::size_t fps{ 0 };
     };

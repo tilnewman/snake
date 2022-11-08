@@ -13,7 +13,6 @@
 #include "sound-player.hpp"
 #include "states.hpp"
 #include "status-region.hpp"
-#include "teleport-effect.hpp"
 
 #include <memory>
 #include <vector>
@@ -67,7 +66,6 @@ namespace snake
         util::AnimationPlayer m_animationPlayer;
         Animations m_cellAnims;
         StatusRegion m_statusRegion;
-        TeleportEffect m_teleportEffect;
         StateMachine m_stateMachine;
         Context m_context;
 

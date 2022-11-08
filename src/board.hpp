@@ -341,15 +341,6 @@ namespace snake
         bool isQuadIndexValid(const std::size_t index) const;
         bool isQuadFree(const std::size_t index) const;
 
-        // void setupTeleportWall(Context & context, const TeleportWallPos & telePos);
-        //
-        // sf::FloatRect
-        //    combineTeleportWallPieces(Context &, const BoardPos_t & firstPiecePos, const int
-        //    count);
-        //
-        // sf::Vector2f appendTeleportLineVerts(
-        //    const Context &, const sf::FloatRect & bounds, const BoardPos_t & firstPos);
-
       private:
         static inline const sf::Color m_freeVertColor{ sf::Color::Transparent };
         static inline const sf::Vertex m_freeQuadVertex{ { 0.0f, 0.0f }, m_freeVertColor };
@@ -362,8 +353,6 @@ namespace snake
         std::vector<WallPiece> m_wallPieces;
         std::vector<FoodPiece> m_foodPieces;
         std::vector<PoisonPiece> m_poisonPieces;
-
-        std::vector<sf::Vertex> m_teleportQuads;
 
         // clang-format off
         static inline std::array<sf::Vector2i, 9> surroundingsPositionOffsets = {

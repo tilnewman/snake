@@ -14,7 +14,6 @@
 #include "random.hpp"
 #include "sound-player.hpp"
 #include "status-region.hpp"
-#include "teleport-effect.hpp"
 #include "util.hpp"
 
 #include <sstream>
@@ -214,7 +213,6 @@ namespace snake
     {
         context.board.draw(context, target, states);
 
-        target.draw(context.teleporter, states);
         target.draw(context.anim, states);
         target.draw(context.cell_anims, states);
         target.draw(context.status, states);

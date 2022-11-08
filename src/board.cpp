@@ -7,7 +7,6 @@
 #include "pieces.hpp"
 #include "random.hpp"
 #include "settings.hpp"
-#include "teleport-effect.hpp"
 #include "util.hpp"
 
 #include <algorithm>
@@ -24,7 +23,6 @@ namespace snake
         m_tailPieces.clear();
         m_wallPieces.clear();
         m_foodPieces.clear();
-        m_teleportQuads.clear();
     }
 
     std::string Board::toString(const Context & context) const
@@ -107,9 +105,6 @@ namespace snake
     {
         reset();
 
-        m_teleportQuads.clear();
-        m_teleportQuads.reserve(1000);
-
         //
         m_pieceVerts.reserve(context.layout.cell_count_total_st);
         m_headPieces.reserve(context.layout.cell_count_total_st);
@@ -184,11 +179,6 @@ namespace snake
         //{
         //    placePieceAtRandomPos(context, Piece::Wall);
         //}
-
-        // for (const TeleportWallPos & telWallPos : level.teleport_positions)
-        //{
-        //    setupTeleportWall(context, telWallPos);
-        //}
     }
 
     bool Board::isPiece(const BoardPos_t & pos, const Piece piece) const
@@ -249,14 +239,10 @@ namespace snake
 
         M_CHECK_SS(entryAt(pos).has_value(), pos);
         M_CHECK_SS((entryAt(pos)->piece_enum == piece), entryAt(pos)->piece_enum);
-
-        // context.teleporter.add(context, pos, piece::toColor(piece));
     }
 
     std::size_t Board::removePiece(Context &, const BoardPos_t & posToRemove)
     {
-        // context.teleporter.remove(posToRemove);
-
         auto erasePieceAtPosition = [&](auto & cont, const BoardPos_t & posTemp) {
             const std::size_t countBefore{ cont.size() };
 
@@ -383,38 +369,6 @@ namespace snake
         {
             piece.update(context, elapsedSec);
         }
-
-        {
-            static bool willLighten{ false };
-            const sf::Color colorAdj(0, 0, 0, 1);
-
-            for (sf::Vertex & vert : m_teleportQuads)
-            {
-                if (vert.color.r == 0)
-                {
-                    continue;
-                }
-
-                if (willLighten)
-                {
-                    vert.color += colorAdj;
-
-                    if (vert.color.a >= 150)
-                    {
-                        willLighten = !willLighten;
-                    }
-                }
-                else
-                {
-                    vert.color -= colorAdj;
-
-                    if (vert.color.a <= 50)
-                    {
-                        willLighten = !willLighten;
-                    }
-                }
-            }
-        }
     }
 
     void Board::draw(
@@ -434,11 +388,6 @@ namespace snake
         if (!m_pieceVerts.empty())
         {
             target.draw(&m_pieceVerts[0], m_pieceVerts.size(), sf::Quads, states);
-        }
-
-        if (!m_teleportQuads.empty())
-        {
-            target.draw(&m_teleportQuads[0], m_teleportQuads.size(), sf::Quads, sf::BlendAdd);
         }
     }
 
@@ -903,125 +852,4 @@ namespace snake
         return true;
     }
 
-    // void Board::setupTeleportWall(Context & context, const TeleportWallPos & telePos)
-    //{
-    //    M_CHECK_SS(
-    //        ((telePos.pos.x == 0) || (telePos.pos.y == 0)),
-    //        "pos=" << telePos.pos << ", count=" << telePos.count);
-    //
-    //    M_CHECK_SS((telePos.count > 0), "count=" << telePos.count);
-    //
-    //    const sf::FloatRect bounds{ combineTeleportWallPieces(
-    //        context, telePos.pos, telePos.count) };
-    //
-    //    appendTeleportLineVerts(context, bounds, telePos.pos);
-    //
-    //    //
-    //
-    //    BoardPos_t oppPos{ telePos.pos };
-    //    if (oppPos.x == 0)
-    //    {
-    //        oppPos.x = (context.layout.cell_counts.x - 1);
-    //    }
-    //    else
-    //    {
-    //        M_CHECK_SS((oppPos.y == 0), "pos=" << telePos.pos << ", count=" << telePos.count);
-    //        oppPos.y = (context.layout.cell_counts.y - 1);
-    //    }
-    //
-    //    const sf::FloatRect oppBounds{ combineTeleportWallPieces(context, oppPos,
-    //    telePos.count)
-    //    }; appendTeleportLineVerts(context, oppBounds, oppPos);
-    //}
-    //
-    // sf::FloatRect
-    //    Board::combineTeleportWallPieces(Context & context, const BoardPos_t & pos, const int
-    //    count)
-    //{
-    //    const sf::Keyboard::Key countDir{
-    //        ((pos.x == 0) || (pos.x == (context.layout.cell_counts.x - 1))) ?
-    //        sf::Keyboard::Down
-    //                                                                        :
-    //                                                                        sf::Keyboard::Right
-    //    };
-    //
-    //    sf::VertexArray tempVerts{ sf::Quads };
-    //
-    //    BoardPos_t countPos{ pos };
-    //    for (int cnt(0); cnt < count; ++cnt)
-    //    {
-    //        util::appendQuadVerts(context.layout.cellBounds(countPos), tempVerts);
-    //        removePiece(context, countPos);
-    //        countPos = keys::move(countPos, countDir);
-    //    }
-    //
-    //    return tempVerts.getBounds();
-    //}
-    //
-    // sf::Vector2f Board::appendTeleportLineVerts(
-    //    const Context & context, const sf::FloatRect & piecesBounds, const BoardPos_t & pos)
-    //{
-    //    const sf::Color color(230, 190, 180, 100);
-    //
-    //    std::vector<sf::Vertex> shadowVerts;
-    //    util::appendQuadVerts(piecesBounds, shadowVerts, color);
-    //
-    //    const float moveAmount{ 1.0f };
-    //    // (context.layout.cell_size.x * 0.5f) - 1.0f};
-    //
-    //    sf::Vector2f move(0.0f, 0.0f);
-    //
-    //    if (pos.x == 0)
-    //    {
-    //        // line on the left, emitting effects to the right
-    //        move.x = moveAmount;
-    //        shadowVerts[1].color = sf::Color::Transparent;
-    //        shadowVerts[2].color = sf::Color::Transparent;
-    //    }
-    //    else if (pos.x == (context.layout.cell_counts.x - 1))
-    //    {
-    //        // line on the right, emitting effects to the left
-    //        move.x -= moveAmount;
-    //        shadowVerts[0].color = sf::Color::Transparent;
-    //        shadowVerts[3].color = sf::Color::Transparent;
-    //    }
-    //    else if (pos.y == 0)
-    //    {
-    //        // line on the top, emitting effects down
-    //        move.y = moveAmount;
-    //        shadowVerts[2].color = sf::Color::Transparent;
-    //        shadowVerts[3].color = sf::Color::Transparent;
-    //    }
-    //    else if (pos.y == (context.layout.cell_counts.y - 1))
-    //    {
-    //        // line on the bottom, emitting effects up
-    //        move.y -= moveAmount;
-    //        shadowVerts[0].color = sf::Color::Transparent;
-    //        shadowVerts[1].color = sf::Color::Transparent;
-    //    }
-    //
-    //    for (sf::Vertex & vert : shadowVerts)
-    //    {
-    //        vert.position += move;
-    //        m_teleportQuads.push_back(vert);
-    //    }
-    //
-    //    // for (sf::Vertex & vert : shadowVerts)
-    //    //{
-    //    //    vert.position -= (2.0f * move);
-    //    //
-    //    //    if (sf::Color::Transparent == vert.color)
-    //    //    {
-    //    //        vert.color = color;
-    //    //    }
-    //    //    else
-    //    //    {
-    //    //        vert.color = sf::Color::Transparent;
-    //    //    }
-    //    //
-    //    //    m_teleportQuads.push_back(vert);
-    //    //}
-    //
-    //    return {};
-    //}
 } // namespace snake

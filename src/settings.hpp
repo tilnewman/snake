@@ -21,16 +21,6 @@
 
 namespace snake
 {
-    struct TeleportWallPos
-    {
-        BoardPos_t pos{ 0, 0 };
-        int count{ 0 };
-    };
-
-    using TeleportWallPosVec_t = std::vector<TeleportWallPos>;
-
-    //
-
     // Parameters that define how the board is divided into cells (square tiles).
     class Layout
     {
@@ -169,7 +159,6 @@ namespace snake
 
         // tile::Job tiles;
         BoardPosVec_t wall_positions;
-        TeleportWallPosVec_t teleport_positions;
     };
 
     // Parameters that change per level and define how hard it is to play the game.
@@ -192,7 +181,6 @@ namespace snake
 
       private:
         BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
-        TeleportWallPosVec_t makeTeleportPositionsForLevelNumber(Context & context) const;
         BoardPos_t findNextFoodPos(const Context & context) const;
 
       private:

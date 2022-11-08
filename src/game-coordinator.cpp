@@ -31,7 +31,6 @@ namespace snake
         , m_animationPlayer(m_random)
         , m_cellAnims()
         , m_statusRegion()
-        , m_teleportEffect()
         , m_stateMachine()
         , m_context(
               m_config,
@@ -44,8 +43,7 @@ namespace snake
               m_animationPlayer,
               m_cellAnims,
               m_stateMachine,
-              m_statusRegion,
-              m_teleportEffect)
+              m_statusRegion)
         , m_runClock()
     {}
 
@@ -98,7 +96,6 @@ namespace snake
 
         m_stateMachine.reset();
         m_statusRegion.reset(m_context);
-        m_teleportEffect.reset(m_context);
 
         if (m_config.isTest())
         {

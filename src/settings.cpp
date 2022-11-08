@@ -472,8 +472,6 @@ namespace snake
 
         lvl.wall_positions = makeWallPositionsForLevelNumber(context);
 
-        lvl.teleport_positions = makeTeleportPositionsForLevelNumber(context);
-
         // if ((num % levels_per_inc_eat_required) == 0)
         //{
         //    ++eat_count_required;
@@ -502,12 +500,6 @@ namespace snake
     BoardPosVec_t Level::makeWallPositionsForLevelNumber(Context & context)
     {
         return context.layout.default_wall_positions;
-    }
-
-    TeleportWallPosVec_t Level::makeTeleportPositionsForLevelNumber(Context &) const
-    {
-        // TODO
-        return TeleportWallPosVec_t();
     }
 
     BoardPos_t Level::findNextFoodPos(const Context & context) const
