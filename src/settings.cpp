@@ -293,13 +293,11 @@ namespace snake
         ss << "GameConfig:";
         ss << "\n  media_path              = " << media_path;
         ss << "\n  is_god_mode             = " << std::boolalpha << is_god_mode;
-        ss << "\n  is_speed_test           = " << std::boolalpha << is_speed_test;
         ss << "\n  resolution              = " << resolution;
         ss << "\n  frame_rate_limit        = " << frame_rate_limit;
         ss << "\n  initial_volume          = " << initial_volume;
         ss << "\n  cell_size_window_ratio  = " << cell_size_window_ratio;
         ss << "\n  stat_reg_height_ratio   = " << status_bounds_height_ratio;
-
         ss << "\n  is_fullscreen           = "
            << ((sf_window_style & sf::Style::Fullscreen) ? "true"
                                                          : std::to_string(sf_window_style));

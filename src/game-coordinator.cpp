@@ -158,6 +158,7 @@ namespace snake
             m_bloomWindow = std::make_unique<util::BloomEffectHelper>(m_window);
         }
 
+        // don't use bloom effect when testing because it reduces frame rate significantly
         if (!m_config.isTest())
         {
             m_bloomWindow->isEnabled(true);
@@ -192,6 +193,12 @@ namespace snake
         {
             printDebugStatus();
         }
+
+        const float runTimeSec{ std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f) /
+                                100.0f };
+
+        std::cout << "Play Time: " << runTimeSec << "sec\n";
+        std::cout << "Final Score:" << m_game.score() << std::endl;
     }
 
     void GameCoordinator::handlePeriodicTasks(sf::Clock & periodClock, std::size_t & frameCounter)
@@ -214,9 +221,8 @@ namespace snake
 
         m_cellAnims.cleanup();
 
-        // There are just too many ways for food to either be destroyed or unreachable.
-        // So this check prevents players from being trapped in a level requiring them to eat food
-        // that cannot be reached.
+        // Periodically place new food at random place on the map, because there
+        // are just too many ways for food to either be destroyed or unreachable.
         if ((m_stateMachine.stateEnum() == State::Play) && !m_game.isGameOver() &&
             !m_game.isLevelComplete())
         {
@@ -251,16 +257,10 @@ namespace snake
 
     void GameCoordinator::printDebugStatus()
     {
-        const float runTimeSec{ std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f) /
-                                100.0f };
-
         std::cout << std::endl;
-
         std::cout << m_config.toString() << "\n\n";
         std::cout << m_layout.toString() << "\n\n";
         std::cout << m_board.toString(m_context) << "\n\n";
-        std::cout << m_game.toString() << "\n\n";
-
-        std::cout << "Play Time: " << runTimeSec << "sec" << std::endl;
+        std::cout << m_game.toString() << std::endl;
     }
 } // namespace snake

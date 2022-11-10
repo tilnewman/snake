@@ -34,26 +34,23 @@ int main(const int argc, const char * const argv[])
     GameConfig config;
     config.media_path = ((argc > 1) ? argv[1] : "no_media_folder");
     std::cout << "media_path=" << config.media_path << std::endl;
+
     config.frame_rate_limit = 0;
     config.cell_size_window_ratio = 0.015f;
-    config.sf_window_style = sf::Style::Fullscreen;
-    config.is_level_test = false;
-    config.is_level_test_manual = false;
     config.is_god_mode = false;
-
-    GameCoordinator game(config);
 
     try
     {
+        GameCoordinator game(config);
         game.play();
     }
     catch (const std::exception & ex)
     {
-        std::cout << "EXCEPTION ERROR: DURING GAMEPLAY:  \"" << ex.what() << "\"" << std::endl;
+        std::cout << "EXCEPTION ERROR DURING GAMEPLAY:  \"" << ex.what() << "\"" << std::endl;
     }
     catch (...)
     {
-        std::cout << "EXCEPTION ERROR: DURING GAMEPLAY: \"UNKOWNN\"" << std::endl;
+        std::cout << "EXCEPTION ERROR DURING GAMEPLAY: \"UNKOWNN\"" << std::endl;
     }
 
     return EXIT_SUCCESS;
