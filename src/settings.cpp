@@ -164,19 +164,6 @@ namespace snake
                 sf::IntRect bounds{ (top_left_pos + (pos * cell_size)), cell_size };
 
                 //
-                bool willShadeThisCell{ (horiz % 2) == 0 };
-                if ((vert % 2) == 0)
-                {
-                    willShadeThisCell = !willShadeThisCell;
-                }
-
-                if (willShadeThisCell)
-                {
-                    util::appendQuadVerts(
-                        sf::FloatRect(bounds), cell_quad_verts, config.alt_board_background_color);
-                }
-
-                //
                 if (config.will_put_black_border_around_cells)
                 {
                     ++bounds.left;
@@ -189,6 +176,19 @@ namespace snake
                     ((bounds.left >= 0) && (bounds.top >= 0) && (bounds.width > 1) &&
                      (bounds.height > 1)),
                     "board_pos=" << pos << ", cell_bounds=" << bounds);
+
+                //
+                bool willShadeThisCell{ (horiz % 2) == 0 };
+                if ((vert % 2) == 0)
+                {
+                    willShadeThisCell = !willShadeThisCell;
+                }
+
+                if (willShadeThisCell)
+                {
+                    util::appendQuadVerts(
+                        sf::FloatRect(bounds), cell_quad_verts, config.alt_board_background_color);
+                }
 
                 //
                 all_valid_positions.insert(pos);
