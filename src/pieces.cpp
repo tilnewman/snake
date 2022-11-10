@@ -30,22 +30,7 @@ namespace snake
     {
         std::ostringstream ss;
 
-        const std::string pieceTypeName = [&]() {
-            // clang-format off
-            switch (m_piece)
-            {
-                case Piece::Head:   { return "Head"; }
-                case Piece::Tail:   { return "Tail"; }
-                case Piece::Food:   { return "Food"; }
-                case Piece::Wall:   { return "Wall"; }
-                case Piece::Poison: { return "Poison"; }
-                default:            { return "ERROR"; }
-            }
-            // clang-format on            
-        }
-        ();
-        
-        ss << pieceTypeName << " Piece:";
+        ss << piece::toString(m_piece) << " Piece:";
         ss << "\n\t position            = " << position();
         ss << "\n\t color               = " << color();
         ss << "\n\t turn_duration_sec   = " << m_turnDurationSec;
@@ -86,7 +71,7 @@ namespace snake
 
     FoodPiece::FoodPiece(Context & context, const BoardPos_t & pos)
         : PieceBase(context, Piece::Food, pos, -1.0f)
-    { }
+    {}
 
     //
 
@@ -97,7 +82,7 @@ namespace snake
         , m_directionNextNext(keys::not_a_key)
         , m_tailGrowRemainingCount(context.game.level().tail_start_length)
     {
-        const sf::Keyboard::Key initialRandomDirection { context.random.from(
+        const sf::Keyboard::Key initialRandomDirection{ context.random.from(
             { sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Left, sf::Keyboard::Right }) };
 
         m_directionPrev = initialRandomDirection;
@@ -112,7 +97,7 @@ namespace snake
             return;
         }
 
-        const auto key { event.key.code };
+        const auto key{ event.key.code };
         if (!keys::isArrow(key))
         {
             return;
@@ -144,17 +129,17 @@ namespace snake
 
     auto HeadPiece::move(Context & context)
     {
-        const BoardPos_t oldPos { position() };
-        const BoardPos_t newPos { keys::move(oldPos, m_directionNext) };
+        const BoardPos_t oldPos{ position() };
+        const BoardPos_t newPos{ keys::move(oldPos, m_directionNext) };
         M_CHECK_SS((newPos != oldPos), "oldPos=" << oldPos << ", newPos=" << newPos);
 
-        const PieceEnumOpt_t newPosEnumOpt { context.board.pieceEnumOptAt(newPos) };
+        const PieceEnumOpt_t newPosEnumOpt{ context.board.pieceEnumOptAt(newPos) };
 
         // check for miss must occur before things move around
         if (!newPosEnumOpt)
         {
-            const Surroundings oldSurr { context.board.surroundings(oldPos) };
-            const Surroundings newSurr { context.board.surroundings(newPos) };
+            const Surroundings oldSurr{ context.board.surroundings(oldPos) };
+            const Surroundings newSurr{ context.board.surroundings(newPos) };
 
             if ((oldSurr.pieceCount(Piece::Food) > 0) && (newSurr.pieceCount(Piece::Food) == 0))
             {
@@ -182,7 +167,7 @@ namespace snake
         }
         else
         {
-            const LevelDetails & lvl { context.game.level() };
+            const LevelDetails & lvl{ context.game.level() };
             m_tailGrowRemainingCount += lvl.tail_grow_after_eat;
             turnDurationSec(lvl.sec_per_turn_current);
         }
@@ -244,18 +229,18 @@ namespace snake
 
         ++m_stMovesTowardCurrentTargetCount;
 
-        const bool haveTarget { context.layout.isPositionValid(m_stTargetPos) };
+        const bool haveTarget{ context.layout.isPositionValid(m_stTargetPos) };
 
-        const bool isThereStillFoodAtTarget {
-            haveTarget
-            && (context.board.pieceEnumOptAt(m_stTargetPos).value_or(Piece::Wall) == Piece::Food)
+        const bool isThereStillFoodAtTarget{
+            haveTarget &&
+            (context.board.pieceEnumOptAt(m_stTargetPos).value_or(Piece::Wall) == Piece::Food)
         };
 
-        const bool isTimeToGiveUpOnRechingTarget { m_stMovesTowardCurrentTargetCount
-                                                   > m_stMovesTowardCurrentTargetCountMax };
+        const bool isTimeToGiveUpOnRechingTarget{ m_stMovesTowardCurrentTargetCount >
+                                                  m_stMovesTowardCurrentTargetCountMax };
 
-        const bool willPickNewTarget { !haveTarget || !isThereStillFoodAtTarget
-                                       || isTimeToGiveUpOnRechingTarget };
+        const bool willPickNewTarget{ !haveTarget || !isThereStillFoodAtTarget ||
+                                      isTimeToGiveUpOnRechingTarget };
 
         if (willPickNewTarget)
         {

@@ -347,6 +347,7 @@ namespace snake
         std::vector<WallPiece> m_wallPieces;
         std::vector<FoodPiece> m_foodPieces;
         std::vector<PoisonPiece> m_poisonPieces;
+        std::vector<SlowPiece> m_slowPieces;
 
         // clang-format off
         static inline std::array<sf::Vector2i, 9> surroundingsPositionOffsets = {

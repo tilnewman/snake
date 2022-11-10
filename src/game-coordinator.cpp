@@ -82,7 +82,8 @@ namespace snake
             "step-smash-yuck.ogg",   // eat self
             "mario-pause.ogg",       // pause
             "mario-break-block.ogg", // wall hit
-            "level-intro.ogg"        // start level
+            "level-intro.ogg",       // start level
+            "slow.ogg"               // eat slow pill
         });
 
         m_soundPlayer.volume(m_config.initial_volume);
@@ -229,6 +230,11 @@ namespace snake
             if ((m_game.level().remainingToEat() > 0) && (m_board.countPieces(Piece::Food) == 0))
             {
                 m_board.addNewPieceAtRandomFreePos(m_context, Piece::Food);
+
+                if (m_game.level().remainingToEat() == 3)
+                {
+                    m_board.addNewPieceAtRandomFreePos(m_context, Piece::Slow);
+                }
             }
         }
     }

@@ -99,6 +99,7 @@ namespace snake
         bool isComplete() const;
         const LevelDetails & details() const { return m_details; }
         void handlePickupFood(const Context & context);
+        void handlePickupSlow(const Context & context);
         void setupForLevelNumber(Context & context, const std::size_t levelNumber);
 
       private:
@@ -149,6 +150,7 @@ namespace snake
 
       private:
         void handlePickupFood(Context & context, const BoardPos_t & pos, const Piece piece);
+        void handlePickupSlow(Context & context, const BoardPos_t & pos, const Piece piece);
         void handlePickupLethal(Context & context, const BoardPos_t & pos, const Piece piece);
         int calcLevelCompleteScoreBonus() const;
         int scoreAdj(const Context & context, const int adj);

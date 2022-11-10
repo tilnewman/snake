@@ -122,6 +122,12 @@ namespace snake
             (1_st + (lvl.eat_count_current * lvl.number) + lvl.number + lvl.eat_count_current);
     }
 
+    void Level::handlePickupSlow(const Context &)
+    {
+        LevelDetails & lvl{ m_details };
+        lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
+    }
+
     void Level::setupForLevelNumber(Context & context, const std::size_t levelNumberST)
     {
         LevelDetails & lvl{ m_details };
@@ -279,6 +285,10 @@ namespace snake
         {
             handlePickupFood(context, pos, piece);
         }
+        else if (piece == Piece::Slow)
+        {
+            handlePickupSlow(context, pos, piece);
+        }
         else
         {
             handlePickupLethal(context, pos, piece);
@@ -311,12 +321,19 @@ namespace snake
                 "+" + std::to_string(scoreEarned),
                 sf::Color(255, 255, 200),
                 context.layout.cellBounds(pos));
-
-            if ((level().remainingToEat() > 0) && (context.board.countPieces(Piece::Food) == 0))
-            {
-                context.board.addNewPieceAtRandomFreePos(context, Piece::Food);
-            }
         }
+    }
+
+    void GameInPlay::handlePickupSlow(Context & context, const BoardPos_t & pos, const Piece piece)
+    {
+        context.audio.play("slow", m_eatSfxPitch);
+
+        context.cell_anims.addGrowFadeAnim(context.layout.cellBounds(pos), piece::toColor(piece));
+
+        m_level.handlePickupSlow(context);
+
+        context.cell_anims.addRisingText(
+            context, "SLOW DOWN!", sf::Color(255, 255, 200), context.layout.cellBounds(pos));
     }
 
     void GameInPlay::handlePickupLethal(Context & context, const BoardPos_t &, const Piece piece)

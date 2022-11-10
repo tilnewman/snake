@@ -24,6 +24,7 @@ namespace snake
         m_tailPieces.clear();
         m_wallPieces.clear();
         m_foodPieces.clear();
+        m_slowPieces.clear();
     }
 
     std::string Board::toString(const Context & context) const
@@ -61,12 +62,14 @@ namespace snake
         const std::size_t tailCount{ m_tailPieces.size() };
         const std::size_t foodCount{ m_foodPieces.size() };
         const std::size_t wallCount{ m_wallPieces.size() };
+        const std::size_t slowCount{ m_slowPieces.size() };
         const std::size_t pieceCount{ (headCount + tailCount + foodCount + wallCount) };
 
         ss << "\n  heads_count      = " << headCount;
         ss << "\n  tails_count      = " << tailCount;
         ss << "\n  food_count       = " << foodCount;
         ss << "\n  walls_count      = " << wallCount;
+        ss << "\n  slow_count       = " << slowCount;
         ss << "\n  all_pieces_count = " << pieceCount;
 
         ss << "\n  all_pieces_count SHOULD == used_vertex_count AND SHOULD == "
@@ -111,6 +114,7 @@ namespace snake
         m_headPieces.reserve(context.layout.cell_count_total_st);
         m_wallPieces.reserve(context.layout.cell_count_total_st);
         m_foodPieces.reserve(context.layout.cell_count_total_st);
+        m_slowPieces.reserve(context.layout.cell_count_total_st);
 
         const LevelDetails & level{ context.game.level() };
 
@@ -232,6 +236,7 @@ namespace snake
                 case Piece::Tail:   { return erasePieceAtPosition(m_tailPieces, posToRemove); }
                 case Piece::Food:   { return erasePieceAtPosition(m_foodPieces, posToRemove); }
                 case Piece::Wall:   { return erasePieceAtPosition(m_wallPieces, posToRemove); }
+                case Piece::Slow:   { return erasePieceAtPosition(m_slowPieces, posToRemove); }
                 case Piece::Poison: { return erasePieceAtPosition(m_poisonPieces, posToRemove); }
                
                 default: { break; }
@@ -320,16 +325,6 @@ namespace snake
         }
 
         for (TailPiece & piece : m_tailPieces)
-        {
-            piece.update(context, elapsedSec);
-        }
-
-        for (FoodPiece & piece : m_foodPieces)
-        {
-            piece.update(context, elapsedSec);
-        }
-
-        for (WallPiece & piece : m_wallPieces)
         {
             piece.update(context, elapsedSec);
         }
@@ -610,7 +605,8 @@ namespace snake
     std::size_t Board::allPiecesCount() const
     {
         return (
-            m_headPieces.size() + m_tailPieces.size() + m_foodPieces.size() + m_wallPieces.size());
+            m_headPieces.size() + m_tailPieces.size() + m_foodPieces.size() + m_slowPieces.size() +
+            m_wallPieces.size());
     }
 
     std::vector<BoardPos_t> Board::findPieces(const Piece piece) const
@@ -666,8 +662,8 @@ namespace snake
             case Piece::Tail: return m_tailPieces.emplace_front(TailPiece(context, pos)); //-V525
             case Piece::Food: return m_foodPieces.emplace_back(FoodPiece(context, pos));
             case Piece::Wall: return m_wallPieces.emplace_back(WallPiece(context, pos));
+            case Piece::Slow: return m_slowPieces.emplace_back(SlowPiece(context, pos));
             case Piece::Poison: return m_poisonPieces.emplace_back(PoisonPiece(context, pos));
-
             default: break;
         }
 

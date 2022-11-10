@@ -25,6 +25,7 @@ namespace snake
         Tail,
         Food,
         Wall,
+        Slow,
         Poison
     };
 
@@ -136,6 +137,19 @@ namespace snake
 
     //
 
+    struct SlowPiece : public PieceBase
+    {
+        SlowPiece(Context & context, const BoardPos_t & pos)
+            : PieceBase(context, Piece::Slow, pos)
+        {}
+
+        virtual ~SlowPiece() override = default;
+
+        void update(Context &, const float) override {}
+    };
+
+    //
+
     struct TailPiece : public PieceBase
     {
         TailPiece(Context & context, const BoardPos_t & pos)
@@ -169,7 +183,6 @@ namespace snake
         void finalizeDirectionToMove_SelfTest(Context & context);
         auto move(Context & context);
         void handleTailAfterMove(Context & context);
-
         void handlePickup(Context &, const BoardPos_t & newPos, const Piece piece);
 
       protected:
@@ -201,6 +214,7 @@ namespace snake
                 case Piece::Tail: return "Tail";
                 case Piece::Food: return "Food";
                 case Piece::Wall: return "Wall";
+                case Piece::Slow: return "Slow";
                 case Piece::Poison: return "Poison";
                 default: return "";
             }
@@ -214,6 +228,7 @@ namespace snake
                 case Piece::Tail: return TailPiece::m_colorLight;
                 case Piece::Food: return sf::Color::Yellow;
                 case Piece::Wall: return sf::Color(105, 70, 35);
+                case Piece::Slow: return sf::Color(255, 0, 255);
                 case Piece::Poison: return sf::Color::Red;
                 default: return sf::Color::Transparent;
             }
