@@ -338,9 +338,18 @@ namespace snake
     void Board::draw(
         const Context & context, sf::RenderTarget & target, const sf::RenderStates & states) const
     {
-        // board region solid background color
-        util::drawRectangleVerts(
-            target, context.layout.board_bounds_f, context.config.board_background_color);
+        // board region outline
+        sf::FloatRect outlineRect = context.layout.board_bounds_f;
+        outlineRect.left -= 1.0f;
+        outlineRect.top -= 1.0f;
+        outlineRect.width += 2.0f;
+        outlineRect.height += 2.0f;
+
+        util::drawRectangleShape(
+            target,
+            outlineRect,
+            false,
+            context.config.alt_board_background_color + sf::Color(25, 25, 25));
 
         // draw every other cell with a slightly brighter color for a nice looking checker pattern
         const auto & cellVerts{ context.layout.cellVerts() };
