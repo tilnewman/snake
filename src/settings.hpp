@@ -111,8 +111,7 @@ namespace snake
 
         unsigned int sf_window_style{ static_cast<unsigned>(sf::Style::Fullscreen) };
 
-        sf::Vector2u resolution{ sf::VideoMode::getDesktopMode().width,
-                                 sf::VideoMode::getDesktopMode().height };
+        sf::Vector2u resolution{ 0u, 0u };
 
         unsigned int frame_rate_limit{ 60u }; // zero means there is no limit
 

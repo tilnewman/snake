@@ -8,44 +8,24 @@
 
 #include <cstddef>
 
-// *** make sure M_CHECK_ASSERT_SS works in a destructor ***
-//
 // tails that turn into walls should be gray and not kill but reduce points
 //
+// lives counter
+// earn more lives with score
 // food should always eventually die and be respawned
 // food increasingly away from middle to intentionally next to wall/self/ect
 // poison pills near other food or that appear in your way
-// maps have walls
-// levels whith lots of food but your tail never shrinks
+// bonus levels with lots of food but your tail never shrinks
 // bonuses for turns with limited options or that avoided head-on collision
 // bonus for long straight shots
-// food that moves away from you
-// food that bounces
-// poison pill that grows like a snake
-// all the food for the level is not visible at leel start, but reveals after each is eaten
+// food that moves
 // spinning food that turns you when you eatit in the dir it was spinning
-// pulsing food that fades in-out of transparency
-
-// SHAKE THE SCREEN
-
-// Tiling:
-//  * The outermost wall will always be there, so if you want, you'll have to remove it yourself
-//     However, if you use borders > 0 then you may find it already works with an outer wall
-//  * Use "irregular" to split into EXACTLY as many total tiles as you specified
-//  * Use Uniform/Square to get as close as you can to Uniform/Square:
-//      BUT they are rarely exactly Uniform/Square because they are working with ints and not floats
-//      BUT often return more tiles than speciified to gret as close to Uniform/Square as possible
-//  * Don't set the tiles to be filled in unless you also set a border>0 or forcedSquare as well
-//
-//  Single/Line/Row/Column
-//
+// hidden food that gives big score bonus when eaten
 
 //
 // Bugs
 //
-
-// remove shapes_rot
-// remove stats.list_str?
+//  You can safely eat yourself if crossing the screen border.
 
 //
 
@@ -57,8 +37,7 @@ int main(const int argc, const char * const argv[])
     config.media_path = ((argc > 1) ? argv[1] : "no_media_folder");
     std::cout << "media_path=" << config.media_path << std::endl;
     config.frame_rate_limit = 0;
-    // config.resolution = { 1600, 1200 };
-    config.cell_size_window_ratio = 0.0175f;
+    config.cell_size_window_ratio = 0.015f;
     config.sf_window_style = sf::Style::Fullscreen;
     config.is_level_test = false;
     config.is_level_test_manual = false;

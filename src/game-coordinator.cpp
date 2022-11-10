@@ -107,40 +107,49 @@ namespace snake
         }
     }
 
+    const sf::VideoMode GameCoordinator::pickResolution() const
+    {
+        std::vector<sf::VideoMode> videoModes = sf::VideoMode::getFullscreenModes();
+
+        // remove all with different bit depths
+        const unsigned int desktopBitsPerPixel{ sf::VideoMode::getDesktopMode().bitsPerPixel };
+
+        videoModes.erase(
+            std::remove_if(
+                std::begin(videoModes),
+                std::end(videoModes),
+                [&](const sf::VideoMode & vm) { return (vm.bitsPerPixel != desktopBitsPerPixel); }),
+            std::end(videoModes));
+
+        // remove all with resolutions too high
+        const unsigned int maxDimmension = 2000;
+
+        videoModes.erase(
+            std::remove_if(
+                std::begin(videoModes),
+                std::end(videoModes),
+                [&](const sf::VideoMode & vm) {
+                    return ((vm.width > maxDimmension) || (vm.height > maxDimmension));
+                }),
+            std::end(videoModes));
+
+        // ensure the order is highest resolution first
+        std::sort(std::begin(videoModes), std::end(videoModes));
+        std::reverse(std::begin(videoModes), std::end(videoModes));
+
+        return *videoModes.begin();
+    }
+
     void GameCoordinator::openWindow()
     {
-        const sf::VideoMode videoMode(
-            m_config.resolution.x,
-            m_config.resolution.y,
-            sf::VideoMode::getDesktopMode().bitsPerPixel);
+        const sf::VideoMode videoMode = pickResolution();
+        std::cout << "Video Mode Selected: " << videoMode << '\n';
 
         m_window.create(videoMode, "Snake", m_config.sf_window_style);
-
         M_CHECK_SS(m_window.isOpen(), "Failed to open a window with these settings: " << videoMode);
 
-        // verify the window size is what was specified/expected,
-        // otherwise all the size/positions calculations will be wrong
-        const sf::Vector2u windowExpectedSize{ m_config.resolution };
-        const sf::Vector2u windowActualSize{ m_window.getSize() };
-
-        if (windowActualSize != windowExpectedSize)
-        {
-            std::cout << "The window opened okay but not at the size specified: " << videoMode << ""
-                      << windowActualSize << ".  So...meh.  Let's just run with it." << std::endl;
-        }
-
-        if (m_config.sf_window_style != sf::Style::None)
-        {
-            const auto desktopVideoMode{ sf::VideoMode::getDesktopMode() };
-            const sf::Vector2u desktopScreenSize(desktopVideoMode.width, desktopVideoMode.height);
-            if (windowActualSize != desktopScreenSize)
-            {
-                std::cout << "The window opened okay at the resolution intended ("
-                          << windowActualSize << ") but somehow the desktop resolution ("
-                          << desktopVideoMode
-                          << ") is different...?  So... meh.Let's just run with it." << std::endl;
-            }
-        }
+        m_config.resolution.x = m_window.getSize().x;
+        m_config.resolution.y = m_window.getSize().y;
 
         m_window.setFramerateLimit(m_config.frame_rate_limit);
 
@@ -152,7 +161,7 @@ namespace snake
         if (!m_config.isTest())
         {
             m_bloomWindow->isEnabled(true);
-            m_bloomWindow->blurMultipassCount(5); // 5 looks like the max before fading out
+            m_bloomWindow->blurMultipassCount(5); // 5 looks like the brightest glow
         }
     }
 

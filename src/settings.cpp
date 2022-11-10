@@ -282,10 +282,7 @@ namespace snake
         }
 
         M_CHECK_SS(std::filesystem::is_directory(media_path), media_path);
-
-        M_CHECK_SS(((resolution.x > 0) && (resolution.y > 0)), resolution);
         M_CHECK_SS((cell_size_window_ratio > 0.0f), cell_size_window_ratio);
-
         M_CHECK_SS((!(initial_volume < 0.0f) && !(initial_volume > 100.0f)), initial_volume);
     }
 

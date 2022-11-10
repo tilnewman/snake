@@ -46,6 +46,7 @@ namespace snake
         void repeatPlayForAllVideoModes(const GameConfig & config);
         void frameLoop();
         void setup(const GameConfig & config);
+        const sf::VideoMode pickResolution() const;
         void openWindow();
         void handlePeriodicTasks(sf::Clock & periodClock, std::size_t & frameCounter);
         void handleEvents();
