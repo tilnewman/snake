@@ -89,8 +89,6 @@ namespace snake
       public:
         GameConfig() = default;
 
-        // no reset() function because these are the values that are never supposed to change
-        // void reset();
         void verifyAllMembers();
         std::string toString() const;
 
