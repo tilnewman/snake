@@ -143,6 +143,12 @@ namespace snake
             posLeft += statusText.bounds().width;
             posLeft += betweenPadActual;
         }
+
+        // raise all text a little to make sure commas don't touch the board
+        for (StatusText & statusText : m_texts)
+        {
+            statusText.move(0.0f, -6.0f);
+        }
     }
 
     void StatusRegion::draw(sf::RenderTarget & target, sf::RenderStates states) const

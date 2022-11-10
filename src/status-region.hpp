@@ -116,8 +116,6 @@ namespace snake
 
     //
 
-    // An empty state that does nothing but indicate the game canot play.  One of the reasons this
-    // is required, is because we needed a State that could be constructed without Context.
     class StatusRegion : public IRegion
     {
       public:
