@@ -8,13 +8,12 @@
 
 #include <cstddef>
 
-// tails that turn into walls should be gray and not kill but reduce points
-//
+// gray wall blocks that reduce speed
+// red blocks are poison pills that reduce tail length
 // lives counter
 // earn more lives with score
 // food should always eventually die and be respawned
-// food increasingly away from middle to intentionally next to wall/self/ect
-// poison pills near other food or that appear in your way
+// food increasingly away from middle toward walls/self/ect
 // bonus levels with lots of food but your tail never shrinks
 // bonuses for turns with limited options or that avoided head-on collision
 // bonus for long straight shots
@@ -26,7 +25,6 @@
 // Bugs
 //
 //  You can safely eat yourself if crossing the screen border.
-
 //
 
 int main(const int argc, const char * const argv[])
@@ -42,7 +40,6 @@ int main(const int argc, const char * const argv[])
     config.is_level_test = false;
     config.is_level_test_manual = false;
     config.is_god_mode = false;
-    // config.is_all_video_mode_test = false;
 
     GameCoordinator game(config);
 

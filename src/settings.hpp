@@ -96,16 +96,13 @@ namespace snake
 
         bool isTest() const
         {
-            return (
-                is_god_mode || is_speed_test || is_level_test || is_level_test_manual ||
-                is_all_video_mode_test);
+            return (is_god_mode || is_speed_test || is_level_test || is_level_test_manual);
         }
 
         bool is_god_mode{ false };
         bool is_speed_test{ false };
         bool is_level_test{ false };
         bool is_level_test_manual{ false };
-        bool is_all_video_mode_test{ false };
 
         std::filesystem::path media_path{ std::filesystem::current_path() / "media" };
 

@@ -167,49 +167,8 @@ namespace snake
 
     void GameCoordinator::play(const GameConfig & config)
     {
-        if (config.is_all_video_mode_test)
-        {
-            repeatPlayForAllVideoModes(config);
-        }
-        else
-        {
-            setup(config);
-            frameLoop();
-        }
-    }
-
-    void GameCoordinator::repeatPlayForAllVideoModes(const GameConfig & configOrig)
-    {
-        const unsigned int desktopBitsPerPixel{ sf::VideoMode::getDesktopMode().bitsPerPixel };
-
-        std::vector<sf::VideoMode> videoModes{ sf::VideoMode::getFullscreenModes() };
-        std::reverse(std::begin(videoModes), std::end(videoModes));
-
-        for (const sf::VideoMode & vm : videoModes)
-        {
-            std::cout << "Testing at video mode: " << vm;
-
-            if (vm.bitsPerPixel != desktopBitsPerPixel)
-            {
-                std::cout << " -skipped because the bits_per_pixel is different.\n";
-                continue;
-            }
-
-            std::cout << '\n';
-
-            GameConfig configForThisTest{ configOrig };
-            configForThisTest.resolution.x = vm.width;
-            configForThisTest.resolution.y = vm.height;
-
-            setup(configForThisTest);
-            frameLoop();
-
-            // remove old events
-            sf::Event event;
-            while (m_window.pollEvent(event))
-            {
-            }
-        }
+        setup(config);
+        frameLoop();
     }
 
     void GameCoordinator::frameLoop()
