@@ -170,6 +170,17 @@ namespace snake
     {
         setup(config);
         frameLoop();
+
+        if (m_config.isTest())
+        {
+            printDebugStatus();
+        }
+
+        const float runTimeSec{ std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f) /
+                                100.0f };
+
+        std::cout << "Play Time: " << runTimeSec << "sec\n";
+        std::cout << "Final Score:" << m_game.score() << std::endl;
     }
 
     void GameCoordinator::frameLoop()
@@ -188,17 +199,6 @@ namespace snake
             draw();
             m_stateMachine.changeIfPending(m_context);
         }
-
-        if (m_config.isTest())
-        {
-            printDebugStatus();
-        }
-
-        const float runTimeSec{ std::round(m_runClock.getElapsedTime().asSeconds() * 100.0f) /
-                                100.0f };
-
-        std::cout << "Play Time: " << runTimeSec << "sec\n";
-        std::cout << "Final Score:" << m_game.score() << std::endl;
     }
 
     void GameCoordinator::handlePeriodicTasks(sf::Clock & periodClock, std::size_t & frameCounter)
