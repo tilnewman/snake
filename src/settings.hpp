@@ -105,7 +105,7 @@ namespace snake
         unsigned int frame_rate_limit{ 60u }; // zero means there is no limit
 
         sf::Color window_background_color{ sf::Color::Black };
-        sf::Color board_background_color{ 25, 0, 5 };
+        sf::Color board_background_color{ sf::Color::Black };
         sf::Color alt_board_background_color{ 37, 0, 23 };
         sf::Color board_outline_color{ 230, 190, 180, 100 };
 
