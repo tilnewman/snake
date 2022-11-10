@@ -6,6 +6,7 @@
 #include "cell-animations.hpp"
 
 #include "context.hpp"
+#include "layout.hpp"
 #include "media.hpp"
 
 //

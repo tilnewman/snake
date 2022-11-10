@@ -8,6 +8,7 @@
 #include "board.hpp"
 #include "cell-animations.hpp"
 #include "context.hpp"
+#include "layout.hpp"
 #include "random.hpp"
 #include "settings.hpp"
 #include "sound-player.hpp"

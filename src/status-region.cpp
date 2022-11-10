@@ -5,6 +5,7 @@
 //
 #include "status-region.hpp"
 
+#include "layout.hpp"
 #include "media.hpp"
 #include "settings.hpp"
 

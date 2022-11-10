@@ -9,6 +9,7 @@
 #include "board.hpp"
 #include "cell-animations.hpp"
 #include "context.hpp"
+#include "layout.hpp"
 #include "media.hpp"
 #include "pieces.hpp"
 #include "random.hpp"
