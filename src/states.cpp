@@ -8,11 +8,11 @@
 #include "animation-player.hpp"
 #include "board.hpp"
 #include "cell-animations.hpp"
-#include "context.hpp"
 #include "layout.hpp"
 #include "media.hpp"
 #include "pieces.hpp"
 #include "random.hpp"
+#include "settings.hpp"
 #include "sound-player.hpp"
 #include "status-region.hpp"
 #include "util.hpp"
@@ -39,37 +39,6 @@ namespace snake
         setupText(context, message);
     }
 
-    //{
-    // if (m_bgFadeVerts.empty())
-    //{
-    //    const sf::Color fadeColor(0, 0, 0, static_cast<sf::Uint8>(m_bgFadeAlphaMax));
-    //    util::appendQuadVerts(context.layout.window_bounds_f, m_bgFadeVerts, fadeColor);
-    //
-    //    // const sf::Color fadeDark(0, 0, 0, static_cast<sf::Uint8>(m_bgFadeAlphaMax));
-    //    // const sf::Color fadeLight(0, 0, 0, (fadeDark.a / 3));
-    //    //
-    //    // sf::FloatRect rect(context.layout.board_bounds_f);
-    //    // rect.height *= 0.5f;
-    //    //
-    //    // util::appendQuadVerts(rect, m_bgFadeVerts, fadeLight);
-    //    // m_bgFadeVerts.at(2).color = fadeDark;
-    //    // m_bgFadeVerts.at(3).color = fadeDark;
-    //    //
-    //    // rect.top += rect.height;
-    //    // util::appendQuadVerts(rect, m_bgFadeVerts, fadeLight);
-    //    // m_bgFadeVerts.at(4).color = fadeDark;
-    //    // m_bgFadeVerts.at(5).color = fadeDark;
-    //    //
-    //    // rect = context.layout.status_bounds_f;
-    //    // util::appendQuadVerts(rect, m_bgFadeVerts, fadeDark);
-    //    // m_bgFadeVerts.at(8).color = fadeDark;
-    //    // m_bgFadeVerts.at(9).color = fadeDark;
-    //}
-
-    //    message += messagePostfix;
-    //    setupText(context, message);
-    //}
-
     void StateBase::setupText(const Context & context, const std::string & message)
     {
         m_text.setString(message);
@@ -84,10 +53,6 @@ namespace snake
     void StateBase::update(Context & context, const float elapsedSec)
     {
         m_elapsedTimeSec += elapsedSec;
-
-        // updateBgFade(elapsedSec);
-
-        // context.anim.update(elapsedSec);
         context.cell_anims.update(context, elapsedSec);
     }
 
@@ -101,27 +66,6 @@ namespace snake
         context.state.setChangePending(nextState());
         return true;
     }
-
-    // void StateBase::updateBgFade(const float elapsedSec)
-    //{
-    //    if (m_hasBgFade && (m_bgFadeAlpha < m_bgFadeAlphaMax))
-    //    {
-    //        m_bgFadeAlpha += (m_bgFadeSpeed * elapsedSec);
-    //    }
-    //    else
-    //    {
-    //        m_bgFadeAlpha -= (m_bgFadeSpeed * elapsedSec);
-    //    }
-    //
-    //    m_bgFadeAlpha = std::clamp(m_bgFadeAlpha, m_bgFadeAlphaMin, m_bgFadeAlphaMax);
-    //
-    //    const sf::Color newColor(0, 0, 0, static_cast<sf::Uint8>(m_bgFadeAlpha));
-    //
-    //    for (sf::Vertex & vert : m_bgFadeVerts)
-    //    {
-    //        vert.color = newColor;
-    //    }
-    //}
 
     bool StateBase::willIgnoreEvent(const Context & context, const sf::Event & event) const
     {

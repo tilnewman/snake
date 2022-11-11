@@ -25,6 +25,7 @@ namespace snake
         m_wallPieces.clear();
         m_foodPieces.clear();
         m_slowPieces.clear();
+        m_shrinkPieces.clear();
     }
 
     std::string Board::toString(const Context & context) const
@@ -63,13 +64,17 @@ namespace snake
         const std::size_t foodCount{ m_foodPieces.size() };
         const std::size_t wallCount{ m_wallPieces.size() };
         const std::size_t slowCount{ m_slowPieces.size() };
-        const std::size_t pieceCount{ (headCount + tailCount + foodCount + wallCount) };
+        const std::size_t shrinkCount{ m_slowPieces.size() };
+
+        const std::size_t pieceCount{ (
+            headCount + tailCount + foodCount + wallCount + slowCount + shrinkCount) };
 
         ss << "\n  heads_count      = " << headCount;
         ss << "\n  tails_count      = " << tailCount;
         ss << "\n  food_count       = " << foodCount;
         ss << "\n  walls_count      = " << wallCount;
         ss << "\n  slow_count       = " << slowCount;
+        ss << "\n  shrink_count     = " << shrinkCount;
         ss << "\n  all_pieces_count = " << pieceCount;
 
         ss << "\n  all_pieces_count SHOULD == used_vertex_count AND SHOULD == "
@@ -237,8 +242,7 @@ namespace snake
                 case Piece::Food:   { return erasePieceAtPosition(m_foodPieces, posToRemove); }
                 case Piece::Wall:   { return erasePieceAtPosition(m_wallPieces, posToRemove); }
                 case Piece::Slow:   { return erasePieceAtPosition(m_slowPieces, posToRemove); }
-                case Piece::Poison: { return erasePieceAtPosition(m_poisonPieces, posToRemove); }
-               
+                case Piece::Shrink: { return erasePieceAtPosition(m_shrinkPieces, posToRemove); }
                 default: { break; }
             }
             // clang-format on
@@ -654,6 +658,22 @@ namespace snake
         return surr;
     }
 
+    void Board::shrinkTail(Context & context)
+    {
+        // stop growing the tail
+        for (HeadPiece & headPiece : m_headPieces)
+        {
+            headPiece.resetTailGrowCounter();
+        }
+
+        while (m_tailPieces.size() > context.game.level().tail_start_length)
+        {
+            removePiece(context, findLastTailPiecePos());
+        }
+
+        reColorTailPieces(context);
+    }
+
     PieceBase & Board::makePiece(Context & context, const Piece piece, const BoardPos_t & pos)
     {
         switch (piece)
@@ -663,7 +683,7 @@ namespace snake
             case Piece::Food: return m_foodPieces.emplace_back(FoodPiece(context, pos));
             case Piece::Wall: return m_wallPieces.emplace_back(WallPiece(context, pos));
             case Piece::Slow: return m_slowPieces.emplace_back(SlowPiece(context, pos));
-            case Piece::Poison: return m_poisonPieces.emplace_back(PoisonPiece(context, pos));
+            case Piece::Shrink: return m_shrinkPieces.emplace_back(ShrinkPiece(context, pos));
             default: break;
         }
 

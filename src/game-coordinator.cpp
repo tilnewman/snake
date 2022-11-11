@@ -181,7 +181,7 @@ namespace snake
                                 100.0f };
 
         std::cout << "Play Time: " << runTimeSec << "sec\n";
-        std::cout << "Final Score:" << m_game.score() << std::endl;
+        std::cout << "Final Score: " << m_game.score() << std::endl;
     }
 
     void GameCoordinator::frameLoop()
@@ -231,9 +231,17 @@ namespace snake
             {
                 m_board.addNewPieceAtRandomFreePos(m_context, Piece::Food);
 
-                if (m_game.level().remainingToEat() == 3)
+                if (m_game.level().remainingToEat() <= 4)
                 {
-                    m_board.addNewPieceAtRandomFreePos(m_context, Piece::Slow);
+                    if (m_random.boolean() && (m_board.countPieces(Piece::Slow) == 0))
+                    {
+                        m_board.addNewPieceAtRandomFreePos(m_context, Piece::Slow);
+                    }
+
+                    if (m_random.boolean() && (m_board.countPieces(Piece::Shrink) == 0))
+                    {
+                        m_board.addNewPieceAtRandomFreePos(m_context, Piece::Shrink);
+                    }
                 }
             }
         }

@@ -26,7 +26,7 @@ namespace snake
         Food,
         Wall,
         Slow,
-        Poison
+        Shrink
     };
 
     using PieceEnumOpt_t = std::optional<Piece>;
@@ -124,13 +124,13 @@ namespace snake
 
     //
 
-    struct PoisonPiece : public PieceBase
+    struct ShrinkPiece : public PieceBase
     {
-        PoisonPiece(Context & context, const BoardPos_t & pos)
-            : PieceBase(context, Piece::Poison, pos)
+        ShrinkPiece(Context & context, const BoardPos_t & pos)
+            : PieceBase(context, Piece::Shrink, pos)
         {}
 
-        virtual ~PoisonPiece() override = default;
+        virtual ~ShrinkPiece() override = default;
 
         void update(Context &, const float) override {}
     };
@@ -177,6 +177,7 @@ namespace snake
         // void update(Context &, const float elapsedSec) override;
         void handleEvent(Context & context, const sf::Event & event) override;
         void takeTurn(Context & context) override;
+        void resetTailGrowCounter() { m_tailGrowRemainingCount = 0; }
 
       private:
         void finalizeDirectionToMove_Player(const Context & context);
@@ -215,7 +216,7 @@ namespace snake
                 case Piece::Food: return "Food";
                 case Piece::Wall: return "Wall";
                 case Piece::Slow: return "Slow";
-                case Piece::Poison: return "Poison";
+                case Piece::Shrink: return "Shrink";
                 default: return "";
             }
         }
@@ -228,8 +229,8 @@ namespace snake
                 case Piece::Tail: return TailPiece::m_colorLight;
                 case Piece::Food: return sf::Color::Yellow;
                 case Piece::Wall: return sf::Color(105, 70, 35);
-                case Piece::Slow: return sf::Color(255, 0, 255);
-                case Piece::Poison: return sf::Color::Red;
+                case Piece::Slow: return sf::Color::Magenta;
+                case Piece::Shrink: return sf::Color::Cyan;
                 default: return sf::Color::Transparent;
             }
         }

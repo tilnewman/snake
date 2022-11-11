@@ -8,8 +8,6 @@
 
 #include <cstddef>
 
-// gray wall blocks that reduce speed
-// red blocks are poison pills that reduce tail length
 // lives counter
 // earn more lives with score
 // food should always eventually die and be respawned
@@ -24,7 +22,7 @@
 //
 // Bugs
 //
-//  You can safely eat yourself if crossing the screen border.
+//  You can safely eat yourself if warpping around the screen edge.
 //
 
 int main(const int argc, const char * const argv[])
@@ -46,11 +44,11 @@ int main(const int argc, const char * const argv[])
     }
     catch (const std::exception & ex)
     {
-        std::cout << "EXCEPTION ERROR DURING GAMEPLAY:  \"" << ex.what() << "\"" << std::endl;
+        std::cout << "EXCEPTION ERROR:  \"" << ex.what() << "\"" << std::endl;
     }
     catch (...)
     {
-        std::cout << "EXCEPTION ERROR DURING GAMEPLAY: \"UNKOWNN\"" << std::endl;
+        std::cout << "EXCEPTION ERROR: \"UNKOWNN\"" << std::endl;
     }
 
     return EXIT_SUCCESS;

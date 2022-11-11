@@ -135,7 +135,7 @@ namespace snake
 
         const PieceEnumOpt_t newPosEnumOpt{ context.board.pieceEnumOptAt(newPos) };
 
-        // check for miss must occur before things move around
+        // check for miss must occur here before things move around
         if (!newPosEnumOpt)
         {
             const Surroundings oldSurr{ context.board.surroundings(oldPos) };
@@ -167,9 +167,14 @@ namespace snake
         }
         else
         {
-            const LevelDetails & lvl{ context.game.level() };
-            m_tailGrowRemainingCount += lvl.tail_grow_after_eat;
-            turnDurationSec(lvl.sec_per_turn_current);
+            const LevelDetails & level{ context.game.level() };
+
+            if (Piece::Food == piece)
+            {
+                m_tailGrowRemainingCount += level.tail_grow_after_eat;
+            }
+
+            turnDurationSec(level.sec_per_turn_current);
         }
     }
 

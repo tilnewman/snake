@@ -289,7 +289,11 @@ namespace snake
         {
             handlePickupSlow(context, pos, piece);
         }
-        else
+        else if (piece == Piece::Shrink)
+        {
+            handlePickupShrink(context, pos, piece);
+        }
+        else // all other pieces (wall, head, tail) are deadly
         {
             handlePickupLethal(context, pos, piece);
         }
@@ -319,7 +323,7 @@ namespace snake
             context.cell_anims.addRisingText(
                 context,
                 "+" + std::to_string(scoreEarned),
-                sf::Color(255, 255, 200),
+                context.config.grow_fade_text_color,
                 context.layout.cellBounds(pos));
         }
     }
@@ -330,10 +334,27 @@ namespace snake
 
         context.cell_anims.addGrowFadeAnim(context.layout.cellBounds(pos), piece::toColor(piece));
 
+        context.cell_anims.addRisingText(
+            context, "SLOW!", context.config.grow_fade_text_color, context.layout.cellBounds(pos));
+
         m_level.handlePickupSlow(context);
+    }
+
+    void
+        GameInPlay::handlePickupShrink(Context & context, const BoardPos_t & pos, const Piece piece)
+    {
+        // re-use the slow sfx for shirnk intentionally
+        context.audio.play("slow", m_eatSfxPitch);
+
+        context.cell_anims.addGrowFadeAnim(context.layout.cellBounds(pos), piece::toColor(piece));
 
         context.cell_anims.addRisingText(
-            context, "SLOW DOWN!", sf::Color(255, 255, 200), context.layout.cellBounds(pos));
+            context,
+            "SHRINK!",
+            context.config.grow_fade_text_color,
+            context.layout.cellBounds(pos));
+
+        context.board.shrinkTail(context);
     }
 
     void GameInPlay::handlePickupLethal(Context & context, const BoardPos_t &, const Piece piece)

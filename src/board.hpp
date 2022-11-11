@@ -318,6 +318,8 @@ namespace snake
 
         const Surroundings surroundings(const BoardPos_t & centerPos) const;
 
+        void shrinkTail(Context & context);
+
       private:
         PieceBase & makePiece(Context &, const Piece piece, const BoardPos_t & pos);
         std::size_t findOrMakeFreeQuadIndex();
@@ -346,7 +348,7 @@ namespace snake
         std::list<TailPiece> m_tailPieces;
         std::vector<WallPiece> m_wallPieces;
         std::vector<FoodPiece> m_foodPieces;
-        std::vector<PoisonPiece> m_poisonPieces;
+        std::vector<ShrinkPiece> m_shrinkPieces;
         std::vector<SlowPiece> m_slowPieces;
 
         // clang-format off

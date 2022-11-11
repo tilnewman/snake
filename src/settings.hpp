@@ -46,6 +46,7 @@ namespace snake
         sf::Color board_background_color{ sf::Color::Black };
         sf::Color alt_board_background_color{ 37, 0, 23 };
         sf::Color board_outline_color{ 230, 190, 180, 100 };
+        sf::Color grow_fade_text_color{ 255, 255, 200 };
 
         float cell_size_window_ratio{ 0.0175f };
         float status_bounds_height_ratio{ 0.02f };
@@ -151,6 +152,7 @@ namespace snake
       private:
         void handlePickupFood(Context & context, const BoardPos_t & pos, const Piece piece);
         void handlePickupSlow(Context & context, const BoardPos_t & pos, const Piece piece);
+        void handlePickupShrink(Context & context, const BoardPos_t & pos, const Piece piece);
         void handlePickupLethal(Context & context, const BoardPos_t & pos, const Piece piece);
         int calcLevelCompleteScoreBonus() const;
         int scoreAdj(const Context & context, const int adj);
