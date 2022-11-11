@@ -79,9 +79,10 @@ namespace snake
 
         cell_counts = (util::size(boardFence) / cell_size);
 
-        // Subtract ONE from each dimmension to make sure there is a nice border between the edges
+        // Subtract from each dimmension to make sure there is a nice border between the edges
         // of the board and the edges of the window.
-        cell_counts.y -= 1;
+        cell_counts.y -= 2;
+        cell_counts.x -= 1;
 
         cell_count_total = (cell_counts.x * cell_counts.y);
         cell_count_total_st = static_cast<std::size_t>(cell_count_total);
