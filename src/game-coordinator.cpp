@@ -54,14 +54,7 @@ namespace snake
 
         openWindow();
 
-        if (m_config.resolution != m_window.getSize())
-        {
-            std::cout << "The window was not the size expected, so a bunch of calculations have to "
-                         "be redone.  ("
-                      << m_config.resolution << " to " << m_window.getSize() << ")" << std::endl;
-
-            m_config.resolution = m_window.getSize();
-        }
+        m_window.setMouseCursorVisible(false);
 
         m_config.verifyAllMembers();
 
