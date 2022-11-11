@@ -64,7 +64,10 @@ namespace snake
 
         sf::IntRect cells_rect{ 0, 0, 0, 0 };
 
-        BoardPosVec_t default_wall_positions;
+        BoardPosVec_t wall_positions_left;
+        BoardPosVec_t wall_positions_right;
+        BoardPosVec_t wall_positions_top;
+        BoardPosVec_t wall_positions_bottom;
 
       private:
         void regionCalculations(const GameConfig & config);

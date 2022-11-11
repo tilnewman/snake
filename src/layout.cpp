@@ -194,15 +194,27 @@ namespace snake
                 cell_bounds_lut[posST.y][posST.x] = bounds;
 
                 //
-                if ((pos.x == 0) || (pos.y == 0) || (pos.x == (cell_counts.x - 1)) ||
-                    (pos.y == (cell_counts.y - 1)))
+                if (pos.x == 0)
                 {
-                    default_wall_positions.push_back(pos);
+                    wall_positions_left.push_back(pos);
+                }
+
+                if (pos.y == 0)
+                {
+                    wall_positions_top.push_back(pos);
+                }
+
+                if (pos.x == (cell_counts.x - 1))
+                {
+                    wall_positions_right.push_back(pos);
+                }
+
+                if (pos.y == (cell_counts.y - 1))
+                {
+                    wall_positions_bottom.push_back(pos);
                 }
             }
         }
-
-        std::sort(std::begin(default_wall_positions), std::end(default_wall_positions));
 
         M_CHECK_SS(
             (all_valid_positions.size() == cell_count_total_st),

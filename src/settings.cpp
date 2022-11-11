@@ -189,9 +189,39 @@ namespace snake
         // std::cout << toString() << std::endl;
     }
 
+    // TODO put some better random logic based on increasing level
     BoardPosVec_t Level::makeWallPositionsForLevelNumber(Context & context)
     {
-        return context.layout.default_wall_positions;
+        BoardPosVec_t wallPositions;
+        wallPositions.reserve(1000);
+
+        if (context.random.boolean())
+        {
+            std::copy(
+                std::begin(context.layout.wall_positions_left),
+                std::end(context.layout.wall_positions_left),
+                std::back_inserter(wallPositions));
+
+            std::copy(
+                std::begin(context.layout.wall_positions_right),
+                std::end(context.layout.wall_positions_right),
+                std::back_inserter(wallPositions));
+        }
+
+        if (context.random.boolean())
+        {
+            std::copy(
+                std::begin(context.layout.wall_positions_top),
+                std::end(context.layout.wall_positions_top),
+                std::back_inserter(wallPositions));
+
+            std::copy(
+                std::begin(context.layout.wall_positions_bottom),
+                std::end(context.layout.wall_positions_bottom),
+                std::back_inserter(wallPositions));
+        }
+
+        return wallPositions;
     }
 
     BoardPos_t Level::findNextFoodPos(const Context & context) const
