@@ -279,13 +279,6 @@ namespace snake
     sf::Vector2i
         Board::move(Context & context, const BoardPos_t & fromPos, const BoardPos_t & toPos)
     {
-        // check if walked off the board
-        const BoardPosOpt_t wrapPosOpt{ context.layout.findWraparoundPos(toPos) };
-        if (wrapPosOpt)
-        {
-            return move(context, fromPos, wrapPosOpt.value());
-        }
-
         M_CHECK_SS(
             entryAt(fromPos),
             "fromPos=" << fromPos << ", toPos=" << toPos

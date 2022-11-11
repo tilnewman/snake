@@ -230,7 +230,7 @@ namespace snake
                 case Piece::Food: return sf::Color::Yellow;
                 case Piece::Wall: return sf::Color(105, 70, 35);
                 case Piece::Slow: return sf::Color::Magenta;
-                case Piece::Shrink: return sf::Color::Cyan;
+                case Piece::Shrink: return sf::Color::Red;
                 default: return sf::Color::Transparent;
             }
         }

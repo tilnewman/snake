@@ -41,6 +41,7 @@ namespace snake
 
     void PieceBase::position(Context & context, const BoardPos_t & newPosition)
     {
+        // Board::move() might change the given newPosition because of wrap around
         m_position = context.board.move(context, position(), newPosition);
     }
 
@@ -130,7 +131,15 @@ namespace snake
     auto HeadPiece::move(Context & context)
     {
         const BoardPos_t oldPos{ position() };
-        const BoardPos_t newPos{ keys::move(oldPos, m_directionNext) };
+        BoardPos_t newPos{ keys::move(oldPos, m_directionNext) };
+
+        // check if walked off the board
+        const BoardPosOpt_t wrapPosOpt{ context.layout.findWraparoundPos(newPos) };
+        if (wrapPosOpt)
+        {
+            newPos = wrapPosOpt.value();
+        }
+
         M_CHECK_SS((newPos != oldPos), "oldPos=" << oldPos << ", newPos=" << newPos);
 
         const PieceEnumOpt_t newPosEnumOpt{ context.board.pieceEnumOptAt(newPos) };
@@ -148,7 +157,7 @@ namespace snake
                 context.cell_anims.addRisingText(
                     context,
                     "miss",
-                    sf::Color::White,
+                    context.config.grow_fade_text_color,
                     context.layout.cellBounds(oldSurr.posOfPiece(Piece::Food)));
             }
         }

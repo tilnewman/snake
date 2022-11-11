@@ -203,9 +203,9 @@ namespace snake
                 std::back_inserter(wallPositions));
 
             std::copy(
-                std::begin(context.layout.wall_positions_right),
-                std::end(context.layout.wall_positions_right),
-                std::back_inserter(wallPositions));
+               std::begin(context.layout.wall_positions_right),
+               std::end(context.layout.wall_positions_right),
+               std::back_inserter(wallPositions));
         }
 
         if (context.random.boolean())
