@@ -120,6 +120,7 @@ namespace snake
         m_wallPieces.reserve(context.layout.cell_count_total_st);
         m_foodPieces.reserve(context.layout.cell_count_total_st);
         m_slowPieces.reserve(context.layout.cell_count_total_st);
+        m_shrinkPieces.reserve(context.layout.cell_count_total_st);
 
         const LevelDetails & level{ context.game.level() };
 
