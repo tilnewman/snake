@@ -290,14 +290,14 @@ namespace snake
 
     int GameInPlay::calcScoreForEating(Context &)
     {
-        const std::size_t score{ level().number + level().eat_count_current + 1 };
-        return static_cast<int>(score * 10);
+        const std::size_t score{ (level().number + level().eat_count_current) * 10_st };
+        return static_cast<int>(score);
     }
 
     int GameInPlay::calcLevelCompleteScoreBonus() const
     {
-        const std::size_t score{ level().number + level().eat_count_current + 1 };
-        return static_cast<int>(score * 100);
+        const std::size_t score{ level().number * 100_st };
+        return static_cast<int>(score);
     }
 
     void GameInPlay::handlePickup(Context & context, const BoardPos_t & pos, const Piece piece)
@@ -331,22 +331,21 @@ namespace snake
 
         m_level.handlePickupFood(context);
 
-        const int scoreEarned{ calcScoreForEating(context) };
-        scoreAdj(context, scoreEarned);
+        int scoreEarned = calcScoreForEating(context);
 
         if (m_level.isComplete())
         {
-            scoreAdj(context, calcLevelCompleteScoreBonus());
+            scoreEarned += calcLevelCompleteScoreBonus();
             context.state.setChangePending(State::LevelCompleteMsg);
         }
-        else
-        {
-            context.cell_anims.addRisingText(
-                context,
-                "+" + std::to_string(scoreEarned),
-                context.config.grow_fade_text_color,
-                context.layout.cellBounds(pos));
-        }
+
+        scoreAdj(context, scoreEarned);
+
+        context.cell_anims.addRisingText(
+            context,
+            "+" + std::to_string(scoreEarned),
+            context.config.grow_fade_text_color,
+            context.layout.cellBounds(pos));
     }
 
     void GameInPlay::handlePickupSlow(Context & context, const BoardPos_t & pos, const Piece piece)

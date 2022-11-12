@@ -39,8 +39,8 @@ namespace snake
         Pause,
         LevelCompleteMsg, // TimedMessage showing "Level Survived!"
         NextLevelMsg,     // TimedMessage showing what level # is next
-        Over,
-        Quit // performs all normal shutdown and exits the program
+        Over,             // game over, play death music, let player see what happened
+        Quit              // performs all normal shutdown and exits the program
     };
 
     using StateOpt_t = std::optional<State>;
