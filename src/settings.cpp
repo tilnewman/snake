@@ -388,13 +388,13 @@ namespace snake
 
         std::cout << "Player bit into " << piece << " and dies.\n";
 
+        // TODO decrement lives counter
+
         if (context.config.is_god_mode)
         {
             std::cout << "...but god mode saves you!\n";
             return;
         }
-
-        // TODO decrement lives counter
 
         context.state.setChangePending(State::Over);
     }
