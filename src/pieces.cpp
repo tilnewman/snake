@@ -208,14 +208,7 @@ namespace snake
             return;
         }
 
-        if (context.game.isHumanPlaying())
-        {
-            finalizeDirectionToMove_Player(context);
-        }
-        else
-        {
-            finalizeDirectionToMove_SelfTest(context);
-        }
+        finalizeDirectionToMove(context);
 
         const auto [oldPos, newPos, newPosEnumOpt] = move(context);
 
@@ -235,76 +228,7 @@ namespace snake
         m_directionNextNext = keys::not_a_key;
     }
 
-    //
-
-    void HeadPiece::finalizeDirectionToMove_SelfTest(Context & context)
-    {
-        M_CHECK_SS(keys::isArrow(m_directionPrev), m_directionPrev);
-
-        ++m_stMovesTowardCurrentTargetCount;
-
-        const bool haveTarget{ context.layout.isPositionValid(m_stTargetPos) };
-
-        const bool isThereStillFoodAtTarget{
-            haveTarget &&
-            (context.board.pieceEnumOptAt(m_stTargetPos).value_or(Piece::Wall) == Piece::Food)
-        };
-
-        const bool isTimeToGiveUpOnRechingTarget{ m_stMovesTowardCurrentTargetCount >
-                                                  m_stMovesTowardCurrentTargetCountMax };
-
-        const bool willPickNewTarget{ !haveTarget || !isThereStillFoodAtTarget ||
-                                      isTimeToGiveUpOnRechingTarget };
-
-        if (willPickNewTarget)
-        {
-            // clang-format off
-           // std::cout << " *** picking new target:";
-           // std::cout << "\n\t haveTarget                    = " << std::boolalpha << haveTarget;
-           // //std::cout << "\n\t isThereStillFoodAtTarget      = " << std::boolalpha << isThereStillFoodAtTarget;
-           // std::cout << "\n\t isTimeToGiveUpOnRechingTarget = " << std::boolalpha << isTimeToGiveUpOnRechingTarget;
-           // std::cout << "\n\t m_directionNextBEFORE         = " << m_directionNext;
-           // std::cout << "\n\t m_stMovesTowardCurrent        = " << m_stMovesTowardCurrentTargetCount;
-           // std::cout << "\n\t m_stTargetPosBEFORE           = " << m_stTargetPos;
-            // clang-format on
-
-            m_stMovesTowardCurrentTargetCount = 0;
-
-            m_stTargetPos = sfPickTarget(context);
-            // std::cout << "\n\t m_stTargetPosAFTER            = " << m_stTargetPos;
-
-            // Need a number of moves toward a target that is considered too much,
-            // and assume we will never reach the current target and pick a new on.
-            // A lot of different values would easily work here, but basing it on
-            // the number of cells/board-size makes the most sense.
-            const std::size_t movesMax{
-                20_st +
-                (static_cast<std::size_t>(std::sqrt(context.layout.cell_count_total)) * 2_st)
-            };
-
-            const std::size_t movesMin{ movesMax / 2 };
-
-            // std::cout << "\n\t m_stMovesTowardMaxBEFORE      = "
-            //           << m_stMovesTowardCurrentTargetCountMax;
-
-            m_stMovesTowardCurrentTargetCountMax = context.random.fromTo(movesMin, movesMax);
-
-            // std::cout << "\n\t m_stMovesTowardMaxAFTER       = "
-            //          << m_stMovesTowardCurrentTargetCountMax << ":  [" << movesMin << ","
-            //          << movesMax << "]" << std::endl;
-        }
-
-        m_directionNext = stPickDirection(context);
-
-        if (!keys::isArrow(m_directionNext))
-        {
-            // std::cout << " *** finalizeDirectionToMove_SelfTest forced to use prev" << std::endl;
-            m_directionNext = m_directionPrev;
-            m_directionNextNext = keys::not_a_key;
-        }
-    }
-
-    void HeadPiece::finalizeDirectionToMove_Player(const Context &)
+    void HeadPiece::finalizeDirectionToMove(const Context &)
     {
         M_CHECK_SS(keys::isArrow(m_directionPrev), m_directionPrev);
 
@@ -343,113 +267,6 @@ namespace snake
             "(2)Reverse direction move detected: m_directionPrev="
                 << m_directionPrev << ", m_directionNext=" << m_directionNext
                 << ", m_directionNextNext=" << m_directionNext);
-    }
-
-    //
-
-    BoardPos_t HeadPiece::sfPickTarget(const Context & context) const
-    {
-        static std::vector<std::pair<int, BoardPos_t>> targets;
-        targets.reserve(1000);
-        targets.clear();
-
-        const sf::Vector2i posSelf{ position() };
-
-        for (const BoardPos_t & foodPos : context.board.findPieces(Piece::Food))
-        {
-            const sf::Vector2i posFood{ foodPos };
-            const sf::Vector2i posDiff{ posFood - posSelf };
-            const int distance{ std::abs(posDiff.x) + std::abs(posDiff.y) };
-            targets.push_back({ distance, foodPos });
-        }
-
-        if (targets.empty())
-        {
-            // std::cout << " *** sfPickTarget() found no food" << std::endl;
-            return BoardPosInvalid;
-        }
-        else if (targets.size() == 1)
-        {
-            return targets.front().second;
-        }
-
-        std::sort(std::begin(targets), std::end(targets));
-        return targets.front().second;
-    }
-
-    sf::Keyboard::Key HeadPiece::stPickDirection(const Context & context) const
-    {
-        // sometimes it just makes mistakes...
-        if (context.random.ratio() > 0.999f)
-        {
-            return context.random.from({
-                sf::Keyboard::Up,
-                sf::Keyboard::Down,
-                sf::Keyboard::Left,
-                sf::Keyboard::Right,
-            });
-        }
-
-        static std::vector<PosInfo> posInfos;
-
-        posInfos.clear();
-        posInfos.push_back({ context, sf::Keyboard::Up, position(), m_stTargetPos });
-        posInfos.push_back({ context, sf::Keyboard::Down, position(), m_stTargetPos });
-        posInfos.push_back({ context, sf::Keyboard::Left, position(), m_stTargetPos });
-        posInfos.push_back({ context, sf::Keyboard::Right, position(), m_stTargetPos });
-
-        posInfos.erase(
-            std::remove_if(
-                std::begin(posInfos),
-                std::end(posInfos),
-                [&](const PosInfo & info) { return info.isOccupiedButNotBy(Piece::Food); }),
-            std::end(posInfos));
-
-        // if no valid moves then don't change direction
-        if (posInfos.empty())
-        {
-            // std::cout << " *** stPickDirection() found no moves that were free or food."
-            //          << std::endl;
-
-            return m_directionNext;
-        }
-        else if (posInfos.size() == 1)
-        {
-            return posInfos.front().dir;
-        }
-
-        // sometimes it just makes mistakes...
-        if (context.random.ratio() > 0.999f)
-        {
-            return context.random.from(posInfos).dir;
-        }
-
-        // for (const auto & info : posInfos)
-        //{
-        //    if (info.isOccupiedBy(Piece::Food))
-        //    {
-        //        return info.dir;
-        //    }
-        //}
-
-        std::sort(
-            std::begin(posInfos), std::end(posInfos), [&](const PosInfo & A, const PosInfo & B) {
-                if (A.isOccupiedBy(Piece::Food) != B.isOccupiedBy(Piece::Food))
-                {
-                    return A.isOccupiedBy(Piece::Food);
-                }
-                else
-                {
-                    return (A.dist_to_target < B.dist_to_target);
-                }
-            });
-
-        // if ((posInfos[1].dist_to_target - posInfos[0].dist_to_target) < 2.0f)
-        //{
-        //    return m_directionPrev;
-        //}
-
-        return posInfos.front().dir;
     }
 
     //

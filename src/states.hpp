@@ -40,8 +40,7 @@ namespace snake
         LevelCompleteMsg, // TimedMessage showing "Level Survived!"
         NextLevelMsg,     // TimedMessage showing what level # is next
         Over,
-        Quit, // performs all normal shutdown and exits the program
-        Test
+        Quit // performs all normal shutdown and exits the program
     };
 
     using StateOpt_t = std::optional<State>;
@@ -62,7 +61,6 @@ namespace snake
                 case State::NextLevelMsg: return "NextLevelMsg";
                 case State::Over: return "Over";
                 case State::Quit: return "Quit";
-                case State::Test: return "Test";
                 default: return "";
             }
         }
@@ -190,19 +188,6 @@ namespace snake
         void update(Context &, const float elapsedSec) override;
         bool handleEvent(Context & context, const sf::Event & event) override;
         void onEnter(Context &) override;
-    };
-
-    //
-    class TestLevelSetupState : public StateBase
-    {
-      public:
-        explicit TestLevelSetupState(const Context & context);
-        virtual ~TestLevelSetupState() override = default;
-
-        bool handleEvent(Context &, const sf::Event &) override;
-        void update(Context &, const float elapsedSec) override;
-        void onEnter(Context &) override;
-        void onExit(Context &) override;
     };
 
     //

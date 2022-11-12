@@ -81,24 +81,10 @@ namespace snake
 
         m_soundPlayer.volume(m_config.initial_volume);
 
-        if (m_config.isTest())
-        {
-            // when vol is zero the SoundPlayer class early exits all functions,
-            // so this means it won't take up any time and distort profiling results.
-            m_soundPlayer.volume(0.0f);
-        }
-
-        m_stateMachine.reset();
         m_statusRegion.reset(m_context);
 
-        if (m_config.isTest())
-        {
-            m_stateMachine.setChangePending(State::Test);
-        }
-        else
-        {
-            m_stateMachine.setChangePending(State::Option);
-        }
+        m_stateMachine.reset();
+        m_stateMachine.setChangePending(State::Option);
     }
 
     const sf::VideoMode GameCoordinator::pickResolution() const
@@ -152,12 +138,8 @@ namespace snake
             m_bloomWindow = std::make_unique<util::BloomEffectHelper>(m_window);
         }
 
-        // don't use bloom effect when testing because it reduces frame rate significantly
-        if (!m_config.isTest())
-        {
-            m_bloomWindow->isEnabled(true);
-            m_bloomWindow->blurMultipassCount(5); // 5 looks like the brightest glow
-        }
+        m_bloomWindow->isEnabled(true);
+        m_bloomWindow->blurMultipassCount(5); // 5 looks like the brightest glow
     }
 
     void GameCoordinator::play(const GameConfig & config)
@@ -217,6 +199,7 @@ namespace snake
 
         // Periodically place new food at random place on the map, because there
         // are just too many ways for food to either be destroyed or unreachable.
+        // Also take this opportunity to place rare helper pieces like slow/shrink.
         if ((m_stateMachine.stateEnum() == State::Play) && !m_game.isGameOver() &&
             !m_game.isLevelComplete())
         {

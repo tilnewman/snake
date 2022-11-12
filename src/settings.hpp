@@ -115,14 +115,6 @@ namespace snake
         static inline const float sec_per_turn_shrink_per_level{ 0.99f };
     };
 
-    //
-
-    enum class WhoIsPlaying
-    {
-        Human,
-        Ai
-    };
-
     // Parameters that are specific to a game currently being played.
     class GameInPlay
     {
@@ -134,14 +126,13 @@ namespace snake
         // set all default values, but IS NOT READY TO PLAY
         void reset(const GameConfig & config, const Layout & layout);
 
-        void start(Context & context, const WhoIsPlaying whoIsPlaying);
+        void start(Context & context);
         void stop(Context &);
 
         void setupNextLevel(Context & context, const bool survived);
 
         bool isGameOver() const { return m_isGameOver; }
         int score() const { return m_score; }
-        bool isHumanPlaying() const { return (WhoIsPlaying::Human == m_whoIsPlaying); }
         const LevelDetails & level() const { return m_level.details(); }
         bool isLevelComplete() const;
         int calcScoreForEating(Context & context);
@@ -161,7 +152,6 @@ namespace snake
         Level m_level;
         int m_score{ 0 };
         bool m_isGameOver{ true };
-        WhoIsPlaying m_whoIsPlaying{ WhoIsPlaying::Human };
         float m_eatSfxPitch{ 1.0f };
 
         static inline const float m_aiPlayVolume{ 5.0f };

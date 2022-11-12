@@ -174,25 +174,15 @@ namespace snake
               context,
               State::Option,
               State::NextLevelMsg,
-              "Ready?\nHit a key to start!\n\n\n\n\n\n\n\n\n",
+              "Ready?\nHit a key to start!\n\n\n\n",
               m_defaultMinDurationSec)
     {}
 
-    void OptionsState::onEnter(Context &)
-    {
-        // TODO start an AI game in the background?
-        // context.game.start(context, WhoIsPlaying::Ai);
-    }
+    void OptionsState::onEnter(Context &) {}
 
     void OptionsState::update(Context & context, const float elapsedSec)
     {
         StateBase::update(context, elapsedSec);
-
-        // this allows watching the game play itself while you setup your game
-        if (!context.game.isHumanPlaying())
-        {
-            context.board.update(context, elapsedSec);
-        }
     }
 
     bool OptionsState::handleEvent(Context & context, const sf::Event & event)
@@ -211,46 +201,9 @@ namespace snake
                      "and start playing."
                   << std::endl;
 
-        context.game.start(context, WhoIsPlaying::Human);
+        context.game.start(context);
         changeToNextState(context);
 
-        return true;
-    }
-
-    //
-
-    TestLevelSetupState::TestLevelSetupState(const Context & context)
-        : StateBase(context, State::Test, State::Quit)
-    {}
-
-    void TestLevelSetupState::onEnter(Context & context)
-    {
-        context.game.start(context, WhoIsPlaying::Human);
-    }
-
-    void TestLevelSetupState::onExit(Context & context) { context.game.stop(context); }
-
-    void TestLevelSetupState::update(Context & context, const float elapsedSec)
-    {
-        StateBase::update(context, elapsedSec);
-
-        // board.update() makes actors run around, and we don't want that during testing
-        // context.board.update(context, elapsedSec);
-    }
-
-    bool TestLevelSetupState::handleEvent(Context & context, const sf::Event & event)
-    {
-        if (StateBase::handleEvent(context, event))
-        {
-            return true;
-        }
-
-        if ((sf::Event::KeyPressed != event.type) && (sf::Event::MouseButtonPressed != event.type))
-        {
-            return false;
-        }
-
-        context.game.setupNextLevel(context, true);
         return true;
     }
 
@@ -354,12 +307,6 @@ namespace snake
 
     void GameOverState::onEnter(Context & context)
     {
-        // if (!context.game.isHumanPlaying())
-        //{
-        //    changeToNextState(context);
-        //    return;
-        //}
-
         context.audio.play("rpg-game-over");
 
         // Calling game.reset() here would work fine and make good sense,
@@ -372,7 +319,6 @@ namespace snake
         // TODO  save high-scores and other details
 
         // std::cout << context.game.statusString("Game Over") << std::endl;
-        // context.game.reset(context.config, context.layout);
         context.game.setupNextLevel(context, false);
     }
 
@@ -474,8 +420,7 @@ namespace snake
             case State::Pause:            { return std::make_unique<PauseState>(context);                }
             case State::LevelCompleteMsg: { return std::make_unique<LevelCompleteMessageState>(context); }
             case State::NextLevelMsg:     { return std::make_unique<NextLevelMessageState>(context); }
-            case State::Test:             { return std::make_unique<TestLevelSetupState>(context); }
-
+           
             case State::Quit:
             default:                      { return std::make_unique<QuitState>(); }
         };

@@ -180,8 +180,7 @@ namespace snake
         void resetTailGrowCounter() { m_tailGrowRemainingCount = 0; }
 
       private:
-        void finalizeDirectionToMove_Player(const Context & context);
-        void finalizeDirectionToMove_SelfTest(Context & context);
+        void finalizeDirectionToMove(const Context & context);
         auto move(Context & context);
         void handleTailAfterMove(Context & context);
         void handlePickup(Context &, const BoardPos_t & newPos, const Piece piece);
@@ -192,15 +191,6 @@ namespace snake
         sf::Keyboard::Key m_directionNextNext;
 
         std::size_t m_tailGrowRemainingCount;
-
-        // self-test stuff
-      private:
-        BoardPos_t sfPickTarget(const Context & context) const;
-        sf::Keyboard::Key stPickDirection(const Context & context) const;
-
-        std::size_t m_stMovesTowardCurrentTargetCount{ 0 };
-        std::size_t m_stMovesTowardCurrentTargetCountMax{ 0 };
-        BoardPos_t m_stTargetPos{ BoardPosInvalid };
     };
 
     //

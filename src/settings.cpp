@@ -203,9 +203,9 @@ namespace snake
                 std::back_inserter(wallPositions));
 
             std::copy(
-               std::begin(context.layout.wall_positions_right),
-               std::end(context.layout.wall_positions_right),
-               std::back_inserter(wallPositions));
+                std::begin(context.layout.wall_positions_right),
+                std::end(context.layout.wall_positions_right),
+                std::back_inserter(wallPositions));
         }
 
         if (context.random.boolean())
@@ -235,12 +235,11 @@ namespace snake
     {
         m_score = 0;
         m_isGameOver = true;
-        m_whoIsPlaying = WhoIsPlaying::Human;
         m_eatSfxPitch = config.eat_sfx_pitch_start;
         m_level.reset();
     }
 
-    void GameInPlay::start(Context & context, const WhoIsPlaying whoIsPlaying)
+    void GameInPlay::start(Context & context)
     {
         if (!m_isGameOver)
         {
@@ -251,15 +250,7 @@ namespace snake
 
         m_isGameOver = false;
 
-        m_whoIsPlaying = whoIsPlaying;
-        if (isHumanPlaying())
-        {
-            context.audio.volume(context.config.initial_volume);
-        }
-        else
-        {
-            context.audio.volume(m_aiPlayVolume);
-        }
+        context.audio.volume(context.config.initial_volume);
 
         m_level.setupForLevelNumber(context, 1);
         context.board.loadMap(context);
@@ -406,9 +397,7 @@ namespace snake
             return;
         }
 
-        // comment this out to allow players to keep retrying a failed level,
-        // but this would work better if there were a life/lives counter...
-        // m_isGameOver = true;
+        // TODO decrement lives counter
 
         context.state.setChangePending(State::Over);
     }
@@ -429,19 +418,18 @@ namespace snake
     {
         std::ostringstream ss;
 
-        ss << prefix << ":  ";
-        ss << ((WhoIsPlaying::Human == m_whoIsPlaying) ? "Human" : "Ai");
+        ss << prefix << ": ";
 
         if (m_isGameOver)
         {
-            ss << "'s game is over after reaching ";
+            ss << "Game is over after reaching ";
         }
         else
         {
-            ss << " is playing ";
+            ss << "Playing at ";
         }
 
-        auto & details{ m_level.details() };
+        const auto & details{ m_level.details() };
         ss << "level=" << details.number;
         ss << ", with " << details.remainingToEat();
         ss << " of " << details.eat_count_required;
