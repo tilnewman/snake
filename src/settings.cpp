@@ -363,7 +363,7 @@ namespace snake
     void
         GameInPlay::handlePickupShrink(Context & context, const BoardPos_t & pos, const Piece piece)
     {
-        // re-use the slow sfx for shirnk intentionally
+        // re-use the slow sfx intentionally
         context.audio.play("slow", m_eatSfxPitch);
 
         context.cell_anims.addGrowFadeAnim(context.layout.cellBounds(pos), piece::toColor(piece));
@@ -383,7 +383,7 @@ namespace snake
         {
             context.audio.play("mario-break-block");
         }
-        else if (piece == Piece::Tail)
+        else if ((piece == Piece::Tail) || (piece == Piece::Head))
         {
             context.audio.play("step-smash-yuck");
         }

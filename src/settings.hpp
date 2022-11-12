@@ -153,8 +153,6 @@ namespace snake
         int m_score{ 0 };
         bool m_isGameOver{ true };
         float m_eatSfxPitch{ 1.0f };
-
-        static inline const float m_aiPlayVolume{ 5.0f };
     };
 } // namespace snake
 
