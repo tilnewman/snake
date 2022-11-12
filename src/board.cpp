@@ -660,7 +660,14 @@ namespace snake
             headPiece.resetTailGrowCounter();
         }
 
-        while (m_tailPieces.size() > context.game.level().tail_start_length)
+        std::size_t newTailSize = (m_tailPieces.size() / 2);
+
+        if (newTailSize < context.game.level().tail_start_length)
+        {
+            newTailSize = context.game.level().tail_start_length;
+        }
+
+        while (m_tailPieces.size() > newTailSize)
         {
             removePiece(context, findLastTailPiecePos());
         }
