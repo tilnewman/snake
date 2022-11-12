@@ -45,10 +45,9 @@ namespace snake
         sf::Color window_background_color{ sf::Color::Black };
         sf::Color board_background_color{ sf::Color::Black };
         sf::Color alt_board_background_color{ 37, 0, 23 };
-        sf::Color board_outline_color{ 230, 190, 180, 100 };
         sf::Color grow_fade_text_color{ 255, 255, 200 };
 
-        float cell_size_window_ratio{ 0.0175f };
+        float cell_size_window_ratio{ 0.015f };
         float status_bounds_height_ratio{ 0.02f };
 
         float cell_anim_grow_ratio{ 1.04f };

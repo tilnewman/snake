@@ -264,7 +264,7 @@ namespace snake
         void reset();
         std::string toString(const Context & context) const;
 
-        void loadMap(Context & context);
+        void loadMap(Context & context, const bool willLoadNewMap);
 
         bool isPiece(const BoardPos_t & pos, const Piece piece) const;
         inline bool isPieceAt(const BoardPos_t & pos) const { return entryAt(pos).has_value(); }
@@ -275,6 +275,9 @@ namespace snake
 
         // returns m_pieceVerts index of the piece erased, otherwise m_pieceVerts.size()
         std::size_t removePiece(Context &, const BoardPos_t & pos);
+
+        // returns the count of pieces removed
+        std::size_t removeAllPieces(Context &, const Piece piece);
 
         sf::Vector2i move(Context &, const BoardPos_t & fromPos, const BoardPos_t & toPos);
 

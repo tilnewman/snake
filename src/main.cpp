@@ -8,19 +8,25 @@
 
 #include <cstddef>
 
-// lives counter
-// earn more lives with score
-// food should always eventually die and be respawned
-// food increasingly away from middle toward walls/self/ect
-// bonus levels with lots of food but your tail never shrinks
-// bonuses for turns with limited options or that avoided head-on collision
-// bonus for long straight shots
-// spinning food that turns you when you eatit in the dir it was spinning
-// hidden food that gives big score bonus when eaten
+//
+// TODO
+//
+//  temp cheater key to skip levels to make level changes easy to see/test
+//  level details depend on time spent playing so more time == harder levels
+//  lives counter
+//  earn more lives with score
+//  food should always eventually die and be respawned
+//  food increasingly away from middle toward walls/self/ect
+//  bonus levels with lots of food but your tail never stops growing
+//  bonuses for turns with limited options or that avoided head-on collision
+//  bonus for long straight shots
+//  spinning food that turns you when you eatit in the dir it was spinning
+//  hidden food that gives big score bonus when eaten
 
 //
 // Bugs
 //
+//  MacOS resolutions are screwed up
 
 int main(const int argc, const char * const argv[])
 {
@@ -31,7 +37,6 @@ int main(const int argc, const char * const argv[])
     std::cout << "media_path=" << config.media_path << std::endl;
 
     config.frame_rate_limit = 0;
-    config.cell_size_window_ratio = 0.015f;
     config.is_god_mode = false;
 
     try

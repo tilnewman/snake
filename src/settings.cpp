@@ -253,7 +253,7 @@ namespace snake
         context.audio.volume(context.config.initial_volume);
 
         m_level.setupForLevelNumber(context, 1);
-        context.board.loadMap(context);
+        context.board.loadMap(context, true);
     }
 
     void GameInPlay::stop(Context & context)
@@ -264,15 +264,13 @@ namespace snake
 
     void GameInPlay::setupNextLevel(Context & context, const bool survived)
     {
-        // TODO Level needs start()/stop() too, where this stuff should maybe go?
-
         m_eatSfxPitch = context.config.eat_sfx_pitch_start;
         context.cell_anims.reset();
 
         const std::size_t nextLevelNumber{ ((survived) ? (level().number + 1) : level().number) };
 
         m_level.setupForLevelNumber(context, nextLevelNumber);
-        context.board.loadMap(context);
+        context.board.loadMap(context, survived);
     }
 
     std::string GameInPlay::toString() const

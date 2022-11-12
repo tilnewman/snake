@@ -26,6 +26,13 @@ namespace snake
         m_foodPieces.clear();
         m_slowPieces.clear();
         m_shrinkPieces.clear();
+
+        m_pieceVerts.reserve(2000);
+        m_headPieces.reserve(10);
+        m_wallPieces.reserve(1000);
+        m_foodPieces.reserve(100);
+        m_slowPieces.reserve(10);
+        m_shrinkPieces.reserve(10);
     }
 
     std::string Board::toString(const Context & context) const
@@ -110,50 +117,55 @@ namespace snake
         return ss.str();
     }
 
-    void Board::loadMap(Context & context)
+    void Board::loadMap(Context & context, const bool willLoadNewMap)
     {
-        reset();
-
-        //
-        m_pieceVerts.reserve(context.layout.cell_count_total_st);
-        m_headPieces.reserve(context.layout.cell_count_total_st);
-        m_wallPieces.reserve(context.layout.cell_count_total_st);
-        m_foodPieces.reserve(context.layout.cell_count_total_st);
-        m_slowPieces.reserve(context.layout.cell_count_total_st);
-        m_shrinkPieces.reserve(context.layout.cell_count_total_st);
-
-        const LevelDetails & level{ context.game.level() };
-
-        replaceWithNewPiece(context, Piece::Head, level.start_pos);
-
-        // place walls
-        if (context.random.boolean())
+        if (willLoadNewMap)
         {
-            for (const BoardPos_t & pos : level.wall_positions)
+            reset();
+
+            const LevelDetails & level{ context.game.level() };
+
+            replaceWithNewPiece(context, Piece::Head, level.start_pos);
+
+            // place walls
+            if (context.random.boolean())
             {
-                replaceWithNewPiece(context, Piece::Wall, pos);
+                for (const BoardPos_t & pos : level.wall_positions)
+                {
+                    replaceWithNewPiece(context, Piece::Wall, pos);
+                }
+            }
+
+            // place random obstacles
+            if (context.random.boolean())
+            {
+                for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
+                {
+                    addNewPieceAtRandomFreePos(context, Piece::Wall);
+                }
+            }
+
+            // place food
+            if (context.random.boolean())
+            {
+                const std::size_t foodCount =
+                    context.random.fromTo(1_st, context.game.level().remainingToEat());
+
+                for (std::size_t i(0); i < foodCount; ++i)
+                {
+                    addNewPieceAtRandomFreePos(context, Piece::Food);
+                }
             }
         }
-
-        // place random obstacles
-        if (context.random.boolean())
+        else
         {
-            for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
-            {
-                addNewPieceAtRandomFreePos(context, Piece::Wall);
-            }
-        }
+            removeAllPieces(context, Piece::Head);
+            removeAllPieces(context, Piece::Tail);
+            removeAllPieces(context, Piece::Food);
+            removeAllPieces(context, Piece::Shrink);
+            removeAllPieces(context, Piece::Slow);
 
-        // place food
-        if (context.random.boolean())
-        {
-            const std::size_t foodCount =
-                context.random.fromTo(1_st, context.game.level().remainingToEat());
-
-            for (std::size_t i(0); i < foodCount; ++i)
-            {
-                addNewPieceAtRandomFreePos(context, Piece::Food);
-            }
+            replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
         }
     }
 
@@ -274,6 +286,18 @@ namespace snake
 
         m_posEntryMap.erase(entryToRemoveIter);
         return entryToRemoveCopy.quad_index;
+    }
+
+    std::size_t Board::removeAllPieces(Context & context, const Piece piece)
+    {
+        const std::vector<BoardPos_t> positions = findPieces(piece);
+
+        for (const BoardPos_t & pos : positions)
+        {
+            removePiece(context, pos);
+        }
+
+        return positions.size();
     }
 
     sf::Vector2i
