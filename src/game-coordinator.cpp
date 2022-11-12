@@ -76,7 +76,7 @@ namespace snake
             "mario-pause.ogg",       // pause
             "mario-break-block.ogg", // wall hit
             "level-intro.ogg",       // start level
-            "slow.ogg"               // eat slow pill
+            "slow.ogg"               // eat slow/shrink pill
         });
 
         m_soundPlayer.volume(m_config.initial_volume);

@@ -15,14 +15,11 @@
 // bonus levels with lots of food but your tail never shrinks
 // bonuses for turns with limited options or that avoided head-on collision
 // bonus for long straight shots
-// food that moves
 // spinning food that turns you when you eatit in the dir it was spinning
 // hidden food that gives big score bonus when eaten
 
 //
 // Bugs
-//
-//  You can safely eat yourself if warpping around the screen edge.
 //
 
 int main(const int argc, const char * const argv[])
