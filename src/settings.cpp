@@ -141,7 +141,7 @@ namespace snake
         m_details.start_pos = { context.layout.cell_counts / 2 };
 
         m_details.eat_count_current = 0;
-        m_details.eat_count_required = (8 + m_details.number);
+        m_details.eat_count_required = (8 + levelSqrtST);
 
         const std::size_t eatCountSqrtST{ static_cast<std::size_t>(
             sqrt(m_details.eat_count_current)) };
@@ -149,7 +149,8 @@ namespace snake
         m_details.tail_start_length = 10;
 
         m_details.tail_grow_after_eat =
-            (3_st + m_details.eat_count_current + levelSqrtST + eatCountSqrtST);
+            ((m_details.tail_start_length / 2) + m_details.eat_count_current + levelSqrtST +
+             eatCountSqrtST);
 
         if (m_details.number <= m_details.eat_count_required)
         {
