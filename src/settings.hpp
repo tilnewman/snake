@@ -60,6 +60,8 @@ namespace snake
         float eat_sfx_pitch_adj{ 0.033f };
 
         bool will_show_fps{ false };
+
+        std::size_t score_per_life_bonus{ 5000 };
     };
 
     //

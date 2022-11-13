@@ -13,7 +13,6 @@
 //
 //  temp cheater key to skip levels to make level changes easy to see/test
 //  level details depend on time spent playing so more time == harder levels
-//  earn more lives with score (every 5,000 points sounds right)
 //  food increasingly away from middle toward walls/self/ect
 //  bonus levels with lots of food but your tail never stops growing
 //  bonuses for turns with limited options or that avoided head-on collision

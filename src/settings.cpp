@@ -339,13 +339,28 @@ namespace snake
             context.state.setChangePending(State::LevelCompleteMsg);
         }
 
+        const std::size_t liveBonusesBefore = (m_score / context.config.score_per_life_bonus);
         scoreAdj(context, scoreEarned);
+        const std::size_t liveBonusesAfter = (m_score / context.config.score_per_life_bonus);
 
-        context.cell_anims.addRisingText(
-            context,
-            "+" + std::to_string(scoreEarned),
-            context.config.grow_fade_text_color,
-            context.layout.cellBounds(pos));
+        if (liveBonusesBefore == liveBonusesAfter)
+        {
+            context.cell_anims.addRisingText(
+                context,
+                "+" + std::to_string(scoreEarned),
+                context.config.grow_fade_text_color,
+                context.layout.cellBounds(pos));
+        }
+        else
+        {
+            ++m_lives;
+
+            context.cell_anims.addRisingText(
+                context,
+                "LIFE BONUS!",
+                context.config.grow_fade_text_color,
+                context.layout.cellBounds(pos));
+        }
     }
 
     void GameInPlay::handlePickupSlow(Context & context, const BoardPos_t & pos, const Piece piece)
