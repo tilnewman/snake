@@ -101,39 +101,35 @@ namespace snake
 
     bool Level::isComplete() const
     {
-        const LevelDetails & lvl{ m_details };
-
-        return ((lvl.eat_count_required > 0) && (lvl.eat_count_current >= lvl.eat_count_required));
+        return (
+            (m_details.eat_count_required > 0) &&
+            (m_details.eat_count_current >= m_details.eat_count_required));
     }
 
     void Level::handlePickupFood(const Context &)
     {
-        LevelDetails & lvl{ m_details };
-
-        if (lvl.eat_count_current >= lvl.eat_count_required)
+        if (m_details.eat_count_current >= m_details.eat_count_required)
         {
             return;
         }
 
-        ++lvl.eat_count_current;
-        lvl.sec_per_turn_current *= lvl.sec_per_turn_shrink_per_eat;
+        ++m_details.eat_count_current;
+        m_details.sec_per_turn_current *= m_details.sec_per_turn_shrink_per_eat;
 
-        lvl.tail_grow_after_eat =
-            (1_st + (lvl.eat_count_current * lvl.number) + lvl.number + lvl.eat_count_current);
+        m_details.tail_grow_after_eat =
+            (1_st + (m_details.eat_count_current * m_details.number) + m_details.number +
+             m_details.eat_count_current);
     }
 
     void Level::handlePickupSlow(const Context &)
     {
-        LevelDetails & lvl{ m_details };
-        lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
+        m_details.sec_per_turn_current = m_details.sec_per_turn_slowest;
     }
 
     void Level::setupForLevelNumber(
         Context & context, const std::size_t levelNumberST, const bool survived)
     {
-        LevelDetails & lvl{ m_details };
-
-        lvl.number = levelNumberST;
+        m_details.number = levelNumberST;
 
         const float levelNumberF{ static_cast<float>(levelNumberST) };
 
@@ -142,39 +138,42 @@ namespace snake
 
         const std::size_t levelSqrtST{ static_cast<std::size_t>(levelSqrtF) };
 
-        lvl.start_pos = { context.layout.cell_counts / 2 };
+        m_details.start_pos = { context.layout.cell_counts / 2 };
 
-        lvl.eat_count_current = 0;
-        lvl.eat_count_required = (8 + lvl.number);
+        m_details.eat_count_current = 0;
+        m_details.eat_count_required = (8 + m_details.number);
 
-        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(sqrt(lvl.eat_count_current)) };
+        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(
+            sqrt(m_details.eat_count_current)) };
 
-        lvl.tail_start_length = 10;
+        m_details.tail_start_length = 10;
 
-        lvl.tail_grow_after_eat = (3_st + lvl.eat_count_current + levelSqrtST + eatCountSqrtST);
+        m_details.tail_grow_after_eat =
+            (3_st + m_details.eat_count_current + levelSqrtST + eatCountSqrtST);
 
-        if (lvl.number <= lvl.eat_count_required)
+        if (m_details.number <= m_details.eat_count_required)
         {
-            lvl.pickups_visible_at_start_count = (lvl.eat_count_required - lvl.number);
+            m_details.pickups_visible_at_start_count =
+                (m_details.eat_count_required - m_details.number);
         }
         else
         {
-            lvl.pickups_visible_at_start_count = 0;
+            m_details.pickups_visible_at_start_count = 0;
         }
 
         // start speed where it takes 6 seconds to travel the height of the board
-        lvl.sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
+        m_details.sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
 
         // ...and end so fast that it only takes 2 seconds
-        lvl.sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
+        m_details.sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
 
-        lvl.sec_per_turn_shrink_per_eat = 0.925f;
+        m_details.sec_per_turn_shrink_per_eat = 0.925f;
 
-        lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
+        m_details.sec_per_turn_current = m_details.sec_per_turn_slowest;
 
         if (survived)
         {
-            lvl.wall_positions = makeWallPositionsForLevelNumber(context);
+            m_details.wall_positions = makeWallPositionsForLevelNumber(context);
         }
     }
 
@@ -442,11 +441,10 @@ namespace snake
             ss << "Playing at ";
         }
 
-        const auto & details{ m_level.details() };
-        ss << "level=" << details.number;
-        ss << ", with " << details.remainingToEat();
-        ss << " of " << details.eat_count_required;
-        ss << " left to eat (" << (details.completedRatio() * 100.0f) << "%)";
+        ss << "level=" << m_level.details().number;
+        ss << ", with " << m_level.details().remainingToEat();
+        ss << " of " << m_level.details().eat_count_required;
+        ss << " left to eat (" << (m_level.details().completedRatio() * 100.0f) << "%)";
         ss << ", score=" << m_score;
 
         return ss.str();
