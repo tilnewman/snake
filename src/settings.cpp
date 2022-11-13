@@ -328,9 +328,13 @@ namespace snake
             context.state.setChangePending(State::LevelCompleteMsg);
         }
 
-        const std::size_t liveBonusesBefore = (m_score / context.config.score_per_life_bonus);
+        const int liveBonusesBefore =
+            (m_score / static_cast<int>(context.config.score_per_life_bonus));
+
         scoreAdj(context, scoreEarned);
-        const std::size_t liveBonusesAfter = (m_score / context.config.score_per_life_bonus);
+
+        const int liveBonusesAfter =
+            (m_score / static_cast<int>(context.config.score_per_life_bonus));
 
         if (liveBonusesBefore == liveBonusesAfter)
         {
