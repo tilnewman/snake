@@ -254,6 +254,8 @@ namespace snake
 
         m_level.setupForLevelNumber(context, 1);
         context.board.loadMap(context, true);
+
+        m_lives = 3;
     }
 
     void GameInPlay::stop(Context & context)
@@ -386,15 +388,25 @@ namespace snake
             context.audio.play("step-smash-yuck");
         }
 
-        std::cout << "Player bit into " << piece << " and dies.\n";
+        std::cout << "Player bit into " << piece << " and loses a life with ";
 
-        // TODO decrement lives counter
+        M_CHECK_SS((m_lives > 0), "GameInPlay::m_lives was zero when it should not be!");
+
+        --m_lives;
+        std::cout << m_lives << " remaining";
+
+        if (0 == m_lives)
+        {
+            std::cout << " and dies";
+        }
 
         if (context.config.is_god_mode)
         {
-            std::cout << "...but god mode saves you!\n";
-            return;
+            std::cout << "...but god mode saves you";
+            m_lives = 1;
         }
+
+        std::cout << ".\n";
 
         context.state.setChangePending(State::Over);
     }

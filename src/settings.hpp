@@ -58,6 +58,8 @@ namespace snake
         float initial_volume{ 50.0f };
         float eat_sfx_pitch_start{ 0.4f };
         float eat_sfx_pitch_adj{ 0.033f };
+
+        bool will_show_fps{ false };
     };
 
     //
@@ -130,6 +132,7 @@ namespace snake
 
         void setupNextLevel(Context & context, const bool survived);
 
+        std::size_t lives() const { return m_lives; }
         bool isGameOver() const { return m_isGameOver; }
         int score() const { return m_score; }
         const LevelDetails & level() const { return m_level.details(); }
@@ -152,6 +155,7 @@ namespace snake
         int m_score{ 0 };
         bool m_isGameOver{ true };
         float m_eatSfxPitch{ 1.0f };
+        std::size_t m_lives{ 0 };
     };
 } // namespace snake
 

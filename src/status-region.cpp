@@ -73,6 +73,13 @@ namespace snake
 
     void StatusRegion::reset(const Context & context)
     {
+        // a collection of text colors that look good in the status region
+        // const sf::Color yellowOrange(255, 190, 0);
+        // const sf::Color creamSkin(250, 230, 190);
+        const sf::Color yellow(230, 190, 50);
+        const sf::Color orange(255, 170, 60);
+        const sf::Color creamCool(230, 190, 180, 192);
+
         m_texts.clear();
         m_texts.reserve(10);
 
@@ -81,17 +88,11 @@ namespace snake
 
         float textHeight{ m_textBounds.height };
 
-        // all kinds of text colors
-        const sf::Color yellow(230, 190, 50);
-        // const sf::Color yellowOrange(255, 190, 0);
-        const sf::Color orange(255, 170, 60);
-        // const sf::Color creamSkin(250, 230, 190);
-        const sf::Color creamCool(230, 190, 180, 192);
-
         m_texts.emplace_back(context, "LEVEL", 3, orange, textHeight);
         m_texts.emplace_back(context, "SCORE", 9, yellow, textHeight);
-        // m_texts.emplace_back(context, "LEFT", 3, creamSkin, textHeight);
-        m_texts.emplace_back(context, "FPS", 3, creamCool, textHeight);
+        m_texts.emplace_back(context, "LIVES", 2, creamCool, textHeight);
+
+        // find optimal spacing/positioning between texts
 
         const float betweenPadCount{ static_cast<float>(m_texts.size() - 1) };
         const float betweenPadMin{ m_statusBounds.height };
@@ -149,22 +150,34 @@ namespace snake
         {
             statusText.move(0.0f, -6.0f);
         }
+
+        //
+        m_fps.setCharacterSize(30);
+        m_fps.setFillColor(sf::Color(250, 230, 190, 127));
+        m_fps.setFont(context.media.font());
+        m_fps.setPosition(util::right(m_texts.front().bounds()) + 20.0f, 10.0f);
     }
 
-    void StatusRegion::draw(sf::RenderTarget & target, sf::RenderStates states) const
+    void StatusRegion::draw(
+        const Context & context, sf::RenderTarget & target, sf::RenderStates states) const
     {
         for (const StatusText & statusText : m_texts)
         {
             target.draw(statusText, states);
         }
+
+        if (context.config.will_show_fps)
+        {
+            target.draw(m_fps, states);
+        }
     }
 
     void StatusRegion::updateText(const Context & context)
     {
-        // 0:level, 1:score, 2:Remaining, 3:fps
         m_texts.at(0).updateNumber(context.game.level().number);
         m_texts.at(1).updateNumber(context.game.score());
-        // m_texts.at(2).updateNumber(context.game.level().remainingToEat());
-        m_texts.at(2).updateNumber(context.fps);
+        m_texts.at(2).updateNumber(context.game.lives());
+
+        m_fps.setString("FPS=" + std::to_string(context.fps));
     }
 } // namespace snake

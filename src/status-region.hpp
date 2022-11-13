@@ -19,16 +19,15 @@ namespace snake
     class Media;
 
     //
-    struct IRegion : public sf::Drawable
+    struct IRegion
     {
-        virtual ~IRegion() override = default;
-
+        virtual ~IRegion() = default;
         virtual void reset(const Context & context) = 0;
-        virtual sf::FloatRect bounds() const = 0;
+        virtual const sf::FloatRect bounds() const = 0;
         virtual void updateText(const Context & context) = 0;
         virtual void update(Context &, const float elapsedSec) = 0;
         virtual void handleEvent(Context & context, const sf::Event & event) = 0;
-        void draw(sf::RenderTarget &, sf::RenderStates) const override = 0;
+        virtual void draw(const Context &, sf::RenderTarget &, sf::RenderStates) const = 0;
     };
 
     //
@@ -124,22 +123,19 @@ namespace snake
 
         void reset(const Context & context) override;
 
-        sf::FloatRect bounds() const override { return m_statusBounds; }
-        sf::FloatRect textBounds() const { return m_textBounds; }
+        const sf::FloatRect bounds() const override { return m_statusBounds; }
+        const sf::FloatRect textBounds() const { return m_textBounds; }
         void update(Context &, const float) override {}
         void handleEvent(Context &, const sf::Event &) override {}
-        void draw(sf::RenderTarget &, sf::RenderStates) const override;
+        void draw(const Context &, sf::RenderTarget &, sf::RenderStates) const override;
 
         void updateText(const Context & context) override;
 
       private:
         sf::FloatRect m_statusBounds;
         sf::FloatRect m_textBounds;
-
-        // 0:level, 1:score, 2:Remaining, 3:fps
         std::vector<StatusText> m_texts;
-
-        //
+        sf::Text m_fps;
     };
 } // namespace snake
 

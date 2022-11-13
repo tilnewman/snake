@@ -160,10 +160,7 @@ namespace snake
 
         target.draw(context.anim, states);
         target.draw(context.cell_anims, states);
-        target.draw(context.status, states);
-
-        // target.draw(&m_bgFadeVerts[0], m_bgFadeVerts.size(), sf::Quads, states);
-
+        context.status.draw(context, target, states);
         target.draw(m_text, states);
     }
 
@@ -316,10 +313,15 @@ namespace snake
 
     void GameOverState::onExit(Context & context)
     {
-        // TODO  save high-scores and other details
-
-        // std::cout << context.game.statusString("Game Over") << std::endl;
-        context.game.setupNextLevel(context, false);
+        if (context.game.lives() == 0)
+        {
+            // TODO  save high-scores and other details
+            context.state.setChangePending(State::Quit);
+        }
+        else
+        {
+            context.game.setupNextLevel(context, false);
+        }
     }
 
     PauseState::PauseState(const Context & context)
