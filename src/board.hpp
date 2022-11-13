@@ -324,6 +324,9 @@ namespace snake
         void shrinkTail(Context & context);
 
       private:
+        void loadMap_New(Context & context);
+        void loadMap_Same(Context & context);
+
         PieceBase & makePiece(Context &, const Piece piece, const BoardPos_t & pos);
         std::size_t findOrMakeFreeQuadIndex();
 

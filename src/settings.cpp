@@ -128,7 +128,8 @@ namespace snake
         lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
     }
 
-    void Level::setupForLevelNumber(Context & context, const std::size_t levelNumberST)
+    void Level::setupForLevelNumber(
+        Context & context, const std::size_t levelNumberST, const bool survived)
     {
         LevelDetails & lvl{ m_details };
 
@@ -168,25 +169,13 @@ namespace snake
         lvl.sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
 
         lvl.sec_per_turn_shrink_per_eat = 0.925f;
-        //    = (1.0f
-        //       - ((lvl.sec_per_turn_slowest - lvl.sec_per_turn_fastest)
-        //          / static_cast<float>(lvl.eat_count_required)));
 
         lvl.sec_per_turn_current = lvl.sec_per_turn_slowest;
 
-        lvl.wall_positions = makeWallPositionsForLevelNumber(context);
-
-        // std::cout << "Setting up for level #" << levelNumberST << ":";
-        // std::cout << "\n\t level_sqrt             = " << levelSqrtST;
-        // std::cout << "\n\t eat_count_required     = " << lvl.eat_count_required;
-        // std::cout << "\n\t tail_grow_after_eat    = " << lvl.tail_grow_after_eat;
-        // std::cout << "\n\t pickups_at_start_count = " << lvl.pickups_visible_at_start_count;
-        // std::cout << "\n\t sec_per_turn_slowest   = " << lvl.sec_per_turn_slowest;
-        // std::cout << "\n\t sec_per_turn_fastest   = " << lvl.sec_per_turn_fastest;
-        // std::cout << "\n\t sec_per_turn_current   = " << lvl.sec_per_turn_current;
-        // std::cout << std::endl << std::endl;
-        //
-        // std::cout << toString() << std::endl;
+        if (survived)
+        {
+            lvl.wall_positions = makeWallPositionsForLevelNumber(context);
+        }
     }
 
     // TODO put some better random logic based on increasing level
@@ -252,7 +241,7 @@ namespace snake
 
         context.audio.volume(context.config.initial_volume);
 
-        m_level.setupForLevelNumber(context, 1);
+        m_level.setupForLevelNumber(context, 1, true);
         context.board.loadMap(context, true);
 
         m_lives = 3;
@@ -271,7 +260,7 @@ namespace snake
 
         const std::size_t nextLevelNumber{ ((survived) ? (level().number + 1) : level().number) };
 
-        m_level.setupForLevelNumber(context, nextLevelNumber);
+        m_level.setupForLevelNumber(context, nextLevelNumber, survived);
         context.board.loadMap(context, survived);
     }
 

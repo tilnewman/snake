@@ -104,7 +104,9 @@ namespace snake
         const LevelDetails & details() const { return m_details; }
         void handlePickupFood(const Context & context);
         void handlePickupSlow(const Context & context);
-        void setupForLevelNumber(Context & context, const std::size_t levelNumber);
+
+        void setupForLevelNumber(
+            Context & context, const std::size_t levelNumber, const bool survived);
 
       private:
         BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);

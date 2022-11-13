@@ -121,52 +121,68 @@ namespace snake
     {
         if (willLoadNewMap)
         {
-            reset();
-
-            const LevelDetails & level{ context.game.level() };
-
-            replaceWithNewPiece(context, Piece::Head, level.start_pos);
-
-            // place walls
-            if (context.random.boolean())
-            {
-                for (const BoardPos_t & pos : level.wall_positions)
-                {
-                    replaceWithNewPiece(context, Piece::Wall, pos);
-                }
-            }
-
-            // place random obstacles
-            if (context.random.boolean())
-            {
-                for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
-                {
-                    addNewPieceAtRandomFreePos(context, Piece::Wall);
-                }
-            }
-
-            // place food
-            if (context.random.boolean())
-            {
-                const std::size_t foodCount =
-                    context.random.fromTo(1_st, context.game.level().remainingToEat());
-
-                for (std::size_t i(0); i < foodCount; ++i)
-                {
-                    addNewPieceAtRandomFreePos(context, Piece::Food);
-                }
-            }
+            loadMap_New(context);
         }
         else
         {
-            removeAllPieces(context, Piece::Head);
-            removeAllPieces(context, Piece::Tail);
-            removeAllPieces(context, Piece::Food);
-            removeAllPieces(context, Piece::Shrink);
-            removeAllPieces(context, Piece::Slow);
-
-            replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
+            loadMap_Same(context);
         }
+    }
+
+    void Board::loadMap_New(Context & context)
+    {
+        reset();
+
+        const LevelDetails & level{ context.game.level() };
+
+        replaceWithNewPiece(context, Piece::Head, level.start_pos);
+
+        // place walls
+        if (context.random.boolean())
+        {
+            for (const BoardPos_t & pos : level.wall_positions)
+            {
+                replaceWithNewPiece(context, Piece::Wall, pos);
+            }
+        }
+
+        // place random obstacles
+        if (context.random.boolean())
+        {
+            for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
+            {
+                addNewPieceAtRandomFreePos(context, Piece::Wall);
+            }
+        }
+
+        // place food
+        if (context.random.boolean())
+        {
+            const std::size_t foodCount =
+                context.random.fromTo(1_st, context.game.level().remainingToEat());
+
+            for (std::size_t i(0); i < foodCount; ++i)
+            {
+                addNewPieceAtRandomFreePos(context, Piece::Food);
+            }
+        }
+    }
+
+    void Board::loadMap_Same(Context & context)
+    {
+        removeAllPieces(context, Piece::Head);
+        removeAllPieces(context, Piece::Tail);
+        removeAllPieces(context, Piece::Food);
+        removeAllPieces(context, Piece::Shrink);
+        removeAllPieces(context, Piece::Slow);
+        removeAllPieces(context, Piece::Wall);
+
+        for (const BoardPos_t & pos : context.game.level().wall_positions)
+        {
+            replaceWithNewPiece(context, Piece::Wall, pos);
+        }
+
+        replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
     }
 
     bool Board::isPiece(const BoardPos_t & pos, const Piece piece) const
