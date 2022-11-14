@@ -555,7 +555,7 @@ namespace snake
     {
         return (
             m_headPieces.size() + m_tailPieces.size() + m_foodPieces.size() + m_slowPieces.size() +
-            m_wallPieces.size());
+            m_wallPieces.size() + m_shrinkPieces.size());
     }
 
     std::vector<BoardPos_t> Board::findPieces(const Piece piece) const

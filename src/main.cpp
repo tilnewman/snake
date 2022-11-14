@@ -11,6 +11,7 @@
 //
 // TODO
 //
+//  shrink pills should maybe appear once tail length exceeds wall count
 //  temp cheater key to skip levels to make level changes easy to see/test
 //  level details depend on time spent playing so more time == harder levels
 //  food increasingly away from middle toward walls/self/ect

@@ -63,7 +63,6 @@ namespace snake
 
         m_layout.reset(m_config);
         m_media.reset(m_config.media_path);
-        m_game.reset(m_config, m_layout);
         m_board.reset();
         m_cellAnims.reset();
         m_animationPlayer.reset((m_config.media_path / "animation").string());

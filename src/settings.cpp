@@ -67,9 +67,7 @@ namespace snake
 
         tail_start_length = 0;
         tail_grow_after_eat = 0;
-        pickups_visible_at_start_count = 0;
 
-        sec_per_turn_fastest = 0.0f;
         sec_per_turn_slowest = 0.0f;
         sec_per_turn_current = 0.0f;
         sec_per_turn_shrink_per_eat = 0.0f;
@@ -77,22 +75,13 @@ namespace snake
         wall_positions.clear();
     }
 
-    bool Level::isComplete() const
-    {
-        return ((eat_count_required > 0) && (eat_count_current >= eat_count_required));
-    }
+    bool Level::isComplete() const { return (eat_count_current >= eat_count_required); }
 
     void Level::handlePickupFood(const Context &)
     {
-        if (eat_count_current >= eat_count_required)
-        {
-            return;
-        }
-
         ++eat_count_current;
+        tail_grow_after_eat += eat_count_current;
         sec_per_turn_current *= sec_per_turn_shrink_per_eat;
-
-        tail_grow_after_eat = (1_st + (eat_count_current * number) + number + eat_count_current);
     }
 
     void Level::handlePickupSlow(const Context &) { sec_per_turn_current = sec_per_turn_slowest; }
@@ -101,44 +90,19 @@ namespace snake
         Context & context, const std::size_t levelNumberST, const bool survived)
     {
         number = levelNumberST;
-
-        const float levelNumberF{ static_cast<float>(levelNumberST) };
-
-        const float levelSqrtF{ std::clamp(
-            std::sqrtf(levelNumberF), 1.0f, (1.0f + (levelNumberF / 2.0f))) };
-
-        const std::size_t levelSqrtST{ static_cast<std::size_t>(levelSqrtF) };
-
         start_pos = { context.layout.cell_counts / 2 };
+
+        const std::size_t levelSqrtST{ static_cast<std::size_t>(std::sqrt(levelNumberST)) };
 
         eat_count_current = 0;
         eat_count_required = (8 + levelSqrtST);
 
-        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(sqrt(eat_count_current)) };
-
         tail_start_length = 10;
+        tail_grow_after_eat = ((tail_start_length / 2) + (levelSqrtST * 2));
 
-        tail_grow_after_eat =
-            ((tail_start_length / 2) + eat_count_current + levelSqrtST + eatCountSqrtST);
-
-        if (number <= eat_count_required)
-        {
-            pickups_visible_at_start_count = (eat_count_required - number);
-        }
-        else
-        {
-            pickups_visible_at_start_count = 0;
-        }
-
-        // start speed where it takes 6 seconds to travel the height of the board
         sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
-
-        // ...and end so fast that it only takes 2 seconds
-        sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
-
-        sec_per_turn_shrink_per_eat = 0.925f;
-
         sec_per_turn_current = sec_per_turn_slowest;
+        sec_per_turn_shrink_per_eat = 0.925f;
 
         if (survived)
         {
@@ -188,48 +152,25 @@ namespace snake
 
     //
 
-    void GameInPlay::reset(const GameConfig & config, const Layout &)
-    {
-        m_score = 0;
-        m_isGameOver = true;
-        m_eatSfxPitch = config.eat_sfx_pitch_start;
-        m_level.reset();
-        m_lives = 0;
-    }
-
     void GameInPlay::start(Context & context)
     {
-        if (!m_isGameOver)
-        {
-            stop(context);
-        }
+        m_level.setupForLevelNumber(context, 1, true);
 
-        reset(context.config, context.layout);
-
+        m_score = 0;
+        m_eatSfxPitch = context.config.eat_sfx_pitch_start;
+        m_lives = 3;
         m_isGameOver = false;
 
-        context.audio.volume(context.config.initial_volume);
-
-        m_level.setupForLevelNumber(context, 1, true);
         context.board.loadMap(context, true);
-
-        m_lives = 3;
-    }
-
-    void GameInPlay::stop(Context & context)
-    {
-        m_isGameOver = true;
-        context.cell_anims.reset();
     }
 
     void GameInPlay::setupNextLevel(Context & context, const bool survived)
     {
         m_eatSfxPitch = context.config.eat_sfx_pitch_start;
-        context.cell_anims.reset();
 
         const std::size_t nextLevelNumber{ ((survived) ? (level().number + 1) : level().number) };
-
         m_level.setupForLevelNumber(context, nextLevelNumber, survived);
+
         context.board.loadMap(context, survived);
     }
 
@@ -244,7 +185,6 @@ namespace snake
         ss << "\n  eat_count_required  = " << m_level.eat_count_required;
         ss << "\n  tail_grow_after_eat = " << m_level.tail_grow_after_eat;
         ss << "\n  sec_per_turn_current= " << m_level.sec_per_turn_current;
-        ss << "\n  turns_per_sec_min   = " << m_level.sec_per_turn_fastest;
         ss << "\n  turns_per_sec_max   = " << m_level.sec_per_turn_slowest;
         ss << "\n  sec_per_turn_adj    = " << m_level.sec_per_turn_shrink_per_eat;
 
@@ -379,6 +319,7 @@ namespace snake
         if (0 == m_lives)
         {
             std::cout << " and dies";
+            m_isGameOver = true;
         }
 
         if (context.config.is_god_mode)
@@ -408,17 +349,7 @@ namespace snake
     {
         std::ostringstream ss;
 
-        ss << prefix << ": ";
-
-        if (m_isGameOver)
-        {
-            ss << "Game is over after reaching ";
-        }
-        else
-        {
-            ss << "Playing at ";
-        }
-
+        ss << prefix << ": Playing at ";
         ss << "level=" << m_level.number;
         ss << ", with " << m_level.remainingToEat();
         ss << " of " << m_level.eat_count_required;

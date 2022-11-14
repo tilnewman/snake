@@ -274,6 +274,7 @@ namespace snake
 
     void LevelCompleteMessageState::onExit(Context & context)
     {
+        context.cell_anims.reset();
         context.game.setupNextLevel(context, true);
     }
 

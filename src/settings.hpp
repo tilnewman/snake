@@ -94,9 +94,7 @@ namespace snake
 
         std::size_t tail_start_length{ 0 };
         std::size_t tail_grow_after_eat{ 0 };
-        std::size_t pickups_visible_at_start_count{ 0 };
 
-        float sec_per_turn_fastest{ 0.0f };
         float sec_per_turn_slowest{ 0.0f };
         float sec_per_turn_current{ 0.0f };
         float sec_per_turn_shrink_per_eat{ 0.0f };
@@ -112,16 +110,12 @@ namespace snake
 
         std::string toString() const;
 
-        // set all default values, but IS NOT READY TO PLAY
-        void reset(const GameConfig & config, const Layout & layout);
-
         void start(Context & context);
-        void stop(Context &);
 
         void setupNextLevel(Context & context, const bool survived);
 
-        std::size_t lives() const { return m_lives; }
         bool isGameOver() const { return m_isGameOver; }
+        std::size_t lives() const { return m_lives; }
         int score() const { return m_score; }
         const Level & level() const { return m_level; }
         int calcScoreForEating(Context & context);
@@ -140,9 +134,9 @@ namespace snake
       private:
         Level m_level;
         int m_score{ 0 };
-        bool m_isGameOver{ true };
         float m_eatSfxPitch{ 1.0f };
         std::size_t m_lives{ 0 };
+        bool m_isGameOver{ false };
     };
 } // namespace snake
 
