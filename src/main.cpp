@@ -32,6 +32,11 @@ int main(const int argc, const char * const argv[])
     config.media_path = ((argc > 1) ? argv[1] : "no_media_folder");
     std::cout << "media_path=" << config.media_path << std::endl;
 
+    if (argc > 2)
+    {
+        config.will_limit_resolution = ("limit-resolution" == std::string{ argv[2] });
+    }
+
     config.frame_rate_limit = 0;
     config.is_god_mode = false;
     config.will_show_fps = true;

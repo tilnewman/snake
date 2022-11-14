@@ -62,6 +62,8 @@ namespace snake
         bool will_show_fps{ false };
 
         std::size_t score_per_life_bonus{ 5000 };
+
+        bool will_limit_resolution{ false };
     };
 
     //

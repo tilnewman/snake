@@ -102,16 +102,19 @@ namespace snake
             std::end(videoModes));
 
         // remove all with resolutions too high
-        const unsigned int maxDimmension = 2000;
+        if (m_config.will_limit_resolution)
+        {
+            const unsigned int maxDimmension = 2000;
 
-        videoModes.erase(
-            std::remove_if(
-                std::begin(videoModes),
-                std::end(videoModes),
-                [&](const sf::VideoMode & vm) {
-                    return ((vm.width > maxDimmension) || (vm.height > maxDimmension));
-                }),
-            std::end(videoModes));
+            videoModes.erase(
+                std::remove_if(
+                    std::begin(videoModes),
+                    std::end(videoModes),
+                    [&](const sf::VideoMode & vm) {
+                        return ((vm.width > maxDimmension) || (vm.height > maxDimmension));
+                    }),
+                std::end(videoModes));
+        }
 
         // ensure the order is highest resolution first
         std::sort(std::begin(videoModes), std::end(videoModes));
