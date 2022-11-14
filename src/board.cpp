@@ -138,12 +138,9 @@ namespace snake
         replaceWithNewPiece(context, Piece::Head, level.start_pos);
 
         // place walls
-        if (context.random.boolean())
+        for (const BoardPos_t & pos : level.wall_positions)
         {
-            for (const BoardPos_t & pos : level.wall_positions)
-            {
-                replaceWithNewPiece(context, Piece::Wall, pos);
-            }
+            replaceWithNewPiece(context, Piece::Wall, pos);
         }
 
         // place random obstacles
