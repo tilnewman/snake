@@ -319,13 +319,16 @@ namespace snake
         if (0 == m_lives)
         {
             std::cout << " and dies";
-            m_isGameOver = true;
-        }
 
-        if (context.config.is_god_mode)
-        {
-            std::cout << "...but god mode saves you";
-            m_lives = 1;
+            if (context.config.is_god_mode)
+            {
+                std::cout << "...but god mode saves you";
+                m_lives = 1;
+            }
+            else
+            {
+                m_isGameOver = true;
+            }
         }
 
         std::cout << ".\n";

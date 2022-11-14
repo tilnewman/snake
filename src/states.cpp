@@ -300,17 +300,10 @@ namespace snake
 
     GameOverState::GameOverState(const Context & context)
         : TimedMessageState(
-              context, State::Over, State::NextLevelMsg, "You Died!\nTry Again!\n\n", 4.5f)
+              context, State::Over, State::NextLevelMsg, "You Died.\nTry Again!\n\n", 4.5f)
     {}
 
-    void GameOverState::onEnter(Context & context)
-    {
-        context.audio.play("rpg-game-over");
-
-        // Calling game.reset() here would work fine and make good sense,
-        // but if you wait until the onExit() function below is run then
-        // the player can see how they lost on screen before moving on.
-    }
+    void GameOverState::onEnter(Context & context) { context.audio.play("rpg-game-over"); }
 
     void GameOverState::onExit(Context & context)
     {
