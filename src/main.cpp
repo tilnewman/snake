@@ -18,11 +18,11 @@
 //  bonuses for turns with limited options or that avoided head-on collision
 //  bonus for long straight shots
 //  hidden food that gives big score bonus when eaten
+//  save max play time and max score in a file and display during option state
 
 //
 // Bugs
 //
-//  MacOS resolutions are screwed up
 
 int main(const int argc, const char * const argv[])
 {
