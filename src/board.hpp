@@ -3,18 +3,16 @@
 //
 // board.hpp
 //
+#include "adjacent.hpp"
 #include "check-macros.hpp"
 #include "common-types.hpp"
 #include "keys.hpp"
 #include "pieces.hpp"
 
 #include <array>
-#include <initializer_list>
-#include <limits>
 #include <list>
 #include <optional>
 #include <tuple>
-#include <type_traits>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -29,6 +27,8 @@ namespace snake
         Inside,
         Outside
     };
+
+    //
 
     struct PosEntry
     {
@@ -45,217 +45,6 @@ namespace snake
 
     //
 
-    struct AdjacentInfo
-    {
-        Piece piece{ Piece::Wall };
-        BoardPos_t pos{ BoardPosInvalid };
-        sf::Keyboard::Key dir{ keys::not_a_key };
-    };
-
-    using AdjacentInfoOpt_t = std::optional<AdjacentInfo>;
-
-    [[nodiscard]] inline bool
-        operator==(const AdjacentInfo & left, const AdjacentInfo & right) noexcept
-    {
-        // clang-format off
-        return (std::tie(
-                left.piece,
-                left.pos,
-                left.dir)
-            == std::tie(
-                right.piece,
-                right.pos,
-                right.dir));
-        // clang-format on
-    }
-
-    [[nodiscard]] inline bool
-        operator!=(const AdjacentInfo & left, const AdjacentInfo & right) noexcept
-    {
-        return !(left == right);
-    }
-
-    //
-
-    struct Surroundings
-    {
-        explicit Surroundings(const BoardPos_t & centerPos)
-            : center_pos(centerPos)
-            , adjacents()
-        {
-            adjacents.reserve(4);
-        }
-
-        //
-
-        PieceEnumOpt_t pieceInDirOpt(const sf::Keyboard::Key dirToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (dirToFind == ap.dir)
-                {
-                    return ap.piece;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        BoardPosOpt_t posInDirOpt(const sf::Keyboard::Key dirToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (dirToFind == ap.dir)
-                {
-                    return ap.pos;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        BoardPos_t posInDir(const sf::Keyboard::Key dirToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (dirToFind == ap.dir)
-                {
-                    return ap.pos;
-                }
-            }
-
-            return BoardPosInvalid;
-        }
-
-        //
-
-        DirKeyOpt_t dirOfPieceOpt(const Piece pieceToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (pieceToFind == ap.piece)
-                {
-                    return ap.dir;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        sf::Keyboard::Key dirOfPiece(const Piece pieceToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (pieceToFind == ap.piece)
-                {
-                    return ap.dir;
-                }
-            }
-
-            return keys::not_a_key;
-        }
-
-        BoardPosOpt_t posOfPieceOpt(const Piece pieceToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (pieceToFind == ap.piece)
-                {
-                    return ap.pos;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        BoardPos_t posOfPiece(const Piece pieceToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (pieceToFind == ap.piece)
-                {
-                    return ap.pos;
-                }
-            }
-
-            return BoardPosInvalid;
-        }
-
-        //
-
-        PieceEnumOpt_t pieceAtPosOpt(const BoardPos_t & posToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (posToFind == ap.pos)
-                {
-                    return ap.piece;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        DirKeyOpt_t dirOfPosOpt(const BoardPos_t & posToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (posToFind == ap.pos)
-                {
-                    return ap.dir;
-                }
-            }
-
-            return std::nullopt;
-        }
-
-        sf::Keyboard::Key dirOfPos(const BoardPos_t & posToFind) const
-        {
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (posToFind == ap.pos)
-                {
-                    return ap.dir;
-                }
-            }
-
-            return keys::not_a_key;
-        }
-
-        //
-
-        std::size_t pieceCount(const Piece pieceToFind) const
-        {
-            std::size_t count{ 0 };
-            for (const AdjacentInfo & ap : adjacents)
-            {
-                if (pieceToFind == ap.piece)
-                {
-                    ++count;
-                }
-            }
-
-            return count;
-        }
-
-        std::size_t piecesCount(const std::initializer_list<Piece> & list) const
-        {
-            std::size_t count{ 0 };
-            for (const Piece piece : list)
-            {
-                count += pieceCount(piece);
-            }
-
-            return count;
-        }
-
-        //
-
-        BoardPos_t center_pos{ BoardPosInvalid };
-        std::vector<AdjacentInfo> adjacents;
-    };
-
-    //
     class Board
     {
       public:

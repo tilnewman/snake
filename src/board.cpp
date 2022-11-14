@@ -5,7 +5,6 @@
 #include "context.hpp"
 #include "layout.hpp"
 #include "media.hpp"
-#include "pieces.hpp"
 #include "random.hpp"
 #include "settings.hpp"
 #include "util.hpp"
