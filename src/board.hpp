@@ -262,7 +262,6 @@ namespace snake
         Board() = default;
 
         void reset();
-        std::string toString(const Context & context) const;
 
         void loadMap(Context & context, const bool willLoadNewMap);
 

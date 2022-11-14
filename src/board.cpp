@@ -35,88 +35,6 @@ namespace snake
         m_shrinkPieces.reserve(10);
     }
 
-    std::string Board::toString(const Context & context) const
-    {
-        std::ostringstream ss;
-
-        ss << "Board:";
-        ss << "\n  pos_entry_map_size      = " << m_posEntryMap.size();
-
-        ss << "\n  piece_verts_vec: size=" << m_pieceVerts.size()
-           << "/4=" << (m_pieceVerts.size() / util::verts_per_quad)
-           << "/%4=" << (m_pieceVerts.size() % util::verts_per_quad);
-
-        ss << "\n  piece_verts_vec   = " << m_pieceVerts.capacity();
-
-        std::size_t usedCount{ 0 };
-        std::size_t availCount{ 0 };
-        for (std::size_t i(0); i < m_pieceVerts.size(); i += util::verts_per_quad)
-        {
-            if (m_pieceVerts.at(i).color == m_freeVertColor)
-            {
-                ++availCount;
-            }
-            else
-            {
-                ++usedCount;
-            }
-        }
-
-        ss << "\n  quads_used      = " << usedCount;
-        ss << "\n  quads_free      = " << (availCount / util::verts_per_quad);
-        ss << "\n  m_pieceVerts.size()  = " << m_pieceVerts.size();
-
-        const std::size_t headCount{ m_headPieces.size() };
-        const std::size_t tailCount{ m_tailPieces.size() };
-        const std::size_t foodCount{ m_foodPieces.size() };
-        const std::size_t wallCount{ m_wallPieces.size() };
-        const std::size_t slowCount{ m_slowPieces.size() };
-        const std::size_t shrinkCount{ m_slowPieces.size() };
-
-        const std::size_t pieceCount{ (
-            headCount + tailCount + foodCount + wallCount + slowCount + shrinkCount) };
-
-        ss << "\n  heads_count      = " << headCount;
-        ss << "\n  tails_count      = " << tailCount;
-        ss << "\n  food_count       = " << foodCount;
-        ss << "\n  walls_count      = " << wallCount;
-        ss << "\n  slow_count       = " << slowCount;
-        ss << "\n  shrink_count     = " << shrinkCount;
-        ss << "\n  all_pieces_count = " << pieceCount;
-
-        ss << "\n  all_pieces_count SHOULD == used_vertex_count AND SHOULD == "
-              "map_pos_count: "
-           << pieceCount << '/' << usedCount << '/' << m_posEntryMap.size();
-
-        for (const auto & [pos, entry] : m_posEntryMap)
-        {
-            if (!context.layout.isPositionValid(pos))
-            {
-                ss << "\n     pos   = " << pos
-                   << " is out of bounds=" << context.layout.cell_counts;
-            }
-
-            if (!isQuadIndexValid(entry.quad_index))
-            {
-                ss << "\n     pos   = " << pos << "(INVALID:verts_vec_size=" << m_pieceVerts.size()
-                   << ")";
-            }
-
-            if (isQuadFree(entry.quad_index))
-            {
-                // clang-format off
-                ss << "(VERTS/QUAD_NOT_AVAILABLE/Transparent:\n" <<
-                    "\n     index   = " << (entry.quad_index + 0) << "=" << m_pieceVerts.at(entry.quad_index + 0).color << ", " <<
-                    "\n     index   = " << (entry.quad_index + 1) << "=" << m_pieceVerts.at(entry.quad_index + 1).color << ", " <<
-                    "\n     index   = " << (entry.quad_index + 2) << "=" << m_pieceVerts.at(entry.quad_index + 2).color << ", " <<
-                    "\n     index   = " << (entry.quad_index + 3) << "=" << m_pieceVerts.at(entry.quad_index + 3).color;
-                // clang-format on
-            }
-        }
-
-        return ss.str();
-    }
-
     void Board::loadMap(Context & context, const bool willLoadNewMap)
     {
         if (willLoadNewMap)
@@ -209,8 +127,7 @@ namespace snake
         {
             M_LOG_SS(
                 "Unable to find any free/available/open positions on the board!\n"
-                << context.layout.toString() << "\n"
-                << toString(context));
+                << context.layout.toString() << "\n");
 
             return;
         }

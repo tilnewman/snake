@@ -250,7 +250,6 @@ namespace snake
         std::cout << std::endl;
         std::cout << m_config.toString() << "\n\n";
         std::cout << m_layout.toString() << "\n\n";
-        std::cout << m_board.toString(m_context) << "\n\n";
         std::cout << m_game.toString() << std::endl;
     }
 } // namespace snake
