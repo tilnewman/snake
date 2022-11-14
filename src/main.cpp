@@ -30,7 +30,6 @@ int main(const int argc, const char * const argv[])
 
     GameConfig config;
     config.media_path = ((argc > 1) ? argv[1] : "no_media_folder");
-    std::cout << "media_path=" << config.media_path << std::endl;
 
     if (argc > 2)
     {

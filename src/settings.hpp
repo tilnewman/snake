@@ -9,7 +9,6 @@
 #include "util.hpp"
 
 #include <filesystem>
-#include <limits>
 #include <optional>
 #include <string>
 #include <vector>
@@ -21,13 +20,12 @@
 namespace snake
 {
 
-    // Parameters that CANNOT change during play, but could be customized before a new game starts.
+    // Parameters that CANNOT change during play, but can be customized before play starts.
     class GameConfig
     {
       public:
         GameConfig() = default;
 
-        void verifyAllMembers();
         std::string toString() const;
 
         bool isTest() const { return (is_god_mode); }
@@ -66,13 +64,28 @@ namespace snake
         bool will_limit_resolution{ false };
     };
 
-    //
-    struct LevelDetails
+    // Parameters that change per level and define how hard it is to play the game.
+    class Level
     {
-        std::string toString() const;
+      public:
+        Level() = default;
+
+        void reset();
+
+        bool isComplete() const;
         float completedRatio() const;
+
         std::size_t remainingToEat() const { return (eat_count_required - eat_count_current); }
-        //
+
+        void handlePickupFood(const Context & context);
+        void handlePickupSlow(const Context & context);
+
+        void setupForLevelNumber(
+            Context & context, const std::size_t levelNumber, const bool survived);
+
+        BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
+        BoardPos_t findNextFoodPos(const Context & context) const;
+
         std::size_t number{ 0 };
         BoardPos_t start_pos{ 0, 0 };
 
@@ -91,38 +104,7 @@ namespace snake
         BoardPosVec_t wall_positions;
     };
 
-    // Parameters that change per level and define how hard it is to play the game.
-    class Level
-    {
-      public:
-        Level() = default;
-
-        // set all default values, but IS NOT READY TO PLAY
-        void reset();
-
-        std::string toString() const;
-
-        bool isComplete() const;
-        const LevelDetails & details() const { return m_details; }
-        void handlePickupFood(const Context & context);
-        void handlePickupSlow(const Context & context);
-
-        void setupForLevelNumber(
-            Context & context, const std::size_t levelNumber, const bool survived);
-
-      private:
-        BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
-        BoardPos_t findNextFoodPos(const Context & context) const;
-
-      private:
-        LevelDetails m_details;
-
-        // static inline const std::size_t levels_per_inc_eat_required{ 5 };
-        static inline const float sec_per_turn_shrink_per_eat_min{ 0.2f };
-        static inline const float sec_per_turn_shrink_per_level{ 0.99f };
-    };
-
-    // Parameters that are specific to a game currently being played.
+    // Parameters that are specific to the game currently being played.
     class GameInPlay
     {
       public:
@@ -141,8 +123,7 @@ namespace snake
         std::size_t lives() const { return m_lives; }
         bool isGameOver() const { return m_isGameOver; }
         int score() const { return m_score; }
-        const LevelDetails & level() const { return m_level.details(); }
-        bool isLevelComplete() const;
+        const Level & level() const { return m_level; }
         int calcScoreForEating(Context & context);
         void handlePickup(Context & context, const BoardPos_t & pos, const Piece piece);
 

@@ -50,12 +50,10 @@ namespace snake
     {
         reset();
 
-        const LevelDetails & level{ context.game.level() };
-
-        replaceWithNewPiece(context, Piece::Head, level.start_pos);
+        replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
 
         // place walls
-        for (const BoardPos_t & pos : level.wall_positions)
+        for (const BoardPos_t & pos : context.game.level().wall_positions)
         {
             replaceWithNewPiece(context, Piece::Wall, pos);
         }

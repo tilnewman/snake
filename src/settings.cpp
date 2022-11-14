@@ -22,26 +22,6 @@
 
 namespace snake
 {
-    void GameConfig::verifyAllMembers()
-    {
-        M_CHECK_SS(std::filesystem::exists(media_path), media_path);
-
-        try
-        {
-            media_path = std::filesystem::canonical(media_path);
-        }
-        catch (const std::filesystem::filesystem_error & fsEx)
-        {
-            std::cerr << "Caught Filesystem Exception in GameConfig::verifyAllMembers():  what=\""
-                      << fsEx.what() << "\"";
-
-            throw;
-        }
-
-        M_CHECK_SS(std::filesystem::is_directory(media_path), media_path);
-        M_CHECK_SS((cell_size_window_ratio > 0.0f), cell_size_window_ratio);
-        M_CHECK_SS((!(initial_volume < 0.0f) && !(initial_volume > 100.0f)), initial_volume);
-    }
 
     std::string GameConfig::toString() const
     {
@@ -64,23 +44,7 @@ namespace snake
 
     //
 
-    std::string LevelDetails::toString() const
-    {
-        std::ostringstream ss;
-
-        ss << "Level\n#" << number << ": (Details)";
-        ss << "\n  eat_count_current   = " << eat_count_current;
-        ss << "\n  eat_count_required  = " << eat_count_required;
-        ss << "\n  tail_grow_after_eat = " << tail_grow_after_eat;
-        ss << "\n  sec_per_turn_current= " << sec_per_turn_current;
-        ss << "\n  turns_per_sec_min   = " << sec_per_turn_fastest;
-        ss << "\n  turns_per_sec_max   = " << sec_per_turn_slowest;
-        ss << "\n  sec_per_turn_adj    = " << sec_per_turn_shrink_per_eat;
-
-        return ss.str();
-    }
-
-    float LevelDetails::completedRatio() const
+    float Level::completedRatio() const
     {
         float ratio{ 0.0f };
 
@@ -93,43 +57,50 @@ namespace snake
         return std::clamp(ratio, 0.0f, 1.0f);
     }
 
-    //
+    void Level::reset()
+    {
+        number = 0;
+        start_pos = { 0, 0 };
 
-    void Level::reset() { m_details = LevelDetails(); }
+        eat_count_current = 0;
+        eat_count_required = 0;
 
-    std::string Level::toString() const { return m_details.toString(); }
+        tail_start_length = 0;
+        tail_grow_after_eat = 0;
+        pickups_visible_at_start_count = 0;
+
+        sec_per_turn_fastest = 0.0f;
+        sec_per_turn_slowest = 0.0f;
+        sec_per_turn_current = 0.0f;
+        sec_per_turn_shrink_per_eat = 0.0f;
+
+        wall_positions.clear();
+    }
 
     bool Level::isComplete() const
     {
-        return (
-            (m_details.eat_count_required > 0) &&
-            (m_details.eat_count_current >= m_details.eat_count_required));
+        return ((eat_count_required > 0) && (eat_count_current >= eat_count_required));
     }
 
     void Level::handlePickupFood(const Context &)
     {
-        if (m_details.eat_count_current >= m_details.eat_count_required)
+        if (eat_count_current >= eat_count_required)
         {
             return;
         }
 
-        ++m_details.eat_count_current;
-        m_details.sec_per_turn_current *= m_details.sec_per_turn_shrink_per_eat;
+        ++eat_count_current;
+        sec_per_turn_current *= sec_per_turn_shrink_per_eat;
 
-        m_details.tail_grow_after_eat =
-            (1_st + (m_details.eat_count_current * m_details.number) + m_details.number +
-             m_details.eat_count_current);
+        tail_grow_after_eat = (1_st + (eat_count_current * number) + number + eat_count_current);
     }
 
-    void Level::handlePickupSlow(const Context &)
-    {
-        m_details.sec_per_turn_current = m_details.sec_per_turn_slowest;
-    }
+    void Level::handlePickupSlow(const Context &) { sec_per_turn_current = sec_per_turn_slowest; }
 
     void Level::setupForLevelNumber(
         Context & context, const std::size_t levelNumberST, const bool survived)
     {
-        m_details.number = levelNumberST;
+        number = levelNumberST;
 
         const float levelNumberF{ static_cast<float>(levelNumberST) };
 
@@ -138,43 +109,40 @@ namespace snake
 
         const std::size_t levelSqrtST{ static_cast<std::size_t>(levelSqrtF) };
 
-        m_details.start_pos = { context.layout.cell_counts / 2 };
+        start_pos = { context.layout.cell_counts / 2 };
 
-        m_details.eat_count_current = 0;
-        m_details.eat_count_required = (8 + levelSqrtST);
+        eat_count_current = 0;
+        eat_count_required = (8 + levelSqrtST);
 
-        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(
-            sqrt(m_details.eat_count_current)) };
+        const std::size_t eatCountSqrtST{ static_cast<std::size_t>(sqrt(eat_count_current)) };
 
-        m_details.tail_start_length = 10;
+        tail_start_length = 10;
 
-        m_details.tail_grow_after_eat =
-            ((m_details.tail_start_length / 2) + m_details.eat_count_current + levelSqrtST +
-             eatCountSqrtST);
+        tail_grow_after_eat =
+            ((tail_start_length / 2) + eat_count_current + levelSqrtST + eatCountSqrtST);
 
-        if (m_details.number <= m_details.eat_count_required)
+        if (number <= eat_count_required)
         {
-            m_details.pickups_visible_at_start_count =
-                (m_details.eat_count_required - m_details.number);
+            pickups_visible_at_start_count = (eat_count_required - number);
         }
         else
         {
-            m_details.pickups_visible_at_start_count = 0;
+            pickups_visible_at_start_count = 0;
         }
 
         // start speed where it takes 6 seconds to travel the height of the board
-        m_details.sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
+        sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
 
         // ...and end so fast that it only takes 2 seconds
-        m_details.sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
+        sec_per_turn_fastest = (2.0f / static_cast<float>(context.layout.cell_counts.y));
 
-        m_details.sec_per_turn_shrink_per_eat = 0.925f;
+        sec_per_turn_shrink_per_eat = 0.925f;
 
-        m_details.sec_per_turn_current = m_details.sec_per_turn_slowest;
+        sec_per_turn_current = sec_per_turn_slowest;
 
         if (survived)
         {
-            m_details.wall_positions = makeWallPositionsForLevelNumber(context);
+            wall_positions = makeWallPositionsForLevelNumber(context);
         }
     }
 
@@ -226,6 +194,7 @@ namespace snake
         m_isGameOver = true;
         m_eatSfxPitch = config.eat_sfx_pitch_start;
         m_level.reset();
+        m_lives = 0;
     }
 
     void GameInPlay::start(Context & context)
@@ -270,12 +239,17 @@ namespace snake
 
         ss << "GameInPlay:";
         ss << "\n  score = " << m_score;
-        ss << "\n\n" << m_level.toString();
+        ss << "\n  Level #" << m_level.number;
+        ss << "\n  eat_count_current   = " << m_level.eat_count_current;
+        ss << "\n  eat_count_required  = " << m_level.eat_count_required;
+        ss << "\n  tail_grow_after_eat = " << m_level.tail_grow_after_eat;
+        ss << "\n  sec_per_turn_current= " << m_level.sec_per_turn_current;
+        ss << "\n  turns_per_sec_min   = " << m_level.sec_per_turn_fastest;
+        ss << "\n  turns_per_sec_max   = " << m_level.sec_per_turn_slowest;
+        ss << "\n  sec_per_turn_adj    = " << m_level.sec_per_turn_shrink_per_eat;
 
         return ss.str();
     }
-
-    bool GameInPlay::isLevelComplete() const { return m_level.isComplete(); }
 
     int GameInPlay::calcScoreForEating(Context &)
     {
@@ -371,8 +345,7 @@ namespace snake
     void
         GameInPlay::handlePickupShrink(Context & context, const BoardPos_t & pos, const Piece piece)
     {
-        // re-use the slow sfx intentionally
-        context.audio.play("slow", m_eatSfxPitch);
+        context.audio.play("explode-puff", m_eatSfxPitch);
 
         context.cell_anims.addGrowFadeAnim(context.layout.cellBounds(pos), piece::toColor(piece));
 
@@ -446,10 +419,10 @@ namespace snake
             ss << "Playing at ";
         }
 
-        ss << "level=" << m_level.details().number;
-        ss << ", with " << m_level.details().remainingToEat();
-        ss << " of " << m_level.details().eat_count_required;
-        ss << " left to eat (" << (m_level.details().completedRatio() * 100.0f) << "%)";
+        ss << "level=" << m_level.number;
+        ss << ", with " << m_level.remainingToEat();
+        ss << " of " << m_level.eat_count_required;
+        ss << " left to eat (" << (m_level.completedRatio() * 100.0f) << "%)";
         ss << ", score=" << m_score;
 
         return ss.str();

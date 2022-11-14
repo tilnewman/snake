@@ -52,11 +52,14 @@ namespace snake
         // don't call m_config::reset() because that would erase all customizations in configParam
         m_config = configParam;
 
+        M_CHECK_SS(std::filesystem::exists(m_config.media_path), m_config.media_path);
+        M_CHECK_SS(std::filesystem::is_directory(m_config.media_path), m_config.media_path);
+        m_config.media_path = std::filesystem::canonical(m_config.media_path);
+        std::cout << "media_path=" << m_config.media_path << std::endl;
+
         openWindow();
 
         m_window.setMouseCursorVisible(false);
-
-        m_config.verifyAllMembers();
 
         m_layout.reset(m_config);
         m_media.reset(m_config.media_path);
@@ -68,7 +71,7 @@ namespace snake
 
         m_soundPlayer.load({
             "rpg-game-over.ogg",     // death
-            "explode-puff.ogg",      // text message appear
+            "explode-puff.ogg",      // eat shrink pill
             "tap-1-a.ogg",           // keystroke/turn
             "miss.ogg",              // miss food by one space
             "shine.ogg",             // eat food
@@ -76,7 +79,7 @@ namespace snake
             "mario-pause.ogg",       // pause
             "mario-break-block.ogg", // wall hit
             "level-intro.ogg",       // start level
-            "slow.ogg"               // eat slow/shrink pill
+            "slow.ogg"               // eat slow pill
         });
 
         m_soundPlayer.volume(m_config.initial_volume);
@@ -204,7 +207,7 @@ namespace snake
         // are just too many ways for food to either be destroyed or unreachable.
         // Also take this opportunity to place rare helper pieces like slow/shrink.
         if ((m_stateMachine.stateEnum() == State::Play) && !m_game.isGameOver() &&
-            !m_game.isLevelComplete())
+            !m_game.level().isComplete())
         {
             if ((m_game.level().remainingToEat() > 0) && (m_board.countPieces(Piece::Food) == 0))
             {

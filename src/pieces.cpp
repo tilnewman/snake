@@ -176,14 +176,12 @@ namespace snake
         }
         else
         {
-            const LevelDetails & level{ context.game.level() };
-
             if (Piece::Food == piece)
             {
-                m_tailGrowRemainingCount += level.tail_grow_after_eat;
+                m_tailGrowRemainingCount += context.game.level().tail_grow_after_eat;
             }
 
-            turnDurationSec(level.sec_per_turn_current);
+            turnDurationSec(context.game.level().sec_per_turn_current);
         }
     }
 
