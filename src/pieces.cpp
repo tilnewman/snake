@@ -170,11 +170,7 @@ namespace snake
     {
         context.game.handlePickup(context, posEaten, piece);
 
-        if (context.game.isGameOver())
-        {
-            color(context, sf::Color::Red);
-        }
-        else
+        if (!context.game.isGameOver())
         {
             if (Piece::Food == piece)
             {
