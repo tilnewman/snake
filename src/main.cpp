@@ -11,15 +11,12 @@
 //
 // TODO
 //
-//  shrink pills should maybe appear once tail length exceeds wall count
-//  temp cheater key to skip levels to make level changes easy to see/test
+//  shrink pills should maybe only appear once tail length exceeds wall count
 //  level details depend on time spent playing so more time == harder levels
-//  food increasingly away from middle toward walls/self/ect
 //  bonus levels with lots of food but your tail never stops growing
 //  bonuses for turns with limited options or that avoided head-on collision
 //  bonus for long straight shots
 //  hidden food that gives big score bonus when eaten
-//  save max play time and max score in a file and display during option state
 
 //
 // Bugs

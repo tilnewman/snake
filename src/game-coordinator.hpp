@@ -45,7 +45,6 @@ namespace snake
             return (m_window.isOpen() && (m_stateMachine.stateEnum() != State::Quit));
         }
 
-        void repeatPlayForAllVideoModes(const GameConfig & config);
         void frameLoop();
         void setup(const GameConfig & config);
         const sf::VideoMode pickResolution() const;
