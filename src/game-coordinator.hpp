@@ -10,6 +10,7 @@
 #include "media.hpp"
 #include "pieces.hpp"
 #include "random.hpp"
+#include "score-file.hpp"
 #include "settings.hpp"
 #include "sound-player.hpp"
 #include "states.hpp"
@@ -69,6 +70,7 @@ namespace snake
         Animations m_cellAnims;
         StatusRegion m_statusRegion;
         StateMachine m_stateMachine;
+        ScoreFile m_scoreFile;
         Context m_context;
 
         sf::Clock m_runClock;

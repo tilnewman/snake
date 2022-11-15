@@ -32,6 +32,7 @@ namespace snake
         , m_cellAnims()
         , m_statusRegion()
         , m_stateMachine()
+        , m_scoreFile()
         , m_context(
               m_config,
               m_layout,
@@ -43,7 +44,8 @@ namespace snake
               m_animationPlayer,
               m_cellAnims,
               m_stateMachine,
-              m_statusRegion)
+              m_statusRegion,
+              m_scoreFile)
         , m_runClock()
     {}
 
@@ -161,7 +163,8 @@ namespace snake
                                 100.0f };
 
         std::cout << "Play Time: " << runTimeSec << "sec\n";
-        std::cout << "Final Score: " << m_game.score() << std::endl;
+        std::cout << "Final Score: " << m_game.score() << '\n';
+        std::cout << "High Score : " << m_scoreFile.readHighScore() << std::endl;
     }
 
     void GameCoordinator::frameLoop()

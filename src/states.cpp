@@ -12,6 +12,7 @@
 #include "media.hpp"
 #include "pieces.hpp"
 #include "random.hpp"
+#include "score-file.hpp"
 #include "settings.hpp"
 #include "sound-player.hpp"
 #include "status-region.hpp"
@@ -309,7 +310,16 @@ namespace snake
     {
         if (context.game.lives() == 0)
         {
-            // TODO  save high-scores and other details
+            // save high score if needed
+            const int currentHighScore = context.score_file.readHighScore();
+            if (context.game.score() > currentHighScore)
+            {
+                std::cout << "You beat the high score of " << currentHighScore << " by "
+                          << (context.game.score() - currentHighScore) << "!\n";
+
+                context.score_file.writeHighScore(context.game.score());
+            }
+
             context.state.setChangePending(State::Quit);
         }
         else

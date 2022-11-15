@@ -21,6 +21,7 @@ namespace snake
     struct IStatesPending;
     class Layout;
     struct IRegion;
+    class ScoreFile;
 
     //
 
@@ -37,7 +38,8 @@ namespace snake
             util::AnimationPlayer & ani,
             Animations & cellAnims,
             IStatesPending & sta,
-            IRegion & stat)
+            IRegion & stat,
+            ScoreFile & scoreFile)
             : config(con)
             , layout(lay)
             , game(gam)
@@ -49,6 +51,7 @@ namespace snake
             , cell_anims(cellAnims)
             , state(sta)
             , status(stat)
+            , score_file(scoreFile)
         {}
 
         Context(const Context &) = delete;
@@ -68,6 +71,7 @@ namespace snake
         Animations & cell_anims;
         IStatesPending & state;
         IRegion & status;
+        ScoreFile & score_file;
 
         std::size_t fps{ 0 };
     };
