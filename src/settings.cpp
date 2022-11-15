@@ -110,26 +110,12 @@ namespace snake
         }
     }
 
-    // TODO put some better random logic based on increasing level
     BoardPosVec_t Level::makeWallPositionsForLevelNumber(Context & context)
     {
         BoardPosVec_t wallPositions;
         wallPositions.reserve(1000);
 
-        if (context.random.boolean())
-        {
-            std::copy(
-                std::begin(context.layout.wall_positions_left),
-                std::end(context.layout.wall_positions_left),
-                std::back_inserter(wallPositions));
-
-            std::copy(
-                std::begin(context.layout.wall_positions_right),
-                std::end(context.layout.wall_positions_right),
-                std::back_inserter(wallPositions));
-        }
-
-        if (context.random.boolean())
+        if ((context.game.level().number >= 5) && context.random.boolean())
         {
             std::copy(
                 std::begin(context.layout.wall_positions_top),
@@ -142,12 +128,36 @@ namespace snake
                 std::back_inserter(wallPositions));
         }
 
+        if ((context.game.level().number >= 10) && context.random.boolean())
+        {
+            std::copy(
+                std::begin(context.layout.wall_positions_left),
+                std::end(context.layout.wall_positions_left),
+                std::back_inserter(wallPositions));
+
+            std::copy(
+                std::begin(context.layout.wall_positions_right),
+                std::end(context.layout.wall_positions_right),
+                std::back_inserter(wallPositions));
+        }
+
         return wallPositions;
     }
 
     BoardPos_t Level::findNextFoodPos(const Context & context) const
     {
+        // TODO maybe each new food piece has a greater chance of being near obstacles
         return context.board.findFreeBoardPosRandom(context).value_or(BoardPosInvalid);
+    }
+
+    std::size_t Level::wallObstacleCount() const
+    {
+        if (number <= 3)
+        {
+            return 0;
+        }
+
+        return (static_cast<std::size_t>(std::sqrt(number)) - 1);
     }
 
     //

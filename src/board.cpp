@@ -59,19 +59,17 @@ namespace snake
         }
 
         // place random obstacles
-        if (context.random.boolean())
+        const std::size_t wallObstacleCount = context.game.level().wallObstacleCount();
+        for (std::size_t i(0); i < wallObstacleCount; ++i)
         {
-            for (std::size_t i(0); i < (context.game.level().number * 2); ++i)
-            {
-                addNewPieceAtRandomFreePos(context, Piece::Wall);
-            }
+            addNewPieceAtRandomFreePos(context, Piece::Wall);
         }
 
         // place food
         if (context.random.boolean())
         {
             const std::size_t foodCount =
-                context.random.fromTo(1_st, context.game.level().remainingToEat());
+                context.random.fromTo(1_st, (context.game.level().remainingToEat() - 4));
 
             for (std::size_t i(0); i < foodCount; ++i)
             {

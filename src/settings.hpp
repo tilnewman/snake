@@ -85,6 +85,7 @@ namespace snake
 
         BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
         BoardPos_t findNextFoodPos(const Context & context) const;
+        std::size_t wallObstacleCount() const;
 
         std::size_t number{ 0 };
         BoardPos_t start_pos{ 0, 0 };
