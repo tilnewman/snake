@@ -340,14 +340,7 @@ namespace snake
 
     BoardPosOpt_t Board::findFreeBoardPosRandom(const Context & context) const
     {
-        // start with a copy of all valid/on-board positions
-        std::set<BoardPos_t> positions{ context.layout.allValidPositions() };
-
-        // remove any that are alraedy occupied
-        for (const auto & [pos, entry] : m_posEntryMap)
-        {
-            positions.erase(pos);
-        }
+        const BoardPosVec_t positions = findAllFreePositions(context);
 
         if (positions.empty())
         {
