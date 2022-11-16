@@ -147,12 +147,7 @@ namespace snake
 
     BoardPosVec_t Level::makeObstaclePositions(const Context & context) const
     {
-        if (number <= 3)
-        {
-            return {};
-        }
-
-        std::size_t count = (number - 3);
+        std::size_t count = number;
 
         if (count > context.config.obstacle_count_limit)
         {
