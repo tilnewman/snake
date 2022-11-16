@@ -59,10 +59,9 @@ namespace snake
         }
 
         // place random obstacles
-        const std::size_t wallObstacleCount = context.game.level().wallObstacleCount();
-        for (std::size_t i(0); i < wallObstacleCount; ++i)
+        for (const BoardPos_t & pos : context.game.level().obstacle_positions)
         {
-            addNewPieceAtRandomFreePos(context, Piece::Wall);
+            replaceWithNewPiece(context, Piece::Wall, pos);
         }
 
         // place food
@@ -88,6 +87,11 @@ namespace snake
         removeAllPieces(context, Piece::Wall);
 
         for (const BoardPos_t & pos : context.game.level().wall_positions)
+        {
+            replaceWithNewPiece(context, Piece::Wall, pos);
+        }
+
+        for (const BoardPos_t & pos : context.game.level().obstacle_positions)
         {
             replaceWithNewPiece(context, Piece::Wall, pos);
         }

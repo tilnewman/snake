@@ -73,6 +73,7 @@ namespace snake
         sec_per_turn_shrink_per_eat = 0.0f;
 
         wall_positions.clear();
+        obstacle_positions.clear();
     }
 
     bool Level::isComplete() const { return (eat_count_current >= eat_count_required); }
@@ -86,8 +87,7 @@ namespace snake
 
     void Level::handlePickupSlow(const Context &) { sec_per_turn_current = sec_per_turn_slowest; }
 
-    void Level::setupForLevelNumber(
-        Context & context, const std::size_t levelNumberST, const bool survived)
+    void Level::setup(Context & context, const std::size_t levelNumberST, const bool survived)
     {
         number = levelNumberST;
         start_pos = { context.layout.cell_counts / 2 };
@@ -106,11 +106,12 @@ namespace snake
 
         if (survived)
         {
-            wall_positions = makeWallPositionsForLevelNumber(context);
+            wall_positions = makeWallPositions(context);
+            obstacle_positions = makeObstaclePositions(context);
         }
     }
 
-    BoardPosVec_t Level::makeWallPositionsForLevelNumber(Context & context)
+    BoardPosVec_t Level::makeWallPositions(const Context & context) const
     {
         BoardPosVec_t wallPositions;
         wallPositions.reserve(1000);
@@ -144,27 +145,40 @@ namespace snake
         return wallPositions;
     }
 
-    BoardPos_t Level::findNextFoodPos(const Context & context) const
-    {
-        // TODO maybe each new food piece has a greater chance of being near obstacles
-        return context.board.findFreeBoardPosRandom(context).value_or(BoardPosInvalid);
-    }
-
-    std::size_t Level::wallObstacleCount() const
+    BoardPosVec_t Level::makeObstaclePositions(const Context & context) const
     {
         if (number <= 3)
         {
-            return 0;
+            return {};
         }
 
-        return (static_cast<std::size_t>(std::sqrt(number)) - 1);
+        std::size_t count = (number - 3);
+
+        if (count > context.config.obstacle_count_limit)
+        {
+            count = context.config.obstacle_count_limit;
+        }
+
+        BoardPosVec_t positions;
+        positions.reserve(count);
+
+        for (std::size_t i(0); i < count; ++i)
+        {
+            auto boardPosOpt = context.board.findFreeBoardPosRandom(context);
+            if (boardPosOpt.has_value())
+            {
+                positions.push_back(boardPosOpt.value());
+            }
+        }
+
+        return positions;
     }
 
     //
 
     void GameInPlay::start(Context & context)
     {
-        m_level.setupForLevelNumber(context, 1, true);
+        m_level.setup(context, 1, true);
 
         m_score = 0;
         m_eatSfxPitch = context.config.eat_sfx_pitch_start;
@@ -179,7 +193,7 @@ namespace snake
         m_eatSfxPitch = context.config.eat_sfx_pitch_start;
 
         const std::size_t nextLevelNumber{ ((survived) ? (level().number + 1) : level().number) };
-        m_level.setupForLevelNumber(context, nextLevelNumber, survived);
+        m_level.setup(context, nextLevelNumber, survived);
 
         context.board.loadMap(context, survived);
     }

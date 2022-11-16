@@ -62,6 +62,8 @@ namespace snake
         std::size_t score_per_life_bonus{ 10000 };
 
         bool will_limit_resolution{ false };
+
+        std::size_t obstacle_count_limit{ 25 };
     };
 
     // Parameters that change per level and define how hard it is to play the game.
@@ -80,12 +82,10 @@ namespace snake
         void handlePickupFood(const Context & context);
         void handlePickupSlow(const Context & context);
 
-        void setupForLevelNumber(
-            Context & context, const std::size_t levelNumber, const bool survived);
+        void setup(Context & context, const std::size_t levelNumber, const bool survived);
 
-        BoardPosVec_t makeWallPositionsForLevelNumber(Context & context);
-        BoardPos_t findNextFoodPos(const Context & context) const;
-        std::size_t wallObstacleCount() const;
+        BoardPosVec_t makeWallPositions(const Context & context) const;
+        BoardPosVec_t makeObstaclePositions(const Context & context) const;
 
         std::size_t number{ 0 };
         BoardPos_t start_pos{ 0, 0 };
@@ -101,6 +101,7 @@ namespace snake
         float sec_per_turn_shrink_per_eat{ 0.0f };
 
         BoardPosVec_t wall_positions;
+        BoardPosVec_t obstacle_positions;
     };
 
     // Parameters that are specific to the game currently being played.
