@@ -98,8 +98,8 @@ namespace snake
         eat_count_current = 0;
         eat_count_required = (8 + levelSqrtST);
 
-        tail_start_length = 10;
-        tail_grow_after_eat = ((tail_start_length / 2) + (levelSqrtST * 2));
+        tail_start_length = (10 + number);
+        tail_grow_after_eat = ((tail_start_length / 2) + number);
 
         sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
         sec_per_turn_current = sec_per_turn_slowest;
