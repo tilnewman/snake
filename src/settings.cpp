@@ -74,6 +74,7 @@ namespace snake
 
         wall_positions.clear();
         obstacle_positions.clear();
+        food_positions.clear();
     }
 
     bool Level::isComplete() const { return (eat_count_current >= eat_count_required); }
@@ -108,6 +109,7 @@ namespace snake
         {
             wall_positions = makeWallPositions(context);
             obstacle_positions = makeObstaclePositions(context);
+            food_positions = makeFoodPositions(context);
         }
     }
 
@@ -153,6 +155,26 @@ namespace snake
         {
             count = context.config.obstacle_count_limit;
         }
+
+        BoardPosVec_t positions;
+        positions.reserve(count);
+
+        for (std::size_t i(0); i < count; ++i)
+        {
+            auto boardPosOpt = context.board.findFreeBoardPosRandom(context);
+            if (boardPosOpt.has_value())
+            {
+                positions.push_back(boardPosOpt.value());
+            }
+        }
+
+        return positions;
+    }
+
+    BoardPosVec_t Level::makeFoodPositions(const Context & context) const
+    {
+        const std::size_t count =
+            context.random.fromTo(0_st, (context.game.level().remainingToEat() - 4));
 
         BoardPosVec_t positions;
         positions.reserve(count);

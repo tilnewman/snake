@@ -26,12 +26,12 @@ namespace snake
         m_slowPieces.clear();
         m_shrinkPieces.clear();
 
-        m_pieceVerts.reserve(2000);
+        m_pieceVerts.reserve(10000);
         m_headPieces.reserve(10);
-        m_wallPieces.reserve(1000);
-        m_foodPieces.reserve(100);
-        m_slowPieces.reserve(10);
-        m_shrinkPieces.reserve(10);
+        m_wallPieces.reserve(5000);
+        m_foodPieces.reserve(1000);
+        m_slowPieces.reserve(100);
+        m_shrinkPieces.reserve(100);
     }
 
     void Board::loadMap(Context & context, const bool willLoadNewMap)
@@ -50,31 +50,23 @@ namespace snake
     {
         reset();
 
-        replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
-
-        // place walls
         for (const BoardPos_t & pos : context.game.level().wall_positions)
         {
             replaceWithNewPiece(context, Piece::Wall, pos);
         }
 
-        // place random obstacles
         for (const BoardPos_t & pos : context.game.level().obstacle_positions)
         {
             replaceWithNewPiece(context, Piece::Wall, pos);
         }
 
-        // place food
-        if (context.random.boolean())
+        for (const BoardPos_t & pos : context.game.level().food_positions)
         {
-            const std::size_t foodCount =
-                context.random.fromTo(1_st, (context.game.level().remainingToEat() - 4));
-
-            for (std::size_t i(0); i < foodCount; ++i)
-            {
-                addNewPieceAtRandomFreePos(context, Piece::Food);
-            }
+            replaceWithNewPiece(context, Piece::Food, pos);
         }
+
+        // always place head las in case other stuff was placed in start_pos
+        replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
     }
 
     void Board::loadMap_Same(Context & context)
@@ -96,6 +88,12 @@ namespace snake
             replaceWithNewPiece(context, Piece::Wall, pos);
         }
 
+        for (const BoardPos_t & pos : context.game.level().food_positions)
+        {
+            replaceWithNewPiece(context, Piece::Food, pos);
+        }
+
+        // always place head las in case other stuff was placed in start_pos
         replaceWithNewPiece(context, Piece::Head, context.game.level().start_pos);
     }
 

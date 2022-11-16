@@ -81,6 +81,7 @@ namespace snake
 
         BoardPosVec_t makeWallPositions(const Context & context) const;
         BoardPosVec_t makeObstaclePositions(const Context & context) const;
+        BoardPosVec_t makeFoodPositions(const Context & context) const;
 
         std::size_t number{ 0 };
         BoardPos_t start_pos{ 0, 0 };
@@ -97,6 +98,7 @@ namespace snake
 
         BoardPosVec_t wall_positions;
         BoardPosVec_t obstacle_positions;
+        BoardPosVec_t food_positions;
     };
 
     // Parameters that are specific to the game currently being played.
