@@ -29,16 +29,15 @@ namespace snake
         std::string toString() const;
 
         bool isTest() const { return (is_god_mode); }
-
         bool is_god_mode{ false };
 
         std::filesystem::path media_path{ std::filesystem::current_path() / "media" };
 
-        unsigned int sf_window_style{ static_cast<unsigned>(sf::Style::Fullscreen) };
-
+        bool will_show_fps{ false };
         sf::Vector2u resolution{ 0u, 0u };
-
+        bool will_limit_resolution{ false };
         unsigned int frame_rate_limit{ 60u }; // zero means there is no limit
+        unsigned int sf_window_style{ static_cast<unsigned>(sf::Style::Fullscreen) };
 
         sf::Color window_background_color{ sf::Color::Black };
         sf::Color board_background_color{ sf::Color::Black };
@@ -57,11 +56,7 @@ namespace snake
         float eat_sfx_pitch_start{ 0.4f };
         float eat_sfx_pitch_adj{ 0.033f };
 
-        bool will_show_fps{ false };
-
         std::size_t score_per_life_bonus{ 10000 };
-
-        bool will_limit_resolution{ false };
 
         std::size_t obstacle_count_limit{ 25 };
     };
