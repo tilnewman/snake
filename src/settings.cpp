@@ -103,7 +103,7 @@ namespace snake
 
         sec_per_turn_slowest = (6.0f / static_cast<float>(context.layout.cell_counts.y));
         sec_per_turn_current = sec_per_turn_slowest;
-        sec_per_turn_shrink_per_eat = (0.925f - (0.001f * static_cast<float>(number)));
+        sec_per_turn_shrink_per_eat = (0.925f - (0.0025f * static_cast<float>(number)));
 
         if (survived)
         {
