@@ -294,14 +294,14 @@ namespace snake
 
     std::string NextLevelMessageState::makeMessage(const Context & context)
     {
-        return ("Level\n#" + std::to_string(context.game.level().number));
+        return ("Level #" + std::to_string(context.game.level().number));
     }
 
     //
 
     GameOverState::GameOverState(const Context & context)
         : TimedMessageState(
-              context, State::Over, State::NextLevelMsg, "You Died.\nTry Again!\n\n", 4.5f)
+              context, State::Over, State::NextLevelMsg, "You Died\nTry Again!\n\n", 4.5f)
     {}
 
     void GameOverState::onEnter(Context & context) { context.audio.play("rpg-game-over"); }
