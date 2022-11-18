@@ -370,12 +370,7 @@ namespace snake
             return true;
         }
 
-        // TODO remove after testing level construction
-        if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::S))
-        {
-            context.state.setChangePending(State::LevelCompleteMsg);
-        }
-        else if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space))
+        if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space))
         {
             context.state.setChangePending(State::Pause);
         }
